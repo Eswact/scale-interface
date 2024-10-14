@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Krona+One&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inria+Sans:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Krona+One&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="styles/style.css">
+    <style id="content_options"></style>
+    <title>Terazi</title>
+</head>
+<body>
+    <main id="content">
+        <div id="electionSide">
+            <div id="topBar">
+                <div class="generalInfos">
+                    <h2>Tartılan</h2>
+                    <div>
+                        <span id="weighed">0,000Kg</span>
+                    </div>
+                </div>
+                <div class="generalInfos">
+                    <h2>Birim Fiyat</h2>
+                    <div>
+                        <span id="unitPrice">12,50₺</span>
+                    </div>
+                </div>
+                <div class="generalInfos">
+                    <h2>Dara</h2>
+                    <div>
+                        <span id="tare">0,000Kg</span>
+                    </div>
+                </div>
+                <div class="generalInfos">
+                    <h2>Tutar</h2>
+                    <div>
+                        <span id="amount">0,00₺</span>
+                    </div>
+                </div>
+            </div>
+            <div id="productList">
+                <div id="cardContainer">
+                    <!-- leaf true -->
+                </div>
+                <div id="pagination">
+                    <button id="firstPage" class="paginationButtons" disabled><i class="fa-solid fa-angles-left"></i></button>
+                    <button id="prevPage" class="paginationButtons" disabled><i class="fa-solid fa-chevron-left"></i></button>
+                    <span id="pageInfo"><span id="currentPage">1</span> / <span id="totalPages"></span></span>
+                    <button id="nextPage" class="paginationButtons" disabled><i class="fa-solid fa-chevron-right"></i></button>
+                    <button id="lastPage" class="paginationButtons" disabled><i class="fa-solid fa-angles-right"></i></button>
+                </div>
+            </div>
+            <div id="categoryList">
+                <div id="goBackCategory">
+                    <button onclick="goBack()"><i class="fa-solid fa-left-long"></i></button>
+                </div>
+                <div id="subCategories" class="carousel">
+                    <!-- leaf false -->
+                    <div id="subCategoryContainer">
+
+                    </div>
+                    <button class="carousel-btn left disabled" id="subPrevBtn"><i class="fa-solid fa-chevron-left"></i></button>
+                    <button class="carousel-btn right disabled" id="subNextBtn"><i class="fa-solid fa-chevron-right"></i></button>
+                </div>
+                <div id="mainCategories">
+                    <div id="mainCategoryContainer">
+                        <!-- parentId null -->
+                    </div>
+                    <button class="carousel-btn left disabled" id="mainPrevBtn"><i class="fa-solid fa-chevron-left"></i></button>
+                    <button class="carousel-btn right disabled" id="mainNextBtn"><i class="fa-solid fa-chevron-right"></i></button>
+                </div>
+            </div>
+        </div>
+
+        <aside id="transactionSide">
+            <div id="productDetail">
+                <div id="productDetailDiv">
+                    <img src="" id="productDetailImg" />
+                    <div class="generalDetails">
+                        <span id="productDetailBarcode"></span>
+                        <div>
+                            <span id="productDetailName" class="truncatedText2"></span>
+                            <span id="productDetailPrice"></span>
+                        </div>
+                    </div>
+                </div>
+                <div id="chooseProductDiv">
+                    Lütfen ürün seçimi yapınız
+                </div>
+            </div>
+            <div id="numpad">
+                <!-- input -->
+                <!-- keys -->
+                <!-- optional sellerman -->
+            </div>
+        </aside>
+    </main>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="scripts/script.js"></script>
+</body>
+</html>
