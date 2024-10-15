@@ -155,7 +155,7 @@ function renderMainCategories(mainCategories) {
         return `<div class="mainCategory flexCenter" data-categoryid="${category.id}"><span class="threeDots">${category.name}</span></div>`;
     }).join('');
 
-    currentPageMain = 1;
+    // currentPageMain = 1;
     togglePaginationButtons(currentPageMain, totalMainPages, 'main');
 }
 
@@ -174,7 +174,6 @@ function renderSubCategories(subCategories) {
     }).join('');
 
     // Manage navigation buttons
-    currentPageSub = 1;
     togglePaginationButtons(currentPageSub, totalSubPages, 'sub');
 }
 
@@ -211,6 +210,7 @@ function handleMainCategoryClick(categoryId) {
     subCategories = newSubCategories.filter(x => x.leaf != true);
     products = categories.filter(x => x.hierarchyPath.includes(`/${categoryId}/`) && x.leaf);
     // products = products.filter(x => x.leaf == true);
+    currentPageSub = 1;
     renderSubCategories(subCategories);
     currentPage = 1;
     renderProducts(currentPage);
@@ -226,6 +226,7 @@ function handleSubCategoryClick(categoryId) {
     let newSubCategories = categories.filter(category => category.parentId === categoryId);
     if (!newSubCategories.every(x => x.leaf == true)) {
         subCategories = newSubCategories.filter(x => x.leaf != true);
+        currentPageSub = 1;
         renderSubCategories(subCategories);
     }
     products = categories.filter(x => x.hierarchyPath.includes(`/${categoryId}/`) && x.leaf);
@@ -262,11 +263,11 @@ function goBack() {
         renderSubCategories(subCategories);
         $('#goBackCategory').removeClass('show');
     }
+    getPrevCategoryName();
 }
 
 function setProductDetail(productId) {
     selectedProductId = productId;
-    console.log(productId)
     $('#productDetailDiv').addClass('show');
     $('#chooseProductDiv').addClass('unshow');
     let selectedProduct = categories.find(x => x.id == selectedProductId);
@@ -274,12 +275,27 @@ function setProductDetail(productId) {
     $('#productDetailBarcode').html(selectedProduct.barcode);
     $('#productDetailName').html(selectedProduct.name);
     $('#productDetailPrice').html(convert2Price(selectedProduct.price));
+    setUnitPrice(selectedProduct.price);
 }
 
 function resetProductDetail() {
     selectedProductId = null;
     $('#productDetailDiv').removeClass('show');
     $('#chooseProductDiv').removeClass('unshow');
+    setUnitPrice(0);
+}
+
+function getPrevCategoryName(){
+    if (backArray.length < 1) {
+        $('#goBackCategory span').html('');
+    }
+    else if (backArray.length == 1) {
+        $('#goBackCategory span').html('Genel');
+    }
+    else {
+        let prevCategory = categories.find(x => JSON.stringify(x.id) == JSON.stringify(backArray[backArray.length - 2]));
+        $('#goBackCategory span').html(prevCategory.name);
+    }
 }
 
 // ready
@@ -295,6 +311,7 @@ $(document).ready(function () {
 
         backArray = [];
         backArray.push(categoryId);
+        getPrevCategoryName();
     });
     // sub category click event
     $('#subCategoryContainer').on('click', '.subCategory', function () {
@@ -309,6 +326,7 @@ $(document).ready(function () {
             backArray.pop();
             backArray.push(categoryId);
         }
+        getPrevCategoryName();
     });
 
     // product paging buttons

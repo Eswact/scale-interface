@@ -69,7 +69,7 @@
         "hierarchyPath": "/1/6",
         "barcode": null,
         "price": null,
-        "image": "./images/meyve.png"
+        "image": "https://www.turkflowers.com/buyukresim/Belarus-6-kg-meyve-sepeti.jpg"
     },
     {
         "id": "7",
@@ -81,7 +81,7 @@
         "hierarchyPath": "/1/7",
         "barcode": null,
         "price": null,
-        "image": "./images/sebze.png"
+        "image": "https://png.pngtree.com/png-vector/20231230/ourlarge/pngtree-3d-decorative-vegetables-and-vegetable-basket-png-image_11390630.png"
     },
     {
         "id": "8",
@@ -93,7 +93,7 @@
         "hierarchyPath": "/1/6/8",
         "barcode": 123456789012,
         "price": 17.99,
-        "image": "./images/muz.png"
+        "image": "https://static.ticimax.cloud/48857/uploads/urunresimleri/buyuk/1008825-f2c8a-.jpg"
     },
     {
         "id": "9",
@@ -105,7 +105,7 @@
         "hierarchyPath": "/1/6/9",
         "barcode": 987654321098,
         "price": 15.50,
-        "image": "./images/elma.png"
+        "image": "https://www.agfresh.com.tr/public/uploads/elma.webp"
     },
     {
         "id": "10",
@@ -117,7 +117,7 @@
         "hierarchyPath": "/1/6/10",
         "barcode": 123123123123,
         "price": 19.99,
-        "image": "./images/kavun.png"
+        "image": "https://tumentarim.com/content/upload/kavun.3.jpg"
     },
     {
         "id": "11",
@@ -129,7 +129,7 @@
         "hierarchyPath": "/1/7/11",
         "barcode": 123321123321,
         "price": 7.75,
-        "image": "./images/domates.png"
+        "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSVEBJfV-aY0bUF6kEcaUDglmACgKPaL2qlMA&s"
     },
     {
         "id": "12",
@@ -141,7 +141,7 @@
         "hierarchyPath": "/1/7/12",
         "barcode": 999888777666,
         "price": 11.45,
-        "image": "./images/biber.png"
+        "image": "https://static.ticimax.cloud/cdn-cgi/image/width=-,quality=85/48857/uploads/urunresimleri/buyuk/1008997-7276ee.jpg"
     },
     {
         "id": "13",
@@ -153,7 +153,7 @@
         "hierarchyPath": "/1/7/13",
         "barcode": 777666555444,
         "price": 6.50,
-        "image": "./images/salatalik.png"
+        "image": "https://d1mm3tuyihn37h.cloudfront.net/wp-content/uploads/Salatalik.jpg"
     },
     {
         "id": "14",
@@ -165,7 +165,7 @@
         "hierarchyPath": "/2/14",
         "barcode": 888777666555,
         "price": 34.99,
-        "image": "./images/kasar-peyniri.png"
+        "image": "https://ideacdn.net/idea/jt/56/myassets/products/178/sm-urun-gorselleri-peynirler-312000-kasar-peyniri-1000g.jpg?revision=1697143329"
     },
     {
         "id": "15",
@@ -177,7 +177,7 @@
         "hierarchyPath": "/2/15",
         "barcode": 333444555666,
         "price": 20.50,
-        "image": "./images/sut.png"
+        "image": "https://images.migrosone.com/sanalmarket/product/11014567/11014567-50f9b6-1650x1650.jpg"
     },
     {
         "id": "16",
@@ -189,7 +189,7 @@
         "hierarchyPath": "/3/16",
         "barcode": 444555666777,
         "price": 60.99,
-        "image": "./images/kiyma.png"
+        "image": "https://ideacdn.net/idea/ge/09/myassets/products/279/dana-yemeklik-kiyma.jpg?revision=1722246017"
     },
     {
         "id": "17",
@@ -201,7 +201,7 @@
         "hierarchyPath": "/3/17",
         "barcode": 555666777888,
         "price": 45.75,
-        "image": "./images/tavuk.png"
+        "image": "https://arazetmarket.com.tr/image/cache/catalog/butun-tavuk-500x500.png"
     },
     {
         "id": "18",
@@ -213,7 +213,7 @@
         "hierarchyPath": "/4/18",
         "barcode": 666777888999,
         "price": 7.50,
-        "image": "./images/su.png"
+        "image": "https://productimages.hepsiburada.net/s/32/375-375/10377359851570.jpg"
     },
     {
         "id": "19",
@@ -225,7 +225,7 @@
         "hierarchyPath": "/4/45/19",
         "barcode": 222111333444,
         "price": 5.25,
-        "image": "./images/soda.png"
+        "image": "https://productimages.hepsiburada.net/s/32/375-375/10364946645042.jpg"
     },
     {
         "id": "20",
@@ -237,7 +237,7 @@
         "hierarchyPath": "/5/20",
         "barcode": null,
         "price": null,
-        "image": "./images/cikolata.png"
+        "image": "https://www.sekercity.com/UserFiles/Fotograflar/org/4864-2447buyuk1jpg-2447buyuk1.jpg"
     },
     {
         "id": "21",
@@ -249,7 +249,7 @@
         "hierarchyPath": "/5/21",
         "barcode": null,
         "price": null,
-        "image": "./images/zeytin.png"
+        "image": "https://www.aydinliamca.com/class/INNOVAEditor/assets/yagli-siyah-zeytin-aydinli-amca-siyah-sele-zeytin-organik-siyah-zeytin-dogal-fermente-zeytin-en-iyi-siyah-zeytin-yagli-zeytin-aydin-zeytin-satisi-aydin-zeytin-fiyatlari-dogal-fermente-siyah-zeytin-aydin-sele-zeytin.jpg"
     },
     {
         "id": "22",
@@ -261,7 +261,7 @@
         "hierarchyPath": "/5/22",
         "barcode": 11111111111111,
         "price": 10,
-        "image": "./images/ekmek.png"
+        "image": "https://ankarahalkekmek.com.tr/wp-content/uploads/2020/11/nekmek.jpg"
     },
     {
         "id": "23",
@@ -273,7 +273,7 @@
         "hierarchyPath": "/2/23",
         "barcode": 999888777666,
         "price": 18.50,
-        "image": "./images/yogurt.png"
+        "image": "https://cdnprod.mopas.com.tr/sys-master-mopascdncontainer/h6b/h7d/8876523290654/53719_0_521Wx521H"
     },
     {
         "id": "24",
@@ -285,7 +285,7 @@
         "hierarchyPath": "/2/24",
         "barcode": 123987654321,
         "price": 5.75,
-        "image": "./images/ayran.png"
+        "image": "https://www.nazar.com.tr/wp-content/uploads/2020/12/ayran.jpg"
     },
     {
         "id": "25",
@@ -297,7 +297,7 @@
         "hierarchyPath": "/2/25",
         "barcode": 333222111555,
         "price": 30.99,
-        "image": "./images/peynir.png"
+        "image": "https://images.migrosone.com/sanalmarket/product/10017285/10017285-748163-1650x1650.jpg"
     },
     {
         "id": "26",
@@ -309,7 +309,7 @@
         "hierarchyPath": "/4/45/26",
         "barcode": 444111333222,
         "price": 60.75,
-        "image": "./images/gazoz.png"
+        "image": "https://www.mismarsanalmarket.com/UserFiles/Fotograflar/org/137-8690504525011-jpg-8690504525011.jpg"
     },
     {
         "id": "27",
@@ -321,7 +321,7 @@
         "hierarchyPath": "/4/45/27",
         "barcode": 222999888777,
         "price": 8.99,
-        "image": "./images/kola.png"
+        "image": "https://cdn.dsmcdn.com/ty1417/product/media/images/prod/QC/20240712/14/7d589b8b-9faa-3d54-93b6-4c6c97e9c020/1_org_zoom.jpg"
     },
     {
         "id": "28",
@@ -333,7 +333,7 @@
         "hierarchyPath": "/4/41/28",
         "barcode": 999333222111,
         "price": 12.50,
-        "image": "./images/bira.png"
+        "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR0dql_hrQ3b5t0etzPFSLtjJHRfWme_p2BvQ&s"
     },
     {
         "id": "29",
@@ -345,7 +345,7 @@
         "hierarchyPath": "/5/29",
         "barcode": null,
         "price": null,
-        "image": "./images/kuruyemis.png"
+        "image": "https://www.cankardeslerkuruyemis.com/class/INNOVAEditor/assets/ozel-karisik-kuruyemis.jpg"
     },
     {
         "id": "30",
@@ -357,7 +357,7 @@
         "hierarchyPath": "/5/30",
         "barcode": null,
         "price": null,
-        "image": "./images/yumurta.png"
+        "image": "https://www.aylinaydin.com.tr/wp-content/uploads/2014/12/yumurta_saglikli_beslenme.jpg"
     },
     {
         "id": "31",
@@ -369,7 +369,7 @@
         "hierarchyPath": "/1/6/31",
         "barcode": 111999888777,
         "price": 27.99,
-        "image": "./images/cilek.png"
+        "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTJ1742w_QUtsZzEWogVVj_zmghUOIqVHVbdw&s"
     },
     {
         "id": "32",
@@ -381,7 +381,7 @@
         "hierarchyPath": "/1/6/32",
         "barcode": 444222333111,
         "price": 22.50,
-        "image": "./images/mango.png"
+        "image": "https://cdn.cimri.io/market/260x260/mango-adet-_46033.jpg"
     },
     {
         "id": "33",
@@ -393,7 +393,7 @@
         "hierarchyPath": "/1/6/33",
         "barcode": 333222555666,
         "price": 19.99,
-        "image": "./images/karpuz.png"
+        "image": "https://nebilcdn.blob.core.windows.net/gimatlinux/0010945_karpuz-kg-meyve_510.jpg"
     },
     {
         "id": "34",
@@ -405,7 +405,7 @@
         "hierarchyPath": "/1/6/34",
         "barcode": 666111333222,
         "price": 18.75,
-        "image": "./images/kayisi.png"
+        "image": "https://www.tekfentarim.com/wp-content/uploads/2021/08/kayisi-1.png"
     },
     {
         "id": "35",
@@ -417,7 +417,7 @@
         "hierarchyPath": "/1/7/35",
         "barcode": 444666555222,
         "price": 8.99,
-        "image": "./images/havuc.png"
+        "image": "https://static.ticimax.cloud/48857/uploads/urunresimleri/buyuk/1009027-f6-451.jpg"
     },
     {
         "id": "36",
@@ -429,7 +429,7 @@
         "hierarchyPath": "/1/7/36",
         "barcode": 222333444555,
         "price": 12.99,
-        "image": "./images/patlican.png"
+        "image": "https://cdn.getir.com/product/patlican_5ced482a4a8a2a000137da47.png"
     },
     {
         "id": "37",
@@ -441,7 +441,7 @@
         "hierarchyPath": "/1/7/37",
         "barcode": 333444111222,
         "price": 9.75,
-        "image": "./images/pirasa.png"
+        "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRpc3bpdf_wYsXE0tNHYow_-XTl1gUErLVwUw&s"
     },
     {
         "id": "38",
@@ -453,7 +453,7 @@
         "hierarchyPath": "/2/38",
         "barcode": 111666333222,
         "price": 40.50,
-        "image": "./images/tereyagi.png"
+        "image": "https://cdn.akakce.com/sutas/sutas-200-gr-z.jpg"
     },
     {
         "id": "39",
@@ -465,7 +465,7 @@
         "hierarchyPath": "/3/39",
         "barcode": 999111222555,
         "price": 80.99,
-        "image": "./images/balik.png"
+        "image": "https://www.esk.gov.tr/upload/Node/10979/pics/Kolyoz.350px.jpg"
     },
     {
         "id": "40",
@@ -477,7 +477,7 @@
         "hierarchyPath": "/3/40",
         "barcode": 111888777333,
         "price": 55.75,
-        "image": "./images/sucuk.png"
+        "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTFhmp9Udc1qvKWcFRBrv4kRjuON2TdPiQIcw&s"
     },
     {
         "id": "41",
@@ -489,7 +489,7 @@
         "hierarchyPath": "/4/41",
         "barcode": null,
         "price": null,
-        "image": "./images/alkollu-icecekler.png"
+        "image": "https://diyetisyengizemakbulut.com/images/uploads/yazilar/711193307912371.jpg"
     },
     {
         "id": "42",
@@ -501,7 +501,7 @@
         "hierarchyPath": "/4/41/42",
         "barcode": 333666555777,
         "price": 200.50,
-        "image": "./images/raki.png"
+        "image": "https://nl.sarap.online/wp-content/uploads/2024/02/yeni-raki-02l.webp"
     },
     {
         "id": "43",
@@ -513,7 +513,7 @@
         "hierarchyPath": "/4/41/43",
         "barcode": 444999111222,
         "price": 250.99,
-        "image": "./images/viski.png"
+        "image": "https://sc02.alicdn.com/kf/UTB8J684NVfFXKJk43Otq6xIPFXal/Jack-daniels-bottle-whisky-price-scotch-whisky.jpg"
     },
     {
         "id": "44",
@@ -525,7 +525,7 @@
         "hierarchyPath": "/4/41/44",
         "barcode": 222111999333,
         "price": 60.75,
-        "image": "./images/sarap.png"
+        "image": "https://ideacdn.net/idea/hx/67/myassets/products/209/hr-bottiglie-volupta-syrah-1.png?revision=1697143329"
     },
     {
         "id": "45",
@@ -537,7 +537,7 @@
         "hierarchyPath": "/4/41",
         "barcode": null,
         "price": null,
-        "image": "./images/alkolsuz-icecekler.png"
+        "image": "https://st3.depositphotos.com/1063437/19229/i/450/depositphotos_192299074-stock-photo-bottles-of-global-soft-drink.jpg"
     },
     {
         "id": "46",
@@ -549,7 +549,7 @@
         "hierarchyPath": "/5/20/46",
         "barcode": 111222333444,
         "price": 12.99,
-        "image": "./images/cikolata.png"
+        "image": "https://img-bizimtoptan.mncdn.com/Content/Images/Thumbs/2001942.jpeg"
     },
     {
         "id": "47",
@@ -561,7 +561,7 @@
         "hierarchyPath": "/5/20/47",
         "barcode": 111222333444,
         "price": 12.99,
-        "image": "./images/snickers-cikolata.png"
+        "image": "https://reimg-carrefour.mncdn.com/mnresize/600/600/productimage/30099475/30099475_0_MC/8797926064178_1608636781267.jpg"
     },
     {
         "id": "48",
@@ -573,7 +573,7 @@
         "hierarchyPath": "/5/48",
         "barcode": null,
         "price": null,
-        "image": "./images/baharatlar.png"
+        "image": "https://d17wu0fn6x6rgz.cloudfront.net/img/w/yazi/mgt/geleneksektucc88rkmutfagcc86ibaharatlari-biostore-924.webp"
     },
     {
         "id": "49",
@@ -585,7 +585,7 @@
         "hierarchyPath": "/5/49",
         "barcode": null,
         "price": null,
-        "image": "./images/soslar.png"
+        "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQkxS-82Lvt-WtqYeBrMSjkq5pKzE009iVUGw&s"
     },
     {
         "id": "50",
@@ -597,7 +597,7 @@
         "hierarchyPath": "/5/50",
         "barcode": null,
         "price": null,
-        "image": "./images/marmelatlar.png"
+        "image": "https://i.lezzet.com.tr/images-xxlarge-secondary/marmelat-yapimi-sef-aydin-demirden-5-kahvaltilik-marmelat-tarifi-ddd76e4a-3e2e-4ffe-bf6f-b55763ec175e.jpg"
     },
     {
         "id": "51",
@@ -609,7 +609,7 @@
         "hierarchyPath": "/5/49/51",
         "barcode": null,
         "price": null,
-        "image": "./images/ketcap.png"
+        "image": "https://www.muglagurme.com/image/cache/catalog/Gorseller/ketcap-tatli-gorsel-seo-800x800w.jpg"
     },
     {
         "id": "52",
@@ -621,11 +621,11 @@
         "hierarchyPath": "/5/49/52",
         "barcode": null,
         "price": null,
-        "image": "./images/mayonez.png"
+        "image": "https://www.muglagurme.com/image/cache/catalog/Gorseller/mayonez-gorsel-seoo-800x800w.jpg"
     },
     {
         "id": "53",
-        "name": "Acılı ketçap",
+        "name": "Heinz acılı ketçap",
         "nameNormalized": "ACILI KETCAP",
         "parentId": "51",
         "isActive": false,
@@ -633,11 +633,11 @@
         "hierarchyPath": "/5/49/51/53",
         "barcode": 333555444111,
         "price": 40.00,
-        "image": "./images/acili-ketcap.png"
+        "image": "https://d23ic3f0nw4szy.cloudfront.net/marketpaketi/products/537757/heinz-ketcap-1-kg-372608001509109866.jpg"
     },
     {
         "id": "54",
-        "name": "Sarımsaklı Mayonez",
+        "name": "Calve sarımsaklı mayonez",
         "nameNormalized": "SARIMSAKLI MAYONEZ",
         "parentId": "52",
         "isActive": false,
@@ -645,6 +645,6 @@
         "hierarchyPath": "/5/49/52/54",
         "barcode": 333555444111,
         "price": 40.00,
-        "image": "./images/sarimsakli-mayonez.png"
+        "image": "https://images.migrosone.com/sanalmarket/product/16300543/16300543-e2dc61-1650x1650.jpg"
     }
 ]

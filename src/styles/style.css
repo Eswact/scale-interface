@@ -163,7 +163,7 @@ body {
 }
 #cardContainer .productCard.selected {
     border: 4px solid var(--active-color);
-    box-shadow: inset 0 0 12px var(--active-color-25);
+    box-shadow: inset 0 0 24px 6px var(--active-color-25);
 }
 #cardContainer .productCard img {
     width: 35%;
@@ -219,6 +219,8 @@ body {
     box-shadow: none;
 }
 #pageInfo {
+    font-size: 18px;
+    font-weight: 800;
     padding: 0 24px;
 }
 /* productList end */
@@ -335,11 +337,16 @@ body {
     border-radius: 12px;
     padding: 6px 12px;
 }
+#subCategories .carousel-btn {
+    font-size: 32px;
+    padding: 8px 16px;
+    border-radius: 50%;
+}
 .carousel-btn.left {
-    left: 4px;
+    left: 12px;
 }
 .carousel-btn.right {
-    right: 4px;
+    right: 12px;
 }
 .carousel-btn.disabled {
     display: none;
@@ -368,6 +375,12 @@ body {
     border: none;
     padding: 0 24px;
     border-radius: 6px;
+}
+#goBackCategory span {
+    color: var(--first-color);
+    font-size: 20px;
+    font-weight: 600;
+    margin-left: 20px;
 }
 /* categoryList end */
 
@@ -403,15 +416,16 @@ body {
     display: none;
 }
 #productDetailImg {
-    width: 46%;
+    width: 42%;
     aspect-ratio: 1;
     object-fit: contain;
+    object-position: center;
     background-color: white;
     border: 2px solid var(--first-color);
-    border-radius: 6px;
+    border-radius: 24px;
 }
 #productDetailDiv .generalDetails {
-    padding: 12px 24px;
+    padding: 12px 6px 12px 24px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -424,17 +438,22 @@ body {
     align-items: flex-start;
 }
 #productDetailName {
-    font-size: 36px;
+    font-size: 32px;
     color: var(--first-color);
     text-shadow: 2px 2px var(--first-color-25);
     max-width: 100%;
-    margin-bottom: 12px;
+    margin-bottom: 16px;
 }
 #productDetailPrice {
-    font-size: 25px;
+    font-size: 24px;
     color: var(--first-color);
     text-shadow: 2px 2px var(--first-color-25);
     max-width: 100%;
+}
+#productDetailBarcode {
+    font-size: 17px;
+    font-weight: 600;
+    margin-bottom: 10px;
 }
 /* productDetail end */
 
