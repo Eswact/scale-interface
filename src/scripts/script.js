@@ -8,6 +8,7 @@ let columnCount;
 let rowCount;
 let barCount;
 let bar2Count;
+let baseFont;
 let salesman; // true/false --> numpad height 680/620
 
 // card container
@@ -33,7 +34,7 @@ let backArray = [];
 var options = localStorage.getItem("options");
 function getOptions() {
     if (options === undefined || options === null) {
-        options = { columnCount: 4, rowCount: 3, barCount: 5, bar2Count: 5 } // default
+        options = { columnCount: 4, rowCount: 3, barCount: 5, bar2Count: 5, baseFont: 16 } // default
         localStorage.setItem("options", JSON.stringify(options));
     }
     else{
@@ -53,13 +54,14 @@ function applyOptions() {
     cardsPerPage = rowCount * columnCount;
     barCount = options.barCount;
     bar2Count = options.bar2Count;
+    baseFont = options.baseFont;
 
     inject();
 }
 function inject() {
     $("#content_options").remove();
     let newcss = `<style id="content_options">
-                        #content {
+                        body {
                             --first-color: rgb(18, 55, 64);
                             --second-color: rgb(84, 154, 171);
                             --second-color-25: rgba(84, 154, 171, 0.25);
@@ -71,7 +73,7 @@ function inject() {
                             --red: rgb(236, 54, 67);
                             --green: rgb(67, 160, 71);
                         
-                            --base-font-size: 16px;
+                            --base-font-size: ${baseFont}px;
                             --column-count: ${columnCount};
                             --row-count: ${rowCount};
                             --bar-count: ${barCount};
