@@ -61,6 +61,9 @@ function applyOptions() {
 function inject() {
     $("#content_options").remove();
     let newcss = `<style id="content_options">
+                        :root {
+                            --base-font-size: ${baseFont}px;
+                        }
                         body {
                             --first-color: rgb(18, 55, 64);
                             --second-color: rgb(84, 154, 171);
@@ -73,7 +76,6 @@ function inject() {
                             --red: rgb(236, 54, 67);
                             --green: rgb(67, 160, 71);
                         
-                            --base-font-size: ${baseFont}px;
                             --column-count: ${columnCount};
                             --row-count: ${rowCount};
                             --bar-count: ${barCount};
