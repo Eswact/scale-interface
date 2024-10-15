@@ -1,0 +1,135 @@
+/**
+*   TODO
+*
+*   font size meselesi
+*   text user selectable olmasın
+*   
+**/
+:root {
+    --keypad-wrapper-bg-color: purple;
+    --keypad-wrapper-border-radius: 6px;
+
+    --keypad-key-bg-color: #303742;
+    --keypad-key-fg-color: #50dd50;
+    --keypad-key-active-bg-color: #f7f7f7;
+    --keypad-key-disabled-bg-color: #222;
+    --keypad-key-disabled-box-shadow: none;
+    --keypad-key-border: 1px solid #406040;
+    --keypad-key-border-radius: 2px;
+    --keypad-key-box-shadow:inset 0px 0px 10px 8px rgba(0,0,0,0.3);
+
+    --keypad-key-delete-color: #dd5050;
+
+    --keypad-input-bg-color: #424242;
+    --keypad-input-fg-color: #f7f7f7;
+    --keypad-input-placeholder-color: #a0a0a0aa;
+}
+
+.keypad-wrapper {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.keypad-wrapper * {
+    font-family: "Gemunu Libre", sans-serif;
+    font-weight: 700;
+    font-size: 1.2em;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    border-style: none;
+    outline-style: none;
+    outline: none;
+    border: none;
+    background: none;
+    width: auto;
+    height: auto;
+}
+
+.keypad-wrapper .keypad-row, 
+.keypad-wrapper .keypad-header {
+    display: flex;
+    flex: 1;
+}
+
+.keypad-wrapper .keypad-row button.keypad-button {
+    flex: 1;
+}
+
+.keypad-wrapper .keypad-header input {
+    width: 100%;
+    text-align: right;
+    padding: 0 8px;
+}
+
+.keypad-wrapper .keypad-header button.keypad-button {
+    min-width: 36px;
+}
+
+.keypad-wrapper {
+    background: var(--keypad-wrapper-bg-color);
+    border-radius: var(--keypad-wrapper-border-radius);
+    overflow: hidden;
+}
+
+.keypad-wrapper button.keypad-button {
+    background: var(--keypad-key-bg-color);
+    color: var(--keypad-key-fg-color);
+    border: var(--keypad-key-border);
+    border-radius: var(--keypad-key-border-radius);
+    box-shadow: var(--keypad-key-box-shadow);
+    -webkit-box-shadow: var(--keypad-key-box-shadow);
+}
+
+.keypad-wrapper button.keypad-button.keypad-delete-button {
+    color: var(--keypad-key-delete-color);
+}
+
+.keypad-wrapper input {
+    background: var(--keypad-input-bg-color);
+    color: var(--keypad-input-fg-color);
+}
+
+.keypad-wrapper input::placeholder {
+    color: var(--keypad-input-placeholder-color);
+    outline: red;
+}
+
+.keypad-wrapper button:disabled {
+    background: var(--keypad-key-disabled-bg-color);
+    box-shadow: var(--keypad-key-disabled-box-shadow);
+}
+
+@keyframes --keypad-blink-animation {
+    from {
+        background: white;
+    }
+    50% {
+        background: black;
+    }
+    to {
+        background: white;
+    }
+}
+
+@-webkit-keyframes blink-key {
+    0% {
+        background-color: var(--keypad-key-active-bg-color);
+        opacity:1;
+    }
+    22% {
+        background-color: var(--keypad-key-active-bg-color);
+    }
+    /* 77% {
+        background-color: Red;
+    } */
+    100% {
+        background-color: #777;
+    }
+}
+
+.keypad-wrapper button.keypad-button.blink {
+    animation: blink-key 0.16s ease-in;
+}

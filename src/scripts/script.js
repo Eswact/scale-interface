@@ -1,3 +1,54 @@
+/*
+    TR -- Dokümantasyon
+    getFirstView() => İlk görünüm oluşturulur.
+    fetchCategories() => tüm kategori ve ürünler çekilir ve "categories" değişkenine atanır. Ardından getFirstView() fonksiyonu çağrılır.
+    getOptions() => kullanıcının kaydettiği ayar var ise, onları getirir. Kaydedilmiş bir ayar yok ise, varsayılan ayarlar kullanılır.
+    updateOptions(kullanici_yeni_opts) => ayarları güncelleyip kaydetmek için kullanılır. Ardından fetchCategories() fonksiyonu çağrılır.
+    NOT: kullanici_yeni_opts => columnCount, rowCount, barCount, bar2Count, baseFont değerlerini içermelidir 
+    applyOptions() => inject() => css injection işlemi ile kullanıcının ayarları uygulanır.
+    renderProducts(page) => "products" Dizisi içersinde bulunan ürünlere ve page değişkeni göre ürünleri kartlar halinde listeler. "rowCount" ve "columnCount" değişkenleri ile satır/sütun sayısı kullanıcın ayarladığı şekilde olur. 
+    renderMainCategories(mainCategories) => parentId'si null Olan ana kategorileri "barCount" değişkenine göre listeler. Eğer barCount'tan fazla ana kategori var ise, yapıyı carousel'e dönüştürür.
+    renderSubCategories(subCategories) => parentId'si null Olmayan ama leaf'i true da olmayan alt kategorileri "bar2Count" değişkenine göre listeler.
+    togglePaginationButtons(currentPage, totalPages, type) => Ana kategori ve alt kategorilerin sayfalandırılmasında kullanılan bir fonksiyondur. Sayfa geçişlerinde kullanılan butonları etkinleştirir/devre dışı bırakır.
+    changePage(type, direction) => Ana kategori ve alt kategorilerin sayfalandırılmasında kullanılan bir fonksiyondur. Sayfa geçişlerinde kullanılır.
+    handleMainCategoryClick(categoryId) => Ana kategorilere tıklandığında, tıklanan kategori altındaki leaf'i true olanlar ile ürün kartlarının, leaf'i false olanlar ile de alt kategorilerin oluşmasını sağlar.
+    handleSubCategoryClick(categoryId) => Alt kategorilere tıklandığında, tıklanan kategorinin altındaki leaf'i true olanlar ile ürün kartlarının, leaf'i false olanlar ile de alt kategorilerin oluşmasını sağlar.
+    updateActiveCategory() => Aktif olan ana kategori ve alt kategorinin görünümünü değiştiren fonksiyondur.
+    NOT: Kategoriler arasında geçiş yapılırken kullanıcının ilerlediği yoldaki kategorilerin id'si "backArray" dizisine eklenir.
+    goBack() => "backArray" Dizisine göre bir önceki kategori durumuna geçilir. Ürünler ve kategoriler bu duruma göre güncellenir. Sadece geri dönülebilecek bir durum varken çalışır.
+    getPrevCategoryName() => "backArray" Dizisinde bulunan bir önceki kategori id'si ile bu kategorinin ismi "categories" dizisinden getirilir ve gösterilir.
+    setProductDetail(productId) => Gönderilen id'ye göre ürün detayı kısmını dolduran fonksiyondur.
+    resetProductDetail() => Ürün detayı kısmını boşaltan fonksiyondur.
+    NOT: Document hazır olduktan sonra sayfa geçişlerini sağlayacak butonlara (#prevPage, #nextPage, #firstPage, #lastPage, #mainPrevBtn, #mainNextBtn, #subPrevBtn, #subNextBtn) tıklama ataması yapılır.
+    NOT: setWeighed(), setTare(), setUnitPrice(), setAmount() fonksiyonları ile ekranda yukarıda bulunan değerler ayarlanabilir.
+    NOT: convert2Kg(), convert2Price() fonksiyonları ile değer dönüşümleri yapılır.
+
+    EN -- Documentation
+    getFirstView() => The first view is created.
+    fetchCategories() => All categories and products are fetched and assigned to the "categories" variable. Then, the getFirstView() function is called.
+    getOptions() => Retrieves the user's saved settings if available. If there are no saved settings, default settings are used.
+    updateOptions(kullanici_yeni_opts) => Used to update and save the settings. Afterward, the fetchCategories() function is called.
+    NOT: kullanici_yeni_opts should contain values for columnCount, rowCount, barCount, bar2Count, and baseFont.
+    applyOptions() => Applies the user's settings using CSS injection (inject()).
+    renderProducts(page) => Lists the products in the "products" array as cards based on the variable page. The number of rows and columns is set according to the user's settings using rowCount and columnCount.
+    renderMainCategories(mainCategories) => Lists the main categories with a parentId of null according to the variable barCount. If there are more main categories than barCount, the structure is converted into a carousel.
+    renderSubCategories(subCategories) => Lists the subcategories that have a non-null parentId but are not leaves (leaf is false) according to the variable bar2Count.
+    togglePaginationButtons(currentPage, totalPages, type) => A function used for paginating main and subcategories. It enables/disables the buttons used for page transitions.
+    changePage(type, direction) => A function used for paginating main and subcategories. It is used for page transitions.
+    handleMainCategoryClick(categoryId) => When main categories are clicked, it ensures the creation of product cards with leaf=true items under the clicked category and subcategories with leaf=false items.
+    handleSubCategoryClick(categoryId) => When subcategories are clicked, it ensures the creation of product cards with leaf=true items under the clicked subcategory and subcategories with leaf=false items.
+    updateActiveCategory() => A function that changes the view of the active main category and subcategory.
+    NOTE: When switching between categories, the IDs of the categories the user has traversed are added to the "backArray".
+    goBack() => Navigates to the previous category state based on the "backArray". Products and categories are updated according to this state. It only works when there is a previous state to return to.
+    getPrevCategoryName() => Retrieves the name of the previous category using the category ID found in the "backArray" from the "categories" array and displays it.
+    setProductDetail(productId) => A function that fills in the product detail section based on the provided ID.
+    resetProductDetail() => A function that clears the product detail section.
+    NOTE: After the document is ready, event assignments are made to the buttons for page transitions (#prevPage, #nextPage, #firstPage, #lastPage, #mainPrevBtn, #mainNextBtn, #subPrevBtn, #subNextBtn).
+    NOTE: The values above the screen can be set with the functions setWeighed(), setTare(), setUnitPrice(), and setAmount().
+    NOTE: Value conversions are made using the functions convert2Kg() and convert2Price().
+*/
+
+
 // all data
 let categories;
 
@@ -86,6 +137,21 @@ function inject() {
     $("head").append(newcss)
 }
 
+// 
+function getFirstView() {
+    currentPageMain = 1;
+    currentPageSub = 1
+    currentPage = 1;
+    mainCategories = categories.filter(category => category.parentId === null);
+    renderMainCategories(mainCategories);
+    subCategories = []
+    renderSubCategories(subCategories);
+    products = categories.filter(x => x.leaf == true);
+    renderProducts(currentPage);
+
+    backArray = [];
+    $('#goBackCategory').removeClass('show');
+}
 // get data
 async function fetchCategories() {
     try {
@@ -94,11 +160,7 @@ async function fetchCategories() {
             type: "get",
             success: function(res) {
                 categories = res;
-                mainCategories = categories.filter(category => category.parentId === null);
-                renderMainCategories(mainCategories);
-                products = categories.filter(x => x.leaf == true);
-                currentPage = 1;
-                renderProducts(currentPage);
+                getFirstView();
             },
             error: function (err) {
                 console.log(err);
@@ -413,3 +475,28 @@ function convert2Kg(value) {
         return "0,000 kg";
     }
 }
+
+
+var confirmation_keypad = Keypad.generateFrom("#numpadContainer", [
+    {
+        statename: "filter-mod",
+        leftActionContent: "<i class='fa fa-magnifying-glass' style=\"font-family: 'FontAwesome'; color: var(--green);\"></i>",
+        leftAction: function (keypad) {
+            console.log(keypad.getNumericValue(true));
+        },
+        rightActionContent: "<i class='fa fa-check' style=\"font-family: 'FontAwesome'; color: var(--green);\"></i>",
+        rightAction: function (keypad) {
+            console.log(keypad.getNumericValue(true));
+        },
+    },
+    {
+        statename: "default",
+        rightActionContent: "<i class='fa fa-check' style=\"font-family: 'FontAwesome'; color: var(--green);\"></i>",
+        rightAction: function (keypad) {
+            console.log(keypad.getNumericValue(true));
+        }
+    },
+]);
+
+confirmation_keypad.setState("default");
+// confirmation_keypad.setState("filter-mod");
