@@ -552,3 +552,42 @@ body {
     font-size: 20px;
 }
 /* numpad end */
+
+/* resolution-warning start */
+#resolution-warning {
+    display: none;
+    flex-direction: column;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 20px;
+    text-align: center;
+    font-size: 18px;
+    border-radius: 10px;
+    z-index: 1000;
+}
+#resolution-warning span:first-child {
+    margin-bottom: 10px;
+}
+/* resolution-warning end */
+
+@media (max-width: 1900px) {
+    #content {
+        display: none;
+    }
+    #resolution-warning {
+        display: flex;
+    }
+}
+
+@media (max-height: 1000px) {
+    #content {
+        display: none;
+    }
+    #resolution-warning {
+        display: flex;
+    }
+}
