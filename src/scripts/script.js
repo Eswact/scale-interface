@@ -60,7 +60,7 @@ let rowCount;
 let barCount;
 let bar2Count;
 let baseFont;
-let salesman; // true/false --> #sellerman display/hidden
+let sellerman;
 
 // card container
 let products = [];
@@ -83,7 +83,7 @@ let backArray = [];
 
 // css injection
 var options = localStorage.getItem("options");
-var default_options = { columnCount: 4, rowCount: 3, barCount: 5, bar2Count: 5, baseFont: 16 };
+var default_options = { columnCount: 4, rowCount: 3, barCount: 5, bar2Count: 5, baseFont: 16, sellerman: false };
 function getOptions() {
     if (options === undefined || options === null) {
         options = default_options;
@@ -107,6 +107,7 @@ function applyOptions() {
     barCount = options.barCount;
     bar2Count = options.bar2Count;
     baseFont = options.baseFont;
+    sellerman = options.sellerman ? "flex" : "none";
 
     inject();
 }
@@ -132,7 +133,7 @@ function inject() {
                             --row-count: ${rowCount};
                             --bar-count: ${barCount};
                             --bar2-count: ${bar2Count};
-                            --salesman: "true";
+                            --sellerman: ${sellerman};
                         }
                     </style>`
     $("head").append(newcss)
