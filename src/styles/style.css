@@ -22,6 +22,7 @@ p, h1, h2, h3, h4, h5, h6 {
     --second-color: rgb(84, 154, 171);
     --second-color-50: rgba(84, 154, 171, 0.55);
     --second-color-25: rgba(84, 154, 171, 0.25);
+    --second-color-10: rgba(84, 154, 171, 0.10);
     --third-color: rgb(176, 215, 225);
     --third-color-50: rgba(176, 215, 225, 0.5);
     --third-color-25: rgba(176, 215, 225, 0.25);
@@ -391,6 +392,9 @@ body {
 #productDetail {
     flex-grow: 1;
     width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     border: 3px solid var(--first-color);
     border-right: none;
     border-radius: 2px;
@@ -398,6 +402,9 @@ body {
 }
 #productDetailDiv {
     display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     width: 100%;
     /* height: 100%; */
     padding: 32px;
@@ -405,6 +412,21 @@ body {
 }
 #productDetailDiv.show {
     display: flex;
+}
+#selectedProduct {
+    width: 100%;
+    display: flex;
+    margin-bottom: 40px;
+}
+#productDetailDiv button {
+    font-size: 22px;
+    font-weight: 600;
+    padding: 12px 16px;
+    border: 2px solid var(--active-color);
+    border-radius: 12px;
+    background-color: white;
+    color: var(--active-color);
+    box-shadow: 0 1px 3px 2px var(--active-color-25);
 }
 #chooseProductDiv {
     display: flex;
@@ -464,7 +486,6 @@ body {
 /* numpad start */
 #numpad {
     margin-top: 10px;
-    height: 620px;
     width: 100%;
     border: 3px solid var(--first-color);
     border-right: none;
@@ -481,9 +502,9 @@ body {
     --keypad-key-active-bg-color: #f7f7f7;
     --keypad-key-disabled-bg-color: #444;
     --keypad-key-disabled-box-shadow: none;
-    --keypad-key-border: 1px solid var(--first-color);
+    --keypad-key-border: 2px solid var(--first-color);
     --keypad-key-border-radius: 2px;
-    --keypad-key-box-shadow:inset 0px 0px 10px 8px var(--first-color-25);
+    --keypad-key-box-shadow:inset 0px 0px 16px 24px var(--first-color-25);
 
     --keypad-key-delete-color: var(--red);
 
@@ -492,8 +513,28 @@ body {
     --keypad-input-placeholder-color: #a0a0a0aa;
 
     width: 100%;
-    height: 100%;
-    max-height: 620px;
+    height: 560px;
     font-size: 28px;
+}
+#numpadContainer .keypad-header {
+    border: 2px solid #000;
+}
+#numpadContainer .keypad-header input {
+    padding: 4px 24px;
+}
+#numpadTopButtons {
+    width: 100%;
+    height: 80px;
+    display: flex;
+    background-color: var(--first-color);
+}
+#numpadTopButtons button {
+    width: 100%;
+    background-color: var(--second-color-10);
+    box-shadow: inset 0px 0px 16px 24px var(--first-color-25);
+    border: none;
+    border-right: 2px solid #000;
+    color: #fff;
+    font-size: 20px;
 }
 /* numpad end */

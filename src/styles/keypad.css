@@ -133,3 +133,41 @@
 .keypad-wrapper button.keypad-button.blink {
     animation: blink-key 0.16s ease-in;
 }
+
+.keypad-grid {
+    width: 100%;
+    height: 480px;
+    display: flex;
+}
+.keypad-grid .keypad-right-buttons {
+    width: 25%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+.keypad-grid .keypad-right-buttons button.keypad-button {
+    background-color: transparent;
+    border-color: #000;
+}
+.keypad-grid .keypad-right-buttons .keypad-action-button-right {
+    width: 100%;
+    height: 75%;
+}
+.keypad-grid .keypad-right-buttons .keypad-delete-button {
+    width: 100%;
+    height: 25%;
+}
+.keypad-grid .keypad-number-buttons {
+    width: 75%;
+    height: 100%;
+    display: flex;
+    flex-wrap: wrap;
+}
+.keypad-grid .keypad-number-buttons .keypad-button {
+    width: 33.33%;
+    height: 25%;
+}
+.keypad-grid .keypad-number-buttons .keypad-button.keypad-action-button-left {
+    width: 66.66%;
+}

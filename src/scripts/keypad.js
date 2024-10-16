@@ -7,6 +7,10 @@
  * error handling
  * 
 */
+var HTML_MOD_TYPES = {
+    DEFAULT: 0,
+    EREN: 1,
+}
 function TryParseInt(value, defaultValue) {
     try {
         var value = parseInt(value);
@@ -31,7 +35,12 @@ function TryParseFloat(value, defaultValue) {
     }
 }
 
-function Keypad(target, options) {
+function Keypad(target, options, params) {
+    params = params || {}
+    var default_params = {
+        html_mod: HTML_MOD_TYPES.DEFAULT,
+    }
+    Object.assign(default_params, params);
     // asap(B):  generateFrom metodunda olduğu gibi target olarak direkt htmldivelement gelebilir ona da dikkat!
     this._dom = document.querySelector(target);
     if (this._dom === null || this._dom === undefined) {
@@ -39,11 +48,11 @@ function Keypad(target, options) {
         return;
     }
     this._states = [];
-    this._injectHTML();
+    this._injectHTML(default_params);
     this._inputField = this._dom.querySelector(".keypad-header input");
     this._leftActionButton = this._dom.querySelector("button.keypad-action-button-left");
     this._rightActionButton = this._dom.querySelector("button.keypad-action-button-right");
-    this._deleteButton = this._dom.querySelector(".keypad-header button");
+    this._deleteButton = this._dom.querySelector(".keypad-delete-button");
     this._applyOptions(options);
     this._bindEvents();
     this.addState(this._options);
@@ -82,33 +91,62 @@ Keypad.prototype = {
         this._currentState = this._options.statename;
         this._updateState();
     },
-    _injectHTML: function () {
+    
+    _injectHTML: function (params) {    
+
         var _node = document.createElement("div");
         _node.classList.add("keypad-wrapper");
-        _node.innerHTML = '<div class="keypad-header">\
-                                <input type="text" readonly/>\
-                                <button class="keypad-delete-button keypad-button" style="min-width: 2em;"><i class="fa fa-arrow-left" style="font-family: \'FontAwesome\';"></i></button>\
-                            </div>\
-                            <div class="keypad-row">\
-                                <button class="keypad-numeric-button keypad-button">7</button>\
-                                <button class="keypad-numeric-button keypad-button">8</button>\
-                                <button class="keypad-numeric-button keypad-button">9</button>\
-                            </div>\
-                            <div class="keypad-row">\
-                                <button class="keypad-numeric-button keypad-button">4</button>\
-                                <button class="keypad-numeric-button keypad-button">5</button>\
-                                <button class="keypad-numeric-button keypad-button">6</button>\
-                            </div>\
-                            <div class="keypad-row">\
-                                <button class="keypad-numeric-button keypad-button">1</button>\
-                                <button class="keypad-numeric-button keypad-button">2</button>\
-                                <button class="keypad-numeric-button keypad-button">3</button>\
-                            </div>\
-                            <div class="keypad-row">\
-                                <button class="keypad-action-button-left keypad-button">,</button>\
-                                <button class="keypad-numeric-button keypad-button">0</button>\
-                                <button class="keypad-action-button-right keypad-button">x</button>\
-                            </div>';
+        if (params.html_mod == HTML_MOD_TYPES.EREN) {
+            _node.innerHTML = `<div class="keypad-header">
+                                    <input type="text" readonly/>
+                                </div>
+                                <div class="keypad-grid">
+                                    <div class="keypad-number-buttons">
+                                        <button class="keypad-numeric-button keypad-button">7</button>
+                                        <button class="keypad-numeric-button keypad-button">8</button>
+                                        <button class="keypad-numeric-button keypad-button">9</button>
+                                        <button class="keypad-numeric-button keypad-button">4</button>
+                                        <button class="keypad-numeric-button keypad-button">5</button>
+                                        <button class="keypad-numeric-button keypad-button">6</button>
+                                        <button class="keypad-numeric-button keypad-button">1</button>
+                                        <button class="keypad-numeric-button keypad-button">2</button>
+                                        <button class="keypad-numeric-button keypad-button">3</button>
+                                        <button class="keypad-action-button-left keypad-button">,</button>
+                                        <button class="keypad-numeric-button keypad-button">0</button>
+                                    </div>
+                                    <div class="keypad-right-buttons">
+                                        <button class="keypad-delete-button keypad-button"><i class="fa fa-arrow-left" style="font-family: \'FontAwesome\';"></i></button>
+                                        <button class="keypad-action-button-right keypad-button">x</button>
+                                    </div>
+                                </div>`;
+        }
+        else { // DEFAULT
+            _node.innerHTML = '<div class="keypad-header">\
+                                    <input type="text" readonly/>\
+                                    <button class="keypad-delete-button keypad-button" style="min-width: 2em;"><i class="fa fa-arrow-left" style="font-family: \'FontAwesome\';"></i></button>\
+                                </div>\
+                                <div class="keypad-row">\
+                                    <button class="keypad-numeric-button keypad-button">7</button>\
+                                    <button class="keypad-numeric-button keypad-button">8</button>\
+                                    <button class="keypad-numeric-button keypad-button">9</button>\
+                                </div>\
+                                <div class="keypad-row">\
+                                    <button class="keypad-numeric-button keypad-button">4</button>\
+                                    <button class="keypad-numeric-button keypad-button">5</button>\
+                                    <button class="keypad-numeric-button keypad-button">6</button>\
+                                </div>\
+                                <div class="keypad-row">\
+                                    <button class="keypad-numeric-button keypad-button">1</button>\
+                                    <button class="keypad-numeric-button keypad-button">2</button>\
+                                    <button class="keypad-numeric-button keypad-button">3</button>\
+                                </div>\
+                                <div class="keypad-row">\
+                                    <button class="keypad-action-button-left keypad-button">,</button>\
+                                    <button class="keypad-numeric-button keypad-button">0</button>\
+                                    <button class="keypad-action-button-right keypad-button">x</button>\
+                                </div>';
+            
+        }
         this._dom.appendChild(_node);
     },
     _bindEvents: function () {
@@ -315,14 +353,20 @@ Keypad.prototype = {
     },
 }
 
-Keypad.generateFrom = function (target, array) {
+Keypad.generateFrom = function (target, array, params) {
+    params = params || {}
+    var default_params = {
+        html_mod: HTML_MOD_TYPES.DEFAULT,
+    }
+
+    Object.assign(default_params, params);
     var dom = document.querySelector(target);
     if (dom === null || dom === undefined) {
         console.error("Keypad target not found!");
         return;
     }
     if (array.constructor === Array && array.length > 0) {
-        var keypad = new Keypad(target, array[0]);
+        var keypad = new Keypad(target, array[0], params);
         for (var index = 1; index < array.length; index++) {
             var element = array[index];
             keypad.addState(array[index]);

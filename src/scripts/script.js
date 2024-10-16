@@ -60,7 +60,7 @@ let rowCount;
 let barCount;
 let bar2Count;
 let baseFont;
-let salesman; // true/false --> numpad height 680/620
+let salesman; // true/false --> #sellerman display/hidden
 
 // card container
 let products = [];
@@ -83,13 +83,14 @@ let backArray = [];
 
 // css injection
 var options = localStorage.getItem("options");
+var default_options = { columnCount: 4, rowCount: 3, barCount: 5, bar2Count: 5, baseFont: 16 };
 function getOptions() {
     if (options === undefined || options === null) {
-        options = { columnCount: 4, rowCount: 3, barCount: 5, bar2Count: 5, baseFont: 16 } // default
+        options = default_options;
         localStorage.setItem("options", JSON.stringify(options));
     }
     else{
-        options = JSON.parse(options)
+        options = Object.assign(default_options, JSON.parse(options));
     }
     applyOptions();
 }
@@ -480,14 +481,11 @@ function convert2Kg(value) {
 var confirmation_keypad = Keypad.generateFrom("#numpadContainer", [
     {
         statename: "filter-mod",
-        leftActionContent: "<i class='fa fa-magnifying-glass' style=\"font-family: 'FontAwesome'; color: var(--green);\"></i>",
-        leftAction: function (keypad) {
-            console.log(keypad.getNumericValue(true));
-        },
-        rightActionContent: "<i class='fa fa-check' style=\"font-family: 'FontAwesome'; color: var(--green);\"></i>",
+        leftActionDisabled: true,
+        rightActionContent: "<i class='fa fa-magnifying-glass' style=\"font-family: 'FontAwesome'; color: #fff;\"></i>",
         rightAction: function (keypad) {
             console.log(keypad.getNumericValue(true));
-        },
+        }
     },
     {
         statename: "default",
@@ -496,7 +494,9 @@ var confirmation_keypad = Keypad.generateFrom("#numpadContainer", [
             console.log(keypad.getNumericValue(true));
         }
     },
-]);
+], {
+    html_mod: 1,
+});
 
 confirmation_keypad.setState("default");
 // confirmation_keypad.setState("filter-mod");
