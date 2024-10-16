@@ -144,6 +144,8 @@ function getFirstView() {
     currentPageMain = 1;
     currentPageSub = 1
     currentPage = 1;
+    activeMainCategory = null;
+    activeSubCategory = null;
     mainCategories = categories.filter(category => category.parentId === null);
     renderMainCategories(mainCategories);
     subCategories = []
@@ -321,8 +323,10 @@ function goBack() {
         backArray.pop();
         let previousCategoryId = backArray[backArray.length - 1];
         handleSubCategoryClick(previousCategoryId);
+        activeSubCategory = previousCategoryId;
     }
     else {
+        activeMainCategory = null;
         $('.mainCategory').removeClass('active');
         products = categories.filter(x => x.leaf == true);
         currentPage = 1;
