@@ -20,8 +20,12 @@
     setProductDetail(productId) => Gönderilen id'ye göre ürün detayı kısmını dolduran fonksiyondur.
     resetProductDetail() => Ürün detayı kısmını boşaltan fonksiyondur.
     NOT: Document hazır olduktan sonra sayfa geçişlerini sağlayacak butonlara (#prevPage, #nextPage, #firstPage, #lastPage, #mainPrevBtn, #mainNextBtn, #subPrevBtn, #subNextBtn) tıklama ataması yapılır.
-    NOT: setWeighed(), setTare(), setUnitPrice(), setAmount() fonksiyonları ile ekranda yukarıda bulunan değerler ayarlanabilir.
-    NOT: convert2Kg(), convert2Price() fonksiyonları ile değer dönüşümleri yapılır.
+    NOT: setWeighed(), setTare(), setUnitPrice(), setAmount() Fonksiyonları ile ekranda yukarıda bulunan değerler ayarlanabilir.
+    NOT: getWeighed(), getTare(), getUnitPrice(), getAmount() Fonksiyonları ile ekranda yukarıda bulunan değerler getirilebilir.
+    NOT: convert2Kg(), convert2Price(), reverseConvertFromKg() ve reverseConvertFromPrice() Fonksiyonları ile değer dönüşümleri yapılır.
+    calculateTotalAmount() => Anlık olarak toplam tutarı hesaplar (birim fiyat * kg/adet)
+    filterByBarcode(value) => Aldığı değere göre ürünler arasında barkod filtrelemesi yapar ve bu değeri içeren barkodları getirir.
+
 
     EN -- Documentation
     getFirstView() => The first view is created.
@@ -45,7 +49,10 @@
     resetProductDetail() => A function that clears the product detail section.
     NOTE: After the document is ready, event assignments are made to the buttons for page transitions (#prevPage, #nextPage, #firstPage, #lastPage, #mainPrevBtn, #mainNextBtn, #subPrevBtn, #subNextBtn).
     NOTE: The values above the screen can be set with the functions setWeighed(), setTare(), setUnitPrice(), and setAmount().
-    NOTE: Value conversions are made using the functions convert2Kg() and convert2Price().
+    NOTE: The values above the screen can be get with the functions getWeighed(), getTare(), getUnitPrice(), and getAmount().
+    NOTE: Value conversions are made using the functions convert2Kg(), convert2Price(), reverseConvertFromKg() and reverseConvertFromPrice().
+    calculateTotalAmount(): Calculates the total amount in real-time (unit price * weight/quantity).
+    filterByBarcode(value): Filters the products based on the given value and returns the barcodes that contain this value.
 */
 
 
@@ -319,8 +326,8 @@ function updateActiveCategory() {
 }
 
 function goBack() {
-    if (backArray.length > 1) {
-        backArray.pop();
+    backArray.pop();
+    if (backArray.length > 0) {
         let previousCategoryId = backArray[backArray.length - 1];
         handleSubCategoryClick(previousCategoryId);
         activeSubCategory = previousCategoryId;
@@ -348,6 +355,7 @@ function setProductDetail(productId) {
     $('#productDetailName').html(selectedProduct.name);
     $('#productDetailPrice').html(convert2Price(selectedProduct.price));
     setUnitPrice(selectedProduct.price);
+    calculateTotalAmount();
 }
 
 function resetProductDetail() {
@@ -355,6 +363,7 @@ function resetProductDetail() {
     $('#productDetailDiv').removeClass('show');
     $('#chooseProductDiv').removeClass('unshow');
     setUnitPrice(0);
+    calculateTotalAmount();
 }
 
 function getPrevCategoryName(){
@@ -368,6 +377,21 @@ function getPrevCategoryName(){
         let prevCategory = categories.find(x => JSON.stringify(x.id) == JSON.stringify(backArray[backArray.length - 2]));
         $('#goBackCategory span').html(prevCategory.name);
     }
+}
+
+
+function filterByBarcode(value) {
+    getFirstView();
+    products = categories.filter(x => JSON.stringify(x.barcode).includes(value));
+    renderProducts(currentPage);
+
+    backArray.push('');
+    $('#goBackCategory').addClass('show');
+    getPrevCategoryName();
+}
+
+function calculateTotalAmount() {
+    setAmount(getWeighed() * getUnitPrice());
 }
 
 // ready
@@ -456,6 +480,28 @@ function setAmount(value) {
     $('#amount').text(amount);
 }
 
+// getters
+function getWeighed() {
+    let weighedText = $('#weighed').text();
+    let weighedValue = reverseConvertFromKg(weighedText);
+    return weighedValue;
+}
+function getTare() {
+    let tareText = $('#tare').text();
+    let tareValue = reverseConvertFromKg(tareText);
+    return tareValue;
+}
+function getUnitPrice() {
+    let unitPriceText = $('#unitPrice').text();
+    let unitPriceValue = reverseConvertFromPrice(unitPriceText);
+    return unitPriceValue;
+}
+function getAmount() {
+    let amountText = $('#amount').text();
+    let amountValue = reverseConvertFromPrice(amountText);
+    return amountValue;
+}
+
 // common functions
 function convert2Price(value) {
     if (value != null && value != undefined) {
@@ -481,27 +527,59 @@ function convert2Kg(value) {
         return "0,000 kg";
     }
 }
+function reverseConvertFromKg(value) {
+    if (value != null && value != undefined) {
+        let str = value.replace(" kg", "");
+        str = str.replace(/\./g, "");
+        str = str.replace(/,/, ".");
+        return parseFloat(str);
+    } else {
+        return 0;
+    }
+}
+function reverseConvertFromPrice(value) {
+    if (value != null && value != undefined) {
+        let str = value.replace("₺", "");
+        str = str.replace(/\./g, "");
+        str = str.replace(/,/, ".");
+        return parseFloat(str);
+    } else {
+        return 0;
+    }
+}
 
 
+// KeypadJS
 var confirmation_keypad = Keypad.generateFrom("#numpadContainer", [
     {
         statename: "filter-mod",
-        leftActionDisabled: true,
         rightActionContent: "<i class='fa fa-magnifying-glass' style=\"font-family: 'FontAwesome'; color: #fff;\"></i>",
+        leftActionDisabled: true,
         rightAction: function (keypad) {
-            console.log(keypad.getNumericValue(true));
+            filterByBarcode(keypad.getNumericValue());
+        },
+        watcher: function (keypad, char, prevVal, nextVal) {
+            if (nextVal.length < 6 || nextVal.includes(',')) {
+                keypad.setState("default");
+            }
+            return true;
         }
     },
     {
         statename: "default",
         rightActionContent: "<i class='fa fa-check' style=\"font-family: 'FontAwesome'; color: var(--green);\"></i>",
         rightAction: function (keypad) {
-            console.log(keypad.getNumericValue(true));
+            setWeighed(keypad.getNumericValue(true));
+            calculateTotalAmount();
+        },
+        watcher: function (keypad, char, prevVal, nextVal) {
+            if (nextVal.length >= 6 && !nextVal.includes(',')) {
+                keypad.setState("filter-mod");
+            }
+            return true;
         }
     },
 ], {
     html_mod: 1,
 });
-
 confirmation_keypad.setState("default");
-// confirmation_keypad.setState("filter-mod");
