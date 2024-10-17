@@ -59,8 +59,6 @@
 // all data
 let categories;
 
-let selectedProductId = null;
-
 // options
 let columnCount;
 let rowCount;
@@ -68,6 +66,9 @@ let barCount;
 let bar2Count;
 let baseFont;
 let sellerman;
+
+// selected product
+let selectedProductId = null;
 
 // card container
 let products = [];
@@ -87,6 +88,8 @@ let totalSubPages;
 let activeSubCategory = null;
 
 let backArray = [];
+
+let printMemory = [];
 
 // css injection
 var options = localStorage.getItem("options");
@@ -216,6 +219,8 @@ function renderProducts(page) {
         $(this).addClass('selected');
         setProductDetail($(this).data('product'));
     });
+
+    $('#filterValue').html(``);
 }
 
 // render categories
@@ -384,6 +389,7 @@ function filterByBarcode(value) {
     getFirstView();
     products = categories.filter(x => JSON.stringify(x.barcode).includes(value));
     renderProducts(currentPage);
+    $('#filterValue').html(`<span>${value}</span> barkoduna göre filtrelenmiştir`);
 
     backArray.push('');
     $('#goBackCategory').addClass('show');
@@ -459,6 +465,25 @@ $(document).ready(function () {
     });
     $('#subNextBtn').click(function () {
         changePage('sub', 'next');
+    });
+
+    $('#calculateTareButton').click(function (){
+        console.log('Dara');
+    });
+    $('#scaleResetButton').click(function (){
+        console.log('Terazi sıfırla');
+    });
+
+    $('#memoryProductButton').click(function() {
+        if (selectedProductId != null && printMemory.every(x => x != selectedProductId)) {
+            printMemory.push(selectedProductId);
+        }
+    });
+    $('#printProductButton').click(function() {
+        if (selectedProductId != null && printMemory.every(x => x != selectedProductId)) {
+            printMemory.push(selectedProductId);
+        }
+        console.log(printMemory);
     });
 });
 
@@ -556,7 +581,7 @@ var confirmation_keypad = Keypad.generateFrom("#numpadContainer", [
         rightActionContent: "<i class='fa fa-magnifying-glass' style=\"font-family: 'FontAwesome'; color: #fff;\"></i>",
         leftActionDisabled: true,
         rightAction: function (keypad) {
-            filterByBarcode(keypad.getNumericValue());
+            filterByBarcode(keypad.getNumericValue(true));
         },
         watcher: function (keypad, char, prevVal, nextVal) {
             if (nextVal.length < 6 || nextVal.includes(',')) {

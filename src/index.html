@@ -19,7 +19,7 @@
         <div id="electionSide">
             <div id="topBar">
                 <div class="generalInfos">
-                    <h2>Tartılan</h2>
+                    <h2>Tartılan Kg/Adet</h2>
                     <div>
                         <span id="weighed">0,000Kg</span>
                     </div>
@@ -44,6 +44,7 @@
                 </div>
             </div>
             <div id="productList">
+                <span id="filterValue"></span>
                 <div id="cardContainer">
                     <!-- leaf true -->
                 </div>
@@ -77,7 +78,6 @@
                 </div>
             </div>
         </div>
-
         <aside id="transactionSide">
             <div id="productDetail">
                 <div id="productDetailDiv">
@@ -91,7 +91,11 @@
                             </div>
                         </div>
                     </div>
-                    <button>Birim Yazdırma</button>
+                    <div id="productButtons" class="flexCenter">
+                        <button id="printProductButton" title="Yazdır"><i class="fa-solid fa-print"></i></button>
+                        <button id="memoryProductButton" title="Hafıza"><i class="fa-solid fa-sd-card"></i></button>
+                        <button id="extraProductButton" title="Extra"><i class="fa-solid fa-question"></i></button>
+                    </div>
                 </div>
                 <div id="chooseProductDiv">
                     Lütfen ürün seçimi yapınız
@@ -99,8 +103,9 @@
             </div>
             <div id="numpad">
                 <div id="numpadTopButtons">
-                    <button>Dara</button>
-                    <button>Ayarlar</button>
+                    <button id="calculateTareButton">Dara</button>
+                    <button id="scaleResetButton">Sıfırla</button>
+                    <button id="extraScaleButton">Extra Buton</button>
                 </div>
                 <div id="numpadContainer">
                     <!-- numpad -->
