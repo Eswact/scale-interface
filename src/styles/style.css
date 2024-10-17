@@ -1,5 +1,3 @@
-/* only adjusted for 1920x1080 screen resolution */
-
 /* reset css start */
 *, *::before, *::after {
     box-sizing: border-box;
@@ -21,6 +19,7 @@ p, h1, h2, h3, h4, h5, h6 {
 :root {
     --first-color: rgb(18, 55, 64);
     --first-color-25: rgba(18, 55, 64, 0.25);
+    --first-color-75: rgba(18, 55, 64, 0.75);
     --second-color: rgb(84, 154, 171);
     --second-color-50: rgba(84, 154, 171, 0.55);
     --second-color-25: rgba(84, 154, 171, 0.25);
@@ -92,25 +91,74 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    width: calc(100% - 500px);
+    width: 70%;
 }
 #transactionSide {
     display: flex;
     flex-direction: column;
-    width: 500px;
+    width: calc(30% - 100px);
+}
+#buttonsSide {
+    transition: all 200ms ease-in-out;
+    width: 100px;
+    height: 100%;
+    padding: 48px 4px 24px 4px;
+    background-color: var(--first-color-75);
+    border: 2px solid var(--first-color);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+#content.full #electionSide{
+    width: 74%;
+}
+#content.full #transactionSide{
+    width: 26%;
+}
+#content.full #buttonsSide{
+    width: 0;
+    border: none;
+    padding: 0;
 }
 /* content end */
+
+/* buttonsSide start */
+#buttonsSide nav {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+}
+#settingsDiv {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+#buttonsSide nav button {
+    font-size: 2.2rem;
+    width: 100%;
+    padding: 10px;
+    border: none;
+    background-color: transparent;
+    color: white;
+    margin-top: 10px;
+}
+/* buttonsSide end */
 
 /* topBar start */
 #topBar {
     width: 100%;
-    min-height: 150px;
+    padding: 25px 10px;
     background-color: var(--first-color);
     display: flex;
     align-items: center;
     justify-content: space-around;
 }
 #topBar .generalInfos {
+    width: 20%;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
@@ -123,7 +171,7 @@ body {
     margin-bottom: 2px;
 }
 #topBar .generalInfos div {
-    width: 240px;
+    width: 100%;
     padding: 16px 8px;
     background-color: #fff;
     color: #000;
@@ -230,12 +278,12 @@ body {
     padding: 0 24px;
 }
 #filterValue {
-    font-size: 18px;
+    font-size: 1.125rem;
     margin-top: 6px;
     margin-bottom: 8px;
 }
 #filterValue span {
-    font-size: 22px;
+    font-size: 1.325rem;
     font-weight: 600;
 }
 /* productList end */
@@ -433,7 +481,7 @@ body {
     width: 100%;
 }
 #productButtons button {
-    font-size: 42px;
+    font-size: 2.75rem;
     font-weight: 600;
     padding: 10px 24px;
     border: 2px solid var(--active-color);
@@ -507,6 +555,7 @@ body {
 #numpad {
     margin-top: 10px;
     width: 100%;
+    height: 60%;
     border: 3px solid var(--first-color);
     border-right: none;
     border-radius: 2px;
@@ -533,8 +582,8 @@ body {
     --keypad-input-placeholder-color: #a0a0a0aa;
 
     width: 100%;
-    height: 560px;
-    font-size: 28px;
+    height: calc(100% - 130px);
+    font-size: 1.8rem;
 }
 #numpadContainer .keypad-header {
     border: 2px solid #000;
@@ -555,7 +604,7 @@ body {
     border: none;
     border-right: 2px solid #000;
     color: #fff;
-    font-size: 20px;
+    font-size: 1.25rem;
 }
 #sellerman {
     width: 100%;
@@ -567,7 +616,7 @@ body {
     display: var(--sellerman);
     justify-content: space-between;
     align-items: center;
-    font-size: 20px;
+    font-size: 1.25rem;
 }
 /* numpad end */
 
@@ -583,29 +632,145 @@ body {
     color: white;
     padding: 20px;
     text-align: center;
-    font-size: 18px;
+    font-size: 1.125rem;
     border-radius: 10px;
     z-index: 1000;
 }
 #resolution-warning span:first-child {
     margin-bottom: 10px;
 }
+@media (max-width: 1023px) {
+    #content {
+        display: none;
+    }
+    #resolution-warning {
+        display: flex;
+    }
+}
+@media (max-height: 639px) {
+    #content {
+        display: none;
+    }
+    #resolution-warning {
+        display: flex;
+    }
+}
 /* resolution-warning end */
 
-@media (max-width: 1900px) {
-    #content {
-        display: none;
+/* mobile start */
+/* 1920x1080 - 1600x900 */
+@media (max-width: 1919px), (max-height: 1079px) {
+    html {
+        font-size: calc(var(--base-font-size) - 2px); /* 1rem */
     }
-    #resolution-warning {
-        display: flex;
+    #electionSide {
+        width: 72%;
+    }
+    #transactionSide {
+        width: calc(28% - 80px);
+    }
+    #buttonsSide {
+        width: 80px;
+    }
+    #topBar {
+        padding: 20px 10px;
+    }
+    #categoryList {
+        min-height: 200px;
+        padding-top: 0;
+    }
+    #mainCategoryContainer .mainCategory {
+        padding: 4px;
+    }
+    #mainCategoryContainer .mainCategory span {
+        font-size: 2rem;
+    }
+    #subCategories {
+        margin-bottom: 0;
+        padding: 10px 0;
+    }
+    #subCategoryContainer .subCategory img {
+        height: 64%;
+    }
+    #subCategoryContainer .subCategory span {
+        font-size: 1.35rem;
+    }
+    #productButtons button {
+        font-size: 2rem;
+        padding: 8px 20px;
+    }
+    #numpad {
+        height: 55%;
+    }
+    #numpadTopButtons {
+        height: 60px;
+    }
+    #numpadContainer {
+        height: calc(100% - 110px);
     }
 }
-
-@media (max-height: 1000px) {
-    #content {
+/* 1600x900 - 1368x768 */
+@media (max-width: 1599px), (max-height: 899px) {
+    html {
+        font-size: calc(var(--base-font-size) - 4px); /* 1rem */
+    }
+    #topBar {
+        padding: 12px;
+    }
+    #productDetailDiv {
+        padding: 20px;
+    }
+    #productDetailImg {
+        border-radius: 16px;
+    }
+    #categoryList {
+        min-height: 140px;
+    }
+    #mainCategoryContainer .mainCategory span {
+        font-size: 2.25rem;
+    }
+    #subCategoryContainer .subCategory span {
+        font-size: 1.75rem
+    }
+    #subCategoryContainer .subCategory img {
         display: none;
     }
-    #resolution-warning {
-        display: flex;
+}
+/* 1368x768 - 1024x720 */
+@media (max-width: 1367px) {
+    html {
+        font-size: calc(var(--base-font-size) - 6px); /* 1rem */
+    }
+    #electionSide {
+        width: 66%;
+    }
+    #transactionSide {
+        width: calc(34% - 60px);
+    }
+    #buttonsSide {
+        width: 60px;
+    }
+    #cardContainer .productCard {
+        flex-direction: column;
+    }
+    #cardContainer .productCard img {
+        margin-right: 0;
+        margin-top: 8px;
+        margin-bottom: 6px;
+    }
+    #cardContainer .productCard div {
+        width: 100%;
+        align-items: center;
+        text-align: center;
+    }
+    #cardContainer .productCard .productPrice {
+        display: none;
+    }
+    #productDetailDiv {
+        padding: 10px;
+    }
+    #productDetailImg {
+        border-radius: 10px;
     }
 }
+/* mobile end */

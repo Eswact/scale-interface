@@ -93,7 +93,7 @@ let printMemory = [];
 
 // css injection
 var options = localStorage.getItem("options");
-var default_options = { columnCount: 4, rowCount: 3, barCount: 5, bar2Count: 5, baseFont: 16, sellerman: false };
+var default_options = { columnCount: 4, rowCount: 3, barCount: 5, bar2Count: 5, baseFont: 16, sellerman: false, fullScreen: true };
 function getOptions() {
     if (options === undefined || options === null) {
         options = default_options;
@@ -118,6 +118,7 @@ function applyOptions() {
     bar2Count = options.bar2Count;
     baseFont = options.baseFont;
     sellerman = options.sellerman ? "flex" : "none";
+    options.fullScreen ? $('#content').addClass('full') : $('#content').removeClass('full');
 
     inject();
 }
@@ -484,6 +485,11 @@ $(document).ready(function () {
             printMemory.push(selectedProductId);
         }
         console.log(printMemory);
+    });
+    $('#otherButtons').click(function() {
+        $('#content').toggleClass('full');
+        (options.fullScreen) ? options.fullScreen = false : options.fullScreen = true;
+        localStorage.setItem("options", JSON.stringify(options));
     });
 });
 
