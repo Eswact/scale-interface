@@ -361,6 +361,7 @@ function setProductDetail(productId) {
     $('#productDetailName').html(selectedProduct.name);
     $('#productDetailPrice').html(convert2Price(selectedProduct.price));
     setUnitPrice(selectedProduct.price);
+    if ($('.keypad-header input').val() != '') $('.keypad-action-button-right').click();
     calculateTotalAmount();
 }
 
@@ -406,6 +407,9 @@ $(document).ready(function () {
     // get options && data
     getOptions();
     fetchCategories();
+
+    const asideBar = new AsideBarButtons("#buttonsSide nav ul");
+    asideBar.loadButtonsFromJSON('././data/buttons.json');
 
     // main category click event
     $('#mainCategoryContainer').on('click', '.mainCategory', function () {
@@ -579,7 +583,6 @@ function reverseConvertFromPrice(value) {
     }
 }
 
-
 // KeypadJS
 var confirmation_keypad = Keypad.generateFrom("#numpadContainer", [
     {
@@ -614,3 +617,65 @@ var confirmation_keypad = Keypad.generateFrom("#numpadContainer", [
     html_mod: 1,
 });
 confirmation_keypad.setState("default");
+
+// asidebar buttons
+function AsideBarButtons(containerId) {
+    this.container = $(containerId);
+
+    this.functionMap = {
+        click_1: function() {
+            alert("Button 1 clicked!");
+        },
+        click_2: function() {
+            alert("Button 2 clicked!");
+        },
+        click_3: function() {
+            alert("Button 3 clicked!");
+        },
+        click_4: function() {
+            alert("Button 4 clicked!");
+        },
+        click_5: function() {
+            alert("Button 5 clicked!");
+        },
+        click_6: function() {
+            alert("Button 6 clicked!");
+        },
+        click_7: function() {
+            alert("Button 7 clicked!");
+        }
+    };
+
+    this.renderButtons = function(buttonsData) {
+        buttonsData.forEach(function(button) {
+            let li = $('<li></li>');
+            let buttonElement = $('<button></button>')
+                .attr('title', button.name)
+                .append(`<i class="${button.iconClass}"></i>`);
+
+            // function control
+            if (this.functionMap[button.onClick]) {
+                buttonElement.on('click', this.functionMap[button.onClick].bind(this));
+            } else {
+                console.warn('Function not found for:', button.onClick);
+            }
+
+            li.append(buttonElement);
+            this.container.append(li);
+        }.bind(this));
+    };
+
+    this.loadButtonsFromJSON = function(jsonFilePath) {
+        $.ajax({
+            url: jsonFilePath,
+            method: 'GET',
+            dataType: 'json',
+            success: function(buttonsData) {
+                this.renderButtons(buttonsData);
+            }.bind(this),
+            error: function(xhr, status, error) {
+                console.error("Error loading buttons JSON:", status, error);
+            }
+        });
+    };
+}

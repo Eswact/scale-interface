@@ -13,6 +13,11 @@ input, button, textarea, select {
 p, h1, h2, h3, h4, h5, h6 {
     overflow-wrap: break-word;
 }
+ul, li {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
 /* reset css end */
 
 /* root start */
@@ -444,6 +449,7 @@ body {
     font-size: 1.25rem;
     font-weight: 600;
     margin-left: 20px;
+    max-width: 250px;
 }
 /* categoryList end */
 
@@ -738,6 +744,17 @@ body {
     #subCategoryContainer .subCategory img {
         display: none;
     }
+    #goBackCategory {
+        padding: 4px 8px;
+        top: -40px;
+    }
+    #goBackCategory button {
+        font-size: 2.25rem;
+    }
+    #goBackCategory span {
+        margin-left: 6px;
+        font-size: 1rem;
+    }
 }
 /* 1368x768 - 1024x720 */
 @media (max-width: 1367px) {
@@ -774,6 +791,17 @@ body {
     }
     #productDetailImg {
         border-radius: 10px;
+    }
+    #goBackCategory {
+        flex-direction: column-reverse;
+        top: -42px;
+    }
+    #goBackCategory button {
+        font-size: 2rem;
+    }
+    #goBackCategory span {
+        margin-bottom: 2px;
+        font-size: 1rem;
     }
 }
 /* mobile end */

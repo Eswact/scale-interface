@@ -1,0 +1,37 @@
+[
+    {
+        "name": "Button 1",
+        "iconClass": "fa-solid fa-bolt-lightning",
+        "onClick": "click_1"
+    },
+    {
+        "name": "Button 2",
+        "iconClass": "fa-solid fa-bolt-lightning",
+        "onClick": "click_2"
+    },
+    {
+        "name": "Button 3",
+        "iconClass": "fa-solid fa-bolt-lightning",
+        "onClick": "click_3"
+    },
+    {
+        "name": "Button 4",
+        "iconClass": "fa-solid fa-bolt-lightning",
+        "onClick": "click_4"
+    },
+    {
+        "name": "Button 5",
+        "iconClass": "fa-solid fa-bolt-lightning",
+        "onClick": "click_5"
+    },
+    {
+        "name": "Button 6",
+        "iconClass": "fa-solid fa-bolt-lightning",
+        "onClick": "click_6"
+    },
+    {
+        "name": "Button 7",
+        "iconClass": "fa-solid fa-bolt-lightning",
+        "onClick": "click_7"
+    }
+]
