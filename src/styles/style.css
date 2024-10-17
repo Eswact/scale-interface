@@ -582,7 +582,9 @@ body {
     --keypad-input-placeholder-color: #a0a0a0aa;
 
     width: 100%;
-    height: calc(100% - 130px);
+    height: 100%;
+    max-height: calc(100% - 80px);
+    min-height: calc(100% - 130px);
     font-size: 1.8rem;
 }
 #numpadContainer .keypad-header {
@@ -706,7 +708,8 @@ body {
         height: 60px;
     }
     #numpadContainer {
-        height: calc(100% - 110px);
+        max-height: calc(100% - 60px);
+        min-height: calc(100% - 110px);
     }
 }
 /* 1600x900 - 1368x768 */
