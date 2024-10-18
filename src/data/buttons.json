@@ -25,7 +25,7 @@
         "onClick": "click_5"
     },
     {
-        "name": "Button 6",
+        "name": "Long Text 6",
         "iconClass": "fa-solid fa-bolt-lightning",
         "onClick": "click_6"
     },

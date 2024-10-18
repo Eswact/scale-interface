@@ -679,7 +679,7 @@ function AsideBarButtons(containerId, buttonsPerPage) {
             let li = $('<li></li>');
             let buttonElement = $('<button></button>')
                 .attr('title', button.name)
-                .append(`<i class="${button.iconClass}"></i>`);
+                .append(`<i class="${button.iconClass}"></i> <span class="threeDots">${button.name}</span>`);
 
             if (this.functionMap[button.onClick]) {
                 buttonElement.on('click', this.functionMap[button.onClick].bind(this));
@@ -692,9 +692,10 @@ function AsideBarButtons(containerId, buttonsPerPage) {
         }
 
         let remainingButtons = this.buttonsPerPage - (endIndex - startIndex);
+        console.log(remainingButtons)
         for (let i = 0; i < remainingButtons; i++) {
             let li = $('<li></li>');
-            let dummyButton = $('<button>.</button>').addClass('dummy-button');
+            let dummyButton = $('<button><i class="fa-solid fa-bolt-lightning"></i><span>.</span></button>').addClass('dummy-button');
             li.append(dummyButton);
             this.container.append(li);
         }
