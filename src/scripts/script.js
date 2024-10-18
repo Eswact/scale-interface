@@ -376,7 +376,7 @@ function setProductDetail(productId) {
     $('#productDetailName').html(selectedProduct.name);
     $('#productDetailPrice').html(convert2Price(selectedProduct.price));
     setUnitPrice(selectedProduct.price);
-    if ($('.keypad-header input').val() != '') $('.keypad-action-button-right').click();
+    if ($('.keypad-header input').val() != '' && confirmation_keypad._currentState == 'default') $('.keypad-action-button-right').click();
     calculateTotalAmount();
 }
 
