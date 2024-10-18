@@ -707,6 +707,9 @@ function AsideBarButtons(containerId, buttonsPerPage) {
             method: 'GET',
             dataType: 'json',
             success: function(buttonsData) {
+                this.container.empty();
+                $(".buttonsUp, .buttonsDown").remove();
+
                 this.buttonsData = buttonsData;
                 this.totalPages = Math.ceil(this.buttonsData.length / this.buttonsPerPage);
 
@@ -732,8 +735,6 @@ function AsideBarButtons(containerId, buttonsPerPage) {
     };
 
     this.createArrows = function() {
-        $(".buttonsUp, .buttonsDown").remove(); 
-
         let upArrow = $('<button class="buttonsUp buttonsPagination"><i class="fa-solid fa-caret-up"></i></button>');
         let downArrow = $('<button class="buttonsDown buttonsPagination"><i class="fa-solid fa-caret-down"></i></button>');
         upArrow.on('click', function() {
