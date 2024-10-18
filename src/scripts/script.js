@@ -25,7 +25,12 @@
     NOT: convert2Kg(), convert2Price(), reverseConvertFromKg() ve reverseConvertFromPrice() Fonksiyonları ile değer dönüşümleri yapılır.
     calculateTotalAmount() => Anlık olarak toplam tutarı hesaplar (birim fiyat * kg/adet)
     filterByBarcode(value) => Aldığı değere göre ürünler arasında barkod filtrelemesi yapar ve bu değeri içeren barkodları getirir.
-
+    AsideBarButtons(containerId, buttonsPerPage) => Butonları belirtilen container'da sayfa bazlı olarak gösterir.
+    loadButtonsFromJSON(jsonFilePath) => JSON dosyasından butonları yükler ve container'a ekler.
+    renderButtons() => Mevcut sayfadaki butonları container'da listeler. Eksik buton varsa, boş butonlarla tamamlar.
+    handlePagination(direction) => Yön tuşlarına göre sayfa değiştirme işlemi yapar. 'up' veya 'down' yönünde kullanılabilir.
+    createArrows() => Aşağı ve yukarı ok butonlarını oluşturur ve container'a ekler.
+    KeypadJS kullanılarak keypad oluşturuldu.
 
     EN -- Documentation
     getFirstView() => The first view is created.
@@ -53,6 +58,12 @@
     NOTE: Value conversions are made using the functions convert2Kg(), convert2Price(), reverseConvertFromKg() and reverseConvertFromPrice().
     calculateTotalAmount(): Calculates the total amount in real-time (unit price * weight/quantity).
     filterByBarcode(value): Filters the products based on the given value and returns the barcodes that contain this value.
+    AsideBarButtons(containerId, buttonsPerPage) => Displays buttons paginated inside the specified container.
+    loadButtonsFromJSON(jsonFilePath) => Loads buttons from a JSON file and appends them to the container.
+    renderButtons() => Renders buttons on the current page. If there are missing buttons, fills them with empty placeholders.
+    handlePagination(direction) => Handles pagination based on direction keys. Can be used with 'up' or 'down' direction.
+    createArrows() => Creates up and down arrow buttons and appends them to the container.
+    Keypad was created using KeypadJS.
 */
 
 
@@ -66,6 +77,7 @@ let barCount;
 let bar2Count;
 let baseFont;
 let sellerman;
+let buttonCount;
 
 // selected product
 let selectedProductId = null;
@@ -93,7 +105,7 @@ let printMemory = [];
 
 // css injection
 var options = localStorage.getItem("options");
-var default_options = { columnCount: 4, rowCount: 3, barCount: 5, bar2Count: 5, baseFont: 16, sellerman: false, fullScreen: true };
+var default_options = { columnCount: 4, rowCount: 3, barCount: 5, bar2Count: 5, baseFont: 16, sellerman: false, buttonCount: 5, fullScreen: true };
 function getOptions() {
     if (options === undefined || options === null) {
         options = default_options;
@@ -119,6 +131,8 @@ function applyOptions() {
     baseFont = options.baseFont;
     sellerman = options.sellerman ? "flex" : "none";
     options.fullScreen ? $('#content').addClass('full') : $('#content').removeClass('full');
+    const asideBar = new AsideBarButtons("#buttonsSide nav ul", options.buttonCount);
+    asideBar.loadButtonsFromJSON('././data/buttons.json');
 
     inject();
 }
@@ -145,6 +159,7 @@ function inject() {
                             --bar-count: ${barCount};
                             --bar2-count: ${bar2Count};
                             --sellerman: ${sellerman};
+                            --buttonCount: ${buttonCount};
                         }
                     </style>`
     $("head").append(newcss)
@@ -408,9 +423,6 @@ $(document).ready(function () {
     getOptions();
     fetchCategories();
 
-    const asideBar = new AsideBarButtons("#buttonsSide nav ul");
-    asideBar.loadButtonsFromJSON('././data/buttons.json');
-
     // main category click event
     $('#mainCategoryContainer').on('click', '.mainCategory', function () {
         let categoryId = JSON.stringify($(this).data('categoryid'));
@@ -619,8 +631,12 @@ var confirmation_keypad = Keypad.generateFrom("#numpadContainer", [
 confirmation_keypad.setState("default");
 
 // asidebar buttons
-function AsideBarButtons(containerId) {
+function AsideBarButtons(containerId, buttonsPerPage) {
     this.container = $(containerId);
+    this.buttonsPerPage = buttonsPerPage || 5;
+    this.currentPage = 0;
+    this.totalPages = 0;
+    this.buttonsData = [];
 
     this.functionMap = {
         click_1: function() {
@@ -643,17 +659,28 @@ function AsideBarButtons(containerId) {
         },
         click_7: function() {
             alert("Button 7 clicked!");
+        },
+        click_8: function() {
+            alert("Button 8 clicked!");
+        },
+        click_9: function() {
+            alert("Button 9 clicked!");
         }
     };
 
-    this.renderButtons = function(buttonsData) {
-        buttonsData.forEach(function(button) {
+    this.renderButtons = function() {
+        this.container.empty();
+
+        let startIndex = this.currentPage * this.buttonsPerPage;
+        let endIndex = Math.min(startIndex + this.buttonsPerPage, this.buttonsData.length);
+
+        for (let i = startIndex; i < endIndex; i++) {
+            let button = this.buttonsData[i];
             let li = $('<li></li>');
             let buttonElement = $('<button></button>')
                 .attr('title', button.name)
                 .append(`<i class="${button.iconClass}"></i>`);
 
-            // function control
             if (this.functionMap[button.onClick]) {
                 buttonElement.on('click', this.functionMap[button.onClick].bind(this));
             } else {
@@ -662,7 +689,15 @@ function AsideBarButtons(containerId) {
 
             li.append(buttonElement);
             this.container.append(li);
-        }.bind(this));
+        }
+
+        let remainingButtons = this.buttonsPerPage - (endIndex - startIndex);
+        for (let i = 0; i < remainingButtons; i++) {
+            let li = $('<li></li>');
+            let dummyButton = $('<button>.</button>').addClass('dummy-button');
+            li.append(dummyButton);
+            this.container.append(li);
+        }
     };
 
     this.loadButtonsFromJSON = function(jsonFilePath) {
@@ -671,11 +706,43 @@ function AsideBarButtons(containerId) {
             method: 'GET',
             dataType: 'json',
             success: function(buttonsData) {
-                this.renderButtons(buttonsData);
+                this.buttonsData = buttonsData;
+                this.totalPages = Math.ceil(this.buttonsData.length / this.buttonsPerPage);
+
+                if (this.totalPages > 1) {
+                    this.createArrows();
+                }
+
+                this.renderButtons();
             }.bind(this),
             error: function(xhr, status, error) {
                 console.error("Error loading buttons JSON:", status, error);
             }
         });
+    };
+
+    this.handlePagination = function(direction) {
+        if (direction === 'up' && this.currentPage > 0) {
+            this.currentPage--;
+        } else if (direction === 'down' && this.currentPage < this.totalPages - 1) {
+            this.currentPage++;
+        }
+        this.renderButtons();
+    };
+
+    this.createArrows = function() {
+        $(".buttonsUp, .buttonsDown").remove(); 
+
+        let upArrow = $('<button class="buttonsUp buttonsPagination"><i class="fa-solid fa-caret-up"></i></button>');
+        let downArrow = $('<button class="buttonsDown buttonsPagination"><i class="fa-solid fa-caret-down"></i></button>');
+        upArrow.on('click', function() {
+            this.handlePagination('up');
+        }.bind(this));
+
+        downArrow.on('click', function() {
+            this.handlePagination('down');
+        }.bind(this));
+        this.container.before(upArrow);
+        this.container.after(downArrow);
     };
 }

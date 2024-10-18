@@ -45,6 +45,7 @@ ul, li {
     --bar2-count: 5;
     --bar-count: 5;
     --sellerman: "none";
+    --button-count: 5;
 }
 /* root end */
 
@@ -150,6 +151,13 @@ body {
     background-color: transparent;
     color: white;
     margin-top: 10px;
+}
+#buttonsSide nav button.buttonsPagination {
+    color: var(--active-color);
+    font-size: 3rem;
+}
+.dummy-button {
+    visibility: hidden;
 }
 /* buttonsSide end */
 
@@ -754,6 +762,12 @@ body {
     #goBackCategory span {
         margin-left: 6px;
         font-size: 1rem;
+    }
+    #buttonsSide {
+        padding: 24px 4px 24px 4px;
+    }
+    #buttonsSide nav button {
+        margin-top: 6px;
     }
 }
 /* 1368x768 - 1024x720 */

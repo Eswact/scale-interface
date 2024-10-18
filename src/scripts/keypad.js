@@ -1,12 +1,5 @@
 /** KeypadJS By Bekobi @2022-01 */
 
-/** 
- * TODO
- * 
- * show_cursor
- * error handling
- * 
-*/
 var HTML_MOD_TYPES = {
     DEFAULT: 0,
     EREN: 1,

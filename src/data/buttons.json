@@ -33,5 +33,15 @@
         "name": "Button 7",
         "iconClass": "fa-solid fa-bolt-lightning",
         "onClick": "click_7"
+    },
+    {
+        "name": "Button 8",
+        "iconClass": "fa-solid fa-bolt-lightning",
+        "onClick": "click_8"
+    },
+    {
+        "name": "Button 9",
+        "iconClass": "fa-solid fa-bolt-lightning",
+        "onClick": "click_9"
     }
 ]
