@@ -161,6 +161,8 @@
     width: 33.33%;
     height: 25%;
 }
-.keypad-grid .keypad-number-buttons .keypad-button.keypad-action-button-left {
-    width: 66.66%;
+.keypad-grid .keypad-number-buttons #printProductButton {
+    background-color: transparent;
+    border-color: #000;
+    font-size: 0.8em;
 }

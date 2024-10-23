@@ -205,9 +205,13 @@ async function fetchCategories() {
 function renderProducts(page) {
     resetProductDetail();
 
+    let favProducts = products.filter(product => product.isFav).sort((a, b) => a.favOrder - b.favOrder);
+    let nonFavProducts = products.filter(product => !product.isFav);
+    let sortedProducts = [...favProducts, ...nonFavProducts];
+
     const startIndex = (page - 1) * cardsPerPage;
     const endIndex = page * cardsPerPage;
-    const productsToShow = products.slice(startIndex, endIndex);
+    const productsToShow = sortedProducts.slice(startIndex, endIndex);
 
     $('#cardContainer').empty();
     productsToShow.forEach(product => {
@@ -375,6 +379,8 @@ function setProductDetail(productId) {
     $('#productDetailBarcode').html(selectedProduct.barcode);
     $('#productDetailName').html(selectedProduct.name);
     $('#productDetailPrice').html(convert2Price(selectedProduct.price));
+    if (selectedProduct.isFav) { $('#productDetailDiv').addClass('favorites'); }
+    else { $('#productDetailDiv').removeClass('favorites'); }
     setUnitPrice(selectedProduct.price);
     if ($('.keypad-header input').val() != '' && confirmation_keypad._currentState == 'default') $('.keypad-action-button-right').click();
     calculateTotalAmount();
@@ -415,6 +421,10 @@ function filterByBarcode(value) {
 
 function calculateTotalAmount() {
     setAmount(getWeighed() * getUnitPrice());
+}
+
+function getFavorites() {
+    console.log(categories.filter(x => x.isFav == true).sort((a, b) => a.favOrder - b.favOrder));
 }
 
 // ready
@@ -494,6 +504,27 @@ $(document).ready(function () {
     $('#memoryProductButton').click(function() {
         if (selectedProductId != null && printMemory.every(x => x != selectedProductId)) {
             printMemory.push(selectedProductId);
+        }
+    });
+    $('#addFavoritesButton').click(function() {
+        if (selectedProductId != null) {
+            categories.find(x => x.id == selectedProductId).isFav = true;
+            let maxFavOrder = Math.max(0, ...categories.filter(x => x.isFav).map(x => x.favOrder || 0));
+            categories.find(x => x.id == selectedProductId).favOrder = maxFavOrder + 1;
+            $('#productDetailDiv').addClass('favorites');
+
+            // save new categories request
+        }
+    });
+    $('#removeFavoritesButton').click(function() {
+        if (selectedProductId != null) {
+            categories.find(x => x.id == selectedProductId).isFav = false;
+            let otherFavorites = categories.filter(x => parseInt(x.favOrder) > parseInt(categories.find(x => x.id == selectedProductId).favOrder));
+            otherFavorites.map(function(thisCategory) { thisCategory.favOrder = parseInt(thisCategory.favOrder) - 1 });
+            categories.find(x => x.id == selectedProductId).favOrder = null;
+            $('#productDetailDiv').removeClass('favorites');
+
+            // save new categories request
         }
     });
     $('#printProductButton').click(function() {

@@ -106,6 +106,7 @@ Keypad.prototype = {
                                         <button class="keypad-numeric-button keypad-button">3</button>
                                         <button class="keypad-action-button-left keypad-button">,</button>
                                         <button class="keypad-numeric-button keypad-button">0</button>
+                                        <button title="yazdır" id="printProductButton" class="keypad-button"><i class="fa-solid fa-print" style="font-family: \'FontAwesome\';"></i></button>
                                     </div>
                                     <div class="keypad-right-buttons">
                                         <button class="keypad-delete-button keypad-button"><i class="fa fa-arrow-left" style="font-family: \'FontAwesome\';"></i></button>
