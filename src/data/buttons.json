@@ -1,47 +1,18 @@
 [
     {
-        "name": "Button 1",
-        "iconClass": "fa-solid fa-bolt-lightning",
-        "onClick": "click_1"
+        "name": "Favoriler",
+        "iconClass": "fa-solid fa-heart",
+        "onClick": "open_favorites",
+        "isModal": true,
+        "modalWidth": 600,
+        "modalHeight": 720
     },
     {
-        "name": "Button 2",
-        "iconClass": "fa-solid fa-bolt-lightning",
-        "onClick": "click_2"
-    },
-    {
-        "name": "Button 3",
-        "iconClass": "fa-solid fa-bolt-lightning",
-        "onClick": "click_3"
-    },
-    {
-        "name": "Button 4",
-        "iconClass": "fa-solid fa-bolt-lightning",
-        "onClick": "click_4"
-    },
-    {
-        "name": "Button 5",
-        "iconClass": "fa-solid fa-bolt-lightning",
-        "onClick": "click_5"
-    },
-    {
-        "name": "Long Text 6",
-        "iconClass": "fa-solid fa-bolt-lightning",
-        "onClick": "click_6"
-    },
-    {
-        "name": "Button 7",
-        "iconClass": "fa-solid fa-bolt-lightning",
-        "onClick": "click_7"
-    },
-    {
-        "name": "Button 8",
-        "iconClass": "fa-solid fa-bolt-lightning",
-        "onClick": "click_8"
-    },
-    {
-        "name": "Button 9",
-        "iconClass": "fa-solid fa-bolt-lightning",
-        "onClick": "click_9"
+        "name": "Askıya Al",
+        "iconClass": "fa-regular fa-clock",
+        "onClick": "suspend",
+        "isModal": false,
+        "modalWidth": null,
+        "modalHeight": null
     }
 ]

@@ -423,8 +423,30 @@ function calculateTotalAmount() {
     setAmount(getWeighed() * getUnitPrice());
 }
 
-function getFavorites() {
-    console.log(categories.filter(x => x.isFav == true).sort((a, b) => a.favOrder - b.favOrder));
+function closeModalE() {
+    $('.modalE').removeClass('show');
+}
+
+function openAsideButtonsModal(buttonProps) {
+    let currentButtonProps;
+    let defaultButtonProps = {name: '', iconClass: '', modalWidth: 400, modalHeight: 400};
+    if (buttonProps) { currentButtonProps = Object.assign(defaultButtonProps, buttonProps); }
+    else { currentButtonProps = defaultButtonProps; }
+    $('#asideButtonsModal .modalBg .modalHeader .modalInfo h2').text(currentButtonProps.name);
+    $('#asideButtonsModal .modalBg .modalHeader .modalInfo i').attr('class', currentButtonProps.iconClass);
+    $('#asideButtonsModal .modalBg').css({
+        "width": `${currentButtonProps.modalWidth}px`,
+        "height": `${currentButtonProps.modalHeight}px`
+    });
+    $('#asideButtonsModal').addClass('show');
+}
+function fillAsideButtonsModal(bodyHtml, footerHtml) {
+    if(bodyHtml) $('#asideButtonsModal .modalBg .modalBody').html(bodyHtml);
+    if(footerHtml) $('#asideButtonsModal .modalBg .modalFooter').html(footerHtml);
+}
+function resetAsideButtonsModal() {
+    $('#asideButtonsModal .modalBg .modalBody').html('');
+    $('#asideButtonsModal .modalBg .modalFooter').html('');
 }
 
 // ready
@@ -670,34 +692,34 @@ function AsideBarButtons(containerId, buttonsPerPage) {
     this.buttonsData = [];
 
     this.functionMap = {
-        click_1: function() {
-            alert("Button 1 clicked!");
+        open_favorites: async function() {
+            let favorites = categories.filter(x => x.isFav == true).sort((a, b) => a.favOrder - b.favOrder);
+            let favotireList = favorites.map((fav, index) => {
+                return `<li class="favorite-item" data-id="${fav.id}">
+                            <input type="number" class="fav-order-input" value="${fav.favOrder}" min="1" />
+                            <span class="fav-name">${fav.name}</span>
+                        </li>`;
+            }).join('');
+            let bodyHtml = `<ul id="favoritesList" class="sortable">${favotireList}</ul>`;
+            let footerHtml = `<button id="saveFavoritesOrder" class="saveButton">Kaydet</button>`;
+            fillAsideButtonsModal(bodyHtml, footerHtml);
+
+            Sortable.create(document.getElementById('favoritesList'), {
+                animation: 150,
+                handle: '.favorite-item',
+                // onEnd: function (evt) {
+                //     updateOrderNumbers();
+                // }
+            });
+
+            $('#saveFavoritesOrder').on('click', function() {
+                saveFavoritesOrder();
+            });
         },
-        click_2: function() {
-            alert("Button 2 clicked!");
+        suspend: async function() {
+            console.log(printMemory);
         },
-        click_3: function() {
-            alert("Button 3 clicked!");
-        },
-        click_4: function() {
-            alert("Button 4 clicked!");
-        },
-        click_5: function() {
-            alert("Button 5 clicked!");
-        },
-        click_6: function() {
-            alert("Button 6 clicked!");
-        },
-        click_7: function() {
-            alert("Button 7 clicked!");
-        },
-        click_8: function() {
-            alert("Button 8 clicked!");
-        },
-        click_9: function() {
-            alert("Button 9 clicked!");
-        }
-    };
+    };    
 
     this.renderButtons = function() {
         this.container.empty();
@@ -713,10 +735,27 @@ function AsideBarButtons(containerId, buttonsPerPage) {
                 .append(`<i class="${button.iconClass}"></i> <span class="threeDots">${button.name}</span>`);
 
             if (this.functionMap[button.onClick]) {
-                buttonElement.on('click', this.functionMap[button.onClick].bind(this));
-            } else {
-                console.warn('Function not found for:', button.onClick);
-            }
+                if (button.isModal) {
+                    buttonElement.on('click', (function(button) {
+                        return async () => {
+                            let buttonProps = { name: button.name, iconClass: button.iconClass, modalWidth: button.modalWidth, modalHeight: button.modalHeight }
+                            openAsideButtonsModal(buttonProps);
+                            $('#asideButtonsModal').addClass('load');
+    
+                            try {
+                                await this.functionMap[button.onClick]();
+                                $('#asideButtonsModal').removeClass('load');
+                            } catch (error) {
+                                $('#asideButtonsModal').removeClass('load');
+                                $('#asideButtonsModal').removeClass('show');
+                                console.error(error);
+                            }
+                        };
+                    }).bind(this)(button));
+                }
+                else { buttonElement.on('click', this.functionMap[button.onClick].bind(this)); }
+            } 
+            else { console.warn('Function not found for:', button.onClick); }
 
             li.append(buttonElement);
             this.container.append(li);

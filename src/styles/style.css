@@ -84,6 +84,10 @@ body {
     -webkit-line-clamp: 2;
     line-clamp: 2;
 }
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
 /* general end */
 
 /* content start */
@@ -662,6 +666,119 @@ body {
     font-size: 1.25rem;
 }
 /* numpad end */
+
+/* modalE start */
+.modalE {
+    z-index: 20;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 20, 0.5);
+    display: none;
+    justify-content: center;
+    align-items: center;
+}
+.modalE.show {
+    display: flex;
+}
+.modalE .modalBg {
+    position: relative;
+    max-width: 100%;
+    max-height: 100%;
+    background-color: white;
+    border: 1px solid rgb(221, 221, 221);
+    border-radius: 10px;
+    padding: 20px;
+    margin: 4px;
+    box-shadow: 0 1px 1px 1px rgba(221, 221, 221, 0.5);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+.modalE .modalBg .modalHeader, .modalE .modalBg .modalBody, .modalE .modalBg .modalFooter {
+    z-index: 20;
+    width: 100%;
+}
+.modalE .modalBg .modalHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+.modalE .modalBg .modalHeader .modalInfo {
+    display: flex;
+    align-items: center;
+    color: var(--first-color);
+}
+.modalE .modalBg .modalHeader .modalInfo i {
+    font-size: 2rem;
+    margin-right: 10px;
+}
+.modalE .modalBg .modalHeader .modalInfo h2 {
+    font-size: 1.75rem;
+    font-weight: 600;
+}
+.modalE .modalBg .modalBody {
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+    margin-top: 10px;
+} 
+.modalE .modalBg .modalFooter {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+}
+.modalE .modalBg .modalFooter button {
+    width: 100%;
+    padding: 6px;
+    margin: 0 6px;
+    border-radius: 6px;
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    font-family: "Orbitron", sans-serif;
+}
+.modalE .modalBg .modalFooter button.saveButton {
+    color: white;
+    border: 1px solid var(--first-color);
+    background-color: var(--first-color);
+    box-shadow: 0 1px 1px 1px var(--first-color-25);
+}
+.modalE .modalBg .loader {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 21;
+    margin: 20px; /* .modalBg padding */
+    width: calc(100% - 40px);
+    height: calc(100% - 40px);
+    background-color: white;
+    display: none;
+    justify-content: center;
+    align-items: center;
+}
+.modalE .modalBg .loader i {
+    font-size: 4rem;
+    color: var(--first-color);
+    -webkit-animation: spin 1.5s linear infinite;
+    animation: spin 1.5s linear infinite;
+}
+.modalE.load .modalBg .loader {
+    display: flex;
+}
+.closeModalE {
+    font-size: 2.25rem;
+    padding: 0 12px;
+    background-color: transparent;
+    border: none;
+    color: var(--red);
+}
+/* modalE end */
 
 /* resolution-warning start */
 #resolution-warning {

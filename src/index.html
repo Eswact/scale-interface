@@ -16,6 +16,7 @@
 </head>
 <body>
     <main id="content">
+        <!-- aside -->
         <aside id="buttonsSide">
             <nav>
                 <div id="buttonsDiv">
@@ -29,6 +30,7 @@
                 </div>
             </nav>
         </aside>
+        <!-- election side -->
         <div id="electionSide">
             <div id="topBar">
                 <div class="generalInfos">
@@ -91,6 +93,7 @@
                 </div>
             </div>
         </div>
+        <!-- transaction side -->
         <aside id="transactionSide">
             <div id="productDetail">
                 <div id="productDetailDiv">
@@ -130,6 +133,28 @@
                 </div>
             </div>
         </aside>
+
+        <!-- modals -->
+        <div id="asideButtonsModal" class="modalE">
+            <div class="modalBg">
+                <!-- loader -->
+                <div class="loader">
+                    <i class="fa-solid fa-spinner"></i>
+                </div>
+                <!-- header -->
+                <div class="modalHeader">
+                    <div class="modalInfo">
+                        <i></i>
+                        <h2></h2>
+                    </div>
+                    <button onclick="closeModalE()" class="closeModalE"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+                <!-- body -->
+                <div class="modalBody"></div>
+                <!-- footer -->
+                <div class="modalFooter"></div>
+            </div>
+        </div>
     </main>
 
     <div id="resolution-warning">
@@ -138,6 +163,7 @@
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.13.0/Sortable.min.js" integrity="sha512-5x7t0fTAVo9dpfbp3WtE2N6bfipUwk7siViWncdDoSz2KwOqVC1N9fDxEOzk0vTThOua/mglfF8NO7uVDLRC8Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="scripts/keypad.js"></script>
     <script src="scripts/script.js"></script>
 </body>
