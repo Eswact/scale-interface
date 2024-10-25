@@ -144,13 +144,19 @@ function inject() {
                         }
                         body {
                             --first-color: rgb(18, 55, 64);
+                            --first-color-25: rgba(18, 55, 64, 0.25);
+                            --first-color-75: rgba(18, 55, 64, 0.75);
                             --second-color: rgb(84, 154, 171);
+                            --second-color-50: rgba(84, 154, 171, 0.55);
                             --second-color-25: rgba(84, 154, 171, 0.25);
+                            --second-color-10: rgba(84, 154, 171, 0.10);
                             --third-color: rgb(176, 215, 225);
                             --third-color-50: rgba(176, 215, 225, 0.5);
                             --third-color-25: rgba(176, 215, 225, 0.25);
                             --active-color: rgb(241, 128, 45);
                             --active-color-25: rgb(241, 128, 45, 0.25);
+                            --scale-color: rgb(57, 239, 57);
+                            --scale-bg: rgb(41, 31, 31);
                             --red: rgb(236, 54, 67);
                             --green: rgb(67, 160, 71);
                         
@@ -449,6 +455,73 @@ function resetAsideButtonsModal() {
     $('#asideButtonsModal .modalBg .modalFooter').html('');
 }
 
+function createFavoritesList(favorites) {
+    favorites = favorites.sort((a, b) => a.favOrder - b.favOrder);
+    let favotireList = favorites.map((fav, index) => {
+        return `<li class="favorite-item" data-id="${fav.id}" data-order=${fav.favOrder}>
+                    <input type="number" class="fav-order-input" value="${fav.favOrder}" min="1" />
+                    <span class="fav-name three-dots">${fav.name}</span>
+                </li>`;
+    }).join('');
+    $('#favoritesList').html(favotireList);
+
+    $('.fav-order-input').off('blur').on('blur', function() {
+        const input = $(this);
+        const currentItemId = JSON.stringify(input.closest('.favorite-item').data('id'));
+        const currentItem = favorites.find(fav => fav.id == currentItemId);
+        const oldOrder = currentItem.favOrder;
+        const newOrder = parseInt(input.val());
+
+        //controls
+        if (isNaN(newOrder) || newOrder <= 0) {
+            input.val(oldOrder);
+            return;
+        }
+        if (newOrder > favorites.length) {
+            input.val(favorites.length);
+        }
+
+        // current
+        currentItem.favOrder = parseInt(input.val());
+
+        // others
+        favorites.forEach(fav => {
+            if (fav.id !== currentItemId) {
+                if (currentItem.favOrder < oldOrder && fav.favOrder >= currentItem.favOrder && fav.favOrder < oldOrder) {
+                    fav.favOrder += 1;
+                }
+                if (currentItem.favOrder > oldOrder && fav.favOrder <= currentItem.favOrder && fav.favOrder > oldOrder) {
+                    fav.favOrder -= 1;
+                }
+            }
+        });
+
+        createFavoritesList(favorites);
+    });
+}
+
+function updateOrderNumbers(evt) {
+    let oldIndex = evt.oldIndex + 1;
+    let newIndex = evt.newIndex + 1;
+    let $thisIndex = $(`.favorite-item[data-order=${oldIndex}]`);
+    
+    if (newIndex > oldIndex) {
+        for (let i = oldIndex + 1; i <= newIndex; i++) {
+            $(`.favorite-item[data-order=${i}]`).find('input').val(i - 1);
+            $(`.favorite-item[data-order=${i}]`).attr('data-order', i - 1);
+        }
+    } 
+    if (newIndex < oldIndex) {
+        for (let i = oldIndex - 1; i >= newIndex; i--) {
+            $(`.favorite-item[data-order=${i}]`).find('input').val(i + 1);
+            $(`.favorite-item[data-order=${i}]`).attr('data-order', i + 1);
+        }
+    }
+    
+    $thisIndex.find('input').val(newIndex);
+    $thisIndex.attr('data-order', newIndex);
+}
+
 // ready
 $(document).ready(function () {
     // get options && data
@@ -609,7 +682,7 @@ function convert2Price(value) {
         str = str.replace(/\./, "x");
         str = str.replace(/,/g, ".");
         str = str.replace(/x/, ",");
-        return str + "₺";
+        return str + " ₺";
     }
     else {
         return "0,00 ₺";
@@ -639,7 +712,7 @@ function reverseConvertFromKg(value) {
 }
 function reverseConvertFromPrice(value) {
     if (value != null && value != undefined) {
-        let str = value.replace("₺", "");
+        let str = value.replace(" ₺", "");
         str = str.replace(/\./g, "");
         str = str.replace(/,/, ".");
         return parseFloat(str);
@@ -694,22 +767,21 @@ function AsideBarButtons(containerId, buttonsPerPage) {
     this.functionMap = {
         open_favorites: async function() {
             let favorites = categories.filter(x => x.isFav == true).sort((a, b) => a.favOrder - b.favOrder);
-            let favotireList = favorites.map((fav, index) => {
-                return `<li class="favorite-item" data-id="${fav.id}">
-                            <input type="number" class="fav-order-input" value="${fav.favOrder}" min="1" />
-                            <span class="fav-name">${fav.name}</span>
-                        </li>`;
-            }).join('');
-            let bodyHtml = `<ul id="favoritesList" class="sortable">${favotireList}</ul>`;
+            let bodyHtml = `<ul id="favoritesList" class="sortable"></ul>`;
             let footerHtml = `<button id="saveFavoritesOrder" class="saveButton">Kaydet</button>`;
             fillAsideButtonsModal(bodyHtml, footerHtml);
+            createFavoritesList(favorites);
 
             Sortable.create(document.getElementById('favoritesList'), {
                 animation: 150,
+                // swap: true,
+                // swapClass: "highlight",
                 handle: '.favorite-item',
-                // onEnd: function (evt) {
-                //     updateOrderNumbers();
-                // }
+                onEnd: function (evt) {
+                    console.log(evt);
+                    
+                    updateOrderNumbers(evt);
+                }
             });
 
             $('#saveFavoritesOrder').on('click', function() {
@@ -762,7 +834,6 @@ function AsideBarButtons(containerId, buttonsPerPage) {
         }
 
         let remainingButtons = this.buttonsPerPage - (endIndex - startIndex);
-        console.log(remainingButtons)
         for (let i = 0; i < remainingButtons; i++) {
             let li = $('<li></li>');
             let dummyButton = $('<button><i class="fa-solid fa-bolt-lightning"></i><span>.</span></button>').addClass('dummy-button');
