@@ -103,6 +103,8 @@ let backArray = [];
 
 let printMemory = [];
 
+let sortableFavorites;
+
 // css injection
 var options = localStorage.getItem("options");
 var default_options = { columnCount: 4, rowCount: 3, barCount: 5, bar2Count: 5, baseFont: 16, sellerman: false, buttonCount: 5, fullScreen: true };
@@ -465,7 +467,13 @@ function createFavoritesList(favorites) {
     }).join('');
     $('#favoritesList').html(favotireList);
 
+    $('.fav-order-input').on('focus', function() {
+        sortableFavorites.option('disabled', true);
+    });
+
     $('.fav-order-input').off('blur').on('blur', function() {
+        sortableFavorites.option('disabled', false);
+
         const input = $(this);
         const currentItemId = JSON.stringify(input.closest('.favorite-item').data('id'));
         const currentItem = favorites.find(fav => fav.id == currentItemId);
@@ -520,6 +528,22 @@ function updateOrderNumbers(evt) {
     
     $thisIndex.find('input').val(newIndex);
     $thisIndex.attr('data-order', newIndex);
+}
+
+function saveFavoritesOrder() {
+    $('.favorite-item').each(function() {
+        let id = JSON.stringify($(this).data('id'));
+        let favOrder = parseInt($(this).data('order'), 10);
+        let category = categories.find(cat => cat.id == id);
+        if (category) {
+            category.favOrder = favOrder;
+        }
+    });
+    
+    currentPage = 1;
+    renderProducts(currentPage);
+
+    closeModalE();
 }
 
 // ready
@@ -772,14 +796,12 @@ function AsideBarButtons(containerId, buttonsPerPage) {
             fillAsideButtonsModal(bodyHtml, footerHtml);
             createFavoritesList(favorites);
 
-            Sortable.create(document.getElementById('favoritesList'), {
+            sortableFavorites = Sortable.create(document.getElementById('favoritesList'), {
                 animation: 150,
                 // swap: true,
                 // swapClass: "highlight",
                 handle: '.favorite-item',
                 onEnd: function (evt) {
-                    console.log(evt);
-                    
                     updateOrderNumbers(evt);
                 }
             });
