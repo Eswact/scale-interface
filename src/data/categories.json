@@ -640,8 +640,8 @@
         "barcode": 111222333444,
         "price": 12.99,
         "image": "https://img-bizimtoptan.mncdn.com/Content/Images/Thumbs/2001942.jpeg",
-        "isFav": false,
-        "favOrder": null
+        "isFav": true,
+        "favOrder": 1
     },
     {
         "id": "47",

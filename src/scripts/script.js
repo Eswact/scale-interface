@@ -104,6 +104,7 @@ let backArray = [];
 let printMemory = [];
 
 let sortableFavorites;
+let tempRemovedFavorites = [];
 
 // css injection
 var options = localStorage.getItem("options");
@@ -450,8 +451,8 @@ function openAsideButtonsModal(buttonProps) {
     $('#asideButtonsModal').addClass('show');
 }
 function fillAsideButtonsModal(bodyHtml, footerHtml) {
-    if(bodyHtml) $('#asideButtonsModal .modalBg .modalBody').html(bodyHtml);
-    if(footerHtml) $('#asideButtonsModal .modalBg .modalFooter').html(footerHtml);
+    $('#asideButtonsModal .modalBg .modalBody').html(bodyHtml || '');
+    $('#asideButtonsModal .modalBg .modalFooter').html(footerHtml || '');
 }
 function resetAsideButtonsModal() {
     $('#asideButtonsModal .modalBg .modalBody').html('');
@@ -463,7 +464,11 @@ function createFavoritesList(favorites) {
     let favotireList = favorites.map((fav, index) => {
         return `<li class="favorite-item" data-id="${fav.id}" data-order=${fav.favOrder}>
                     <input type="number" class="fav-order-input" value="${fav.favOrder}" min="1" />
-                    <span class="fav-name three-dots">${fav.name}</span>
+                    <div>
+                        <span class="fav-barcode three-dots">[${fav.barcode}]</span>
+                        <span class="fav-name three-dots">${fav.name}</span>
+                    </div>
+                    <button class="removeFromFavoriteList ignore-elements"><i class="fa-solid fa-trash-can"></i></button>
                 </li>`;
     }).join('');
     $('#favoritesList').html(favotireList);
@@ -507,6 +512,33 @@ function createFavoritesList(favorites) {
 
         createFavoritesList(favorites);
     });
+
+    $('.removeFromFavoriteList').off('click').on('click', function(){
+        removedId = $(this).closest('.favorite-item').data('id');
+        tempRemovedFavorites.push(JSON.stringify(removedId));
+        currentFavoritesOrder = getCurrentFavoritesOrder(favorites);
+        removedFavOrder = currentFavoritesOrder.find(x => x.id == removedId).favOrder;
+        currentFavoritesOrder.splice(currentFavoritesOrder.findIndex(x => x.id == removedId),1);
+        currentFavoritesOrder.forEach(function(item,index){
+            if (item.favOrder > removedFavOrder) {
+                item.favOrder--;
+            }
+        });
+
+        createFavoritesList(currentFavoritesOrder);
+    });
+
+    function getCurrentFavoritesOrder(favorites) {
+        $('.favorite-item').each(function() {
+            let id = JSON.stringify($(this).data('id'));
+            let favOrder = parseInt($(this).data('order'), 10);
+            let category = favorites.find(cat => cat.id == id);
+            if (category) {
+                category.favOrder = favOrder;
+            }
+        });
+        return favorites
+    }
 }
 
 function updateOrderNumbers(evt) {
@@ -536,6 +568,17 @@ function updateOrderNumbers(evt) {
 }
 
 function saveFavoritesOrder() {
+    if (tempRemovedFavorites != '') {
+        tempRemovedFavorites.forEach(function(item, index){
+            let category = categories.find(cat => cat.id == item);
+            if (category) {
+                category.isFav = false;
+                category.favOrder = null;
+            }
+        });
+    }
+    tempRemovedFavorites = [];
+
     $('.favorite-item').each(function() {
         let id = JSON.stringify($(this).data('id'));
         let favOrder = parseInt($(this).data('order'), 10);
@@ -547,8 +590,22 @@ function saveFavoritesOrder() {
     
     currentPage = 1;
     renderProducts(currentPage);
-
     closeModalE();
+    alert("Değişiklikler gerçekleşti.");
+}
+
+function resetFavorites() {
+    if (confirm("Emin misiniz?") == true) {
+        categories.forEach(function(category, index) {
+            category.isFav = false;
+            category.favOrder = null;
+        });
+
+        currentPage = 1;
+        renderProducts(currentPage);
+        closeModalE();
+        alert("Tüm favoriler kaldırıldı.");
+    }
 }
 
 // ready
@@ -797,25 +854,37 @@ function AsideBarButtons(containerId, buttonsPerPage) {
 
     this.functionMap = {
         open_favorites: async function() {
+            tempRemovedFavorites = [];
+            let bodyHtml;
+            let footerHtml;
             let favorites = categories.filter(x => x.isFav == true).sort((a, b) => a.favOrder - b.favOrder);
-            let bodyHtml = `<ul id="favoritesList" class="sortable"></ul>`;
-            let footerHtml = `<button id="saveFavoritesOrder" class="saveButton">Kaydet</button>`;
+            console.log(favorites.length  > 0);
+            if (favorites.length > 0) {
+                bodyHtml = `<ul id="favoritesList" class="sortable"></ul>`;
+                footerHtml = `<button id="saveFavoritesOrder" onclick="saveFavoritesOrder()"  class="saveButton">Kaydet</button>
+                              <button id="resetFavorites" onclick="resetFavorites()" class="resetButton">Tümünü Kaldır</button>`;
+            }
+            else {
+                bodyHtml = `Favori ürününüz bulunmamaktadır.`;
+                footerHtml = `<button id="saveFavoritesOrder" onclick="saveFavoritesOrder()"  class="saveButton" disabled>Kaydet</button>
+                              <button id="resetFavorites" onclick="resetFavorites()" class="resetButton" disabled>Tümünü Kaldır</button>`;
+            }
             fillAsideButtonsModal(bodyHtml, footerHtml);
             createFavoritesList(favorites);
 
-            sortableFavorites = Sortable.create(document.getElementById('favoritesList'), {
-                animation: 150,
-                // swap: true,
-                // swapClass: "highlight",
-                handle: '.favorite-item',
-                onEnd: function (evt) {
-                    updateOrderNumbers(evt);
-                }
-            });
-
-            $('#saveFavoritesOrder').on('click', function() {
-                saveFavoritesOrder();
-            });
+            if (favorites.length > 0) {
+                sortableFavorites = Sortable.create(document.getElementById('favoritesList'), {
+                    animation: 150,
+                    // swap: true,
+                    // swapClass: "highlight",
+                    handle: '.favorite-item',
+                    ghostClass: 'ghost-item',
+                    filter: ".ignore-elements",
+                    onEnd: function(evt) {
+                        updateOrderNumbers(evt);
+                    }
+                });
+            }
         },
         suspend: async function() {
             console.log(printMemory);

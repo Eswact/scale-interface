@@ -332,7 +332,7 @@ body {
     left: 6px;
     top: 6px;
     font-size: 1.5rem;
-    color: var(--red);
+    color: var(--active-color);
 }
 #cardContainer .productCard .productName {
     font-family: "Krona One", sans-serif;
@@ -796,24 +796,34 @@ body {
 .modalE .modalBg .modalFooter {
     width: 100%;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
-    margin-top: 10px;
 }
 .modalE .modalBg .modalFooter button {
     width: 100%;
     padding: 6px;
-    margin: 0 6px;
+    margin: 10px 6px 0 0;
     border-radius: 6px;
     font-size: 18px;
     font-weight: 600;
     letter-spacing: 2px;
     font-family: "Orbitron", sans-serif;
 }
+.modalE .modalBg .modalFooter button:disabled {
+    opacity: 50%;
+    filter: grayscale(50%);
+}
 .modalE .modalBg .modalFooter button.saveButton {
     color: white;
     border: 1px solid var(--first-color);
     background-color: var(--first-color);
+    box-shadow: 0 1px 1px 1px var(--first-color-25);
+}
+.modalE .modalBg .modalFooter button.resetButton {
+    color: var(--first-color);
+    border: 1px solid var(--first-color);
+    background-color: white;
     box-shadow: 0 1px 1px 1px var(--first-color-25);
 }
 .modalE .modalBg .loader {
@@ -852,8 +862,9 @@ body {
     padding: 5px 10px 5px 5px;
 }
 #favoritesList .favorite-item {
+    position: relative;
     width: 100%;
-    padding: 10px 20px;
+    padding: 10px 50px 10px 20px;
     border-radius: 6px;
     border: 1px solid var(--first-color);
     background-color: white;
@@ -871,9 +882,30 @@ body {
     border: 1px solid #ddd;
     border-radius: 6px;
 }
-#favoritesList .favorite-item span {
+#favoritesList .favorite-item div {
+    max-width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+#favoritesList .favorite-item div span {
     font-size: 1.4rem;
     max-width: 100%;
+}
+#favoritesList .favorite-item div span:first-child {
+    max-width: 100%;
+    margin-bottom: 4px;
+    font-family: monospace;
+    font-size: 1.2rem;
+    letter-spacing: 2px;
+}
+#favoritesList .favorite-item .removeFromFavoriteList {
+    cursor: pointer;
+    position: absolute;
+    right: 12px;
+    font-size: 1.5rem;
+    border: none;
+    background-color: transparent;
+    color: var(--red);
 }
 /* favorite end start */
 
