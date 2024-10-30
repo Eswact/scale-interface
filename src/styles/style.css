@@ -323,6 +323,17 @@ body {
     flex-direction: column;
     width: 55%;
 }
+#cardContainer .productCard .fa-heart {
+    display: none;
+}
+#cardContainer .productCard.favorite .fa-heart {
+    display: block;
+    position: absolute;
+    left: 6px;
+    top: 6px;
+    font-size: 1.5rem;
+    color: var(--red);
+}
 #cardContainer .productCard .productName {
     font-family: "Krona One", sans-serif;
     font-size: calc(1.625rem / var(--column-count) * 4);

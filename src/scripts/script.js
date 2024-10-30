@@ -223,7 +223,8 @@ function renderProducts(page) {
 
     $('#cardContainer').empty();
     productsToShow.forEach(product => {
-        $('#cardContainer').append(`<div class="productCard" data-product="${product.id}">
+        $('#cardContainer').append(`<div class="productCard ${(product.isFav)?'favorite':''}" data-product="${product.id}">
+                                        <i class="fa-solid fa-heart"></i>
                                         <img src="${product.image}" />
                                         <div>
                                             <span class="productName truncatedText2" title="${product.name}">${product.name}</span>
@@ -631,6 +632,7 @@ $(document).ready(function () {
             let maxFavOrder = Math.max(0, ...categories.filter(x => x.isFav).map(x => x.favOrder || 0));
             categories.find(x => x.id == selectedProductId).favOrder = maxFavOrder + 1;
             $('#productDetailDiv').addClass('favorites');
+            $('.productCard.selected').addClass('favorite');
 
             // save new categories request
         }
@@ -642,6 +644,7 @@ $(document).ready(function () {
             otherFavorites.map(function(thisCategory) { thisCategory.favOrder = parseInt(thisCategory.favOrder) - 1 });
             categories.find(x => x.id == selectedProductId).favOrder = null;
             $('#productDetailDiv').removeClass('favorites');
+            $('.productCard.selected').removeClass('favorite');
 
             // save new categories request
         }
