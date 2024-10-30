@@ -513,6 +513,10 @@ function updateOrderNumbers(evt) {
     let oldIndex = evt.oldIndex + 1;
     let newIndex = evt.newIndex + 1;
     let $thisIndex = $(`.favorite-item[data-order=${oldIndex}]`);
+
+    if (newIndex > $('.favorite-item').length) {
+        newIndex = $('.favorite-item').length;
+    }
     
     if (newIndex > oldIndex) {
         for (let i = oldIndex + 1; i <= newIndex; i++) {

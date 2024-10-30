@@ -856,6 +856,7 @@ body {
     padding: 10px 20px;
     border-radius: 6px;
     border: 1px solid var(--first-color);
+    background-color: white;
     margin-bottom: 10px;
     display: flex;
     align-items: center;
@@ -866,6 +867,9 @@ body {
     width: 60px;
     text-align: center;
     margin-right: 20px;
+    background-color: transparent;
+    border: 1px solid #ddd;
+    border-radius: 6px;
 }
 #favoritesList .favorite-item span {
     font-size: 1.4rem;
