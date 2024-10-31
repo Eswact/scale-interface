@@ -915,17 +915,19 @@ body {
     background-color: transparent;
     color: var(--red);
 }
-#mainCategoryFilter {
+#favoriteCategoryFilter {
     width: 100%;
     max-height: calc(10% - 6px);
     padding: 6px;
-    border: 1px solid #ddd;
     border-radius: 6px;
     margin-bottom: 6px;
-    font-size: 1.25rem;
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
 }
-#mainCategoryFilter option {
-    font-size: 1.25rem;
+#favoriteCategoryFilter input {
+    margin: 0 20px 0 10px;
+    transform: scale(2);
 }
 /* favorite end start */
 

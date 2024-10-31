@@ -366,7 +366,8 @@ function goBack() {
     if (backArray.length > 0) {
         let previousCategoryId = backArray[backArray.length - 1];
         handleSubCategoryClick(previousCategoryId);
-        activeSubCategory = previousCategoryId;
+        if (backArray.length != 1) { activeSubCategory = previousCategoryId; }
+        else { activeSubCategory = null; }
     }
     else {
         activeMainCategory = null;
@@ -557,10 +558,15 @@ function createFavoritesList(favorites) {
         return favorites
     }
 
-    $('#mainCategoryFilter').off('change').on('change', function(){
-        if ($('#mainCategoryFilter').val()) {
+    $('#favoriteCategoryFilter input').off('change').on('change', function(){
+        selectedCategoryFilter();
+    });
+
+    function selectedCategoryFilter() {
+        let activeSelectedCategory = activeSubCategory || activeMainCategory;
+        if ($('#favoriteCategoryFilter input').is(':checked') && activeSelectedCategory) {
             favorites.forEach(function(item,index){
-                if (item.hierarchyPath.includes(`/${$('#mainCategoryFilter').val()}/`)) {
+                if (item.hierarchyPath.includes(`/${activeSelectedCategory}/`)) {
                     $(`.favorite-item[data-id=${item.id}]`).css('display','flex');
                 }
                 else {
@@ -576,16 +582,8 @@ function createFavoritesList(favorites) {
 
         if (sortableFavorites) { sortableFavorites.destroy(); }
         createFavoritesSortable(swapMode);
-    });
-    // $('#mainCategoryFilter').trigger('change');
-}
-function fillMainCategoryFilter() {
-    let mainCats = categories.filter(x => x.parentId == null);
-    let mainCatOptions = `<option value="">Tümü</option>`;
-    mainCatOptions += mainCats.map(function(item, index){
-        return `<option value="${item.id}">${item.name}</option>`;
-    }).join('');
-    document.getElementById('mainCategoryFilter').innerHTML = mainCatOptions;
+    }
+    // selectedCategoryFilter();
 }
 
 function updateOrderNumbers(evt) {
@@ -913,7 +911,7 @@ function AsideBarButtons(containerId, buttonsPerPage) {
             let favorites = categories.filter(x => x.isFav == true).sort((a, b) => a.favOrder - b.favOrder);
             console.log(favorites.length  > 0);
             if (favorites.length > 0) {
-                bodyHtml = `<select id="mainCategoryFilter"></select>
+                bodyHtml = `<div id="favoriteCategoryFilter"><input class="" type="checkbox" /><label>Seçili olan kategorinin ürünlerini göster</label></div>
                             <ul id="favoritesList" class="sortable"></ul>`;
                 footerHtml = `<button id="saveFavoritesOrder" onclick="saveFavoritesOrder()"  class="saveButton">Kaydet</button>
                               <button id="resetFavorites" onclick="resetFavorites()" class="resetButton">Tümünü Kaldır</button>`;
@@ -927,7 +925,9 @@ function AsideBarButtons(containerId, buttonsPerPage) {
             createFavoritesList(favorites);
 
             if (favorites.length > 0) {
-                fillMainCategoryFilter();
+                (activeSubCategory || activeMainCategory)
+                    ? $('#favoriteCategoryFilter input').attr('disabled', false)
+                    : $('#favoriteCategoryFilter input').attr('disabled', true);
                 swapMode = false;
                 createFavoritesSortable(swapMode);
             }
