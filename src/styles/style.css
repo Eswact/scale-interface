@@ -106,7 +106,7 @@ body {
 
 /* general start */
 ::-webkit-scrollbar {
-    width: 10px;
+    width: 12px;
 }
 ::-webkit-scrollbar-track {
     border: 1px solid var(--first-color-25);
@@ -802,10 +802,10 @@ body {
 }
 .modalE .modalBg .modalFooter button {
     width: 100%;
-    padding: 6px;
+    padding: 8px;
     margin: 10px 6px 0 0;
     border-radius: 6px;
-    font-size: 18px;
+    font-size: 1.6rem;
     font-weight: 600;
     letter-spacing: 2px;
     font-family: "Orbitron", sans-serif;
@@ -849,7 +849,7 @@ body {
     display: flex;
 }
 .closeModalE {
-    font-size: 2.25rem;
+    font-size: 2.75rem;
     padding: 0 12px;
     background-color: transparent;
     border: none;
@@ -860,11 +860,13 @@ body {
 /* favorite list start */
 #favoritesList {
     padding: 5px 10px 5px 5px;
+    height: 90%;
+    overflow-y: auto;
 }
 #favoritesList .favorite-item {
     position: relative;
     width: 100%;
-    padding: 10px 50px 10px 20px;
+    padding: 10px 50px 10px 10px;
     border-radius: 6px;
     border: 1px solid var(--first-color);
     background-color: white;
@@ -872,10 +874,16 @@ body {
     display: flex;
     align-items: center;
 }
+#favoritesList .favorite-item .handle {
+    font-size: 2.3rem;
+    color: var(--first-color);
+    padding: 5px 10px;
+    margin-right: 15px;
+}
 #favoritesList .favorite-item input {
-    font-size: 1.12rem;
-    padding: 6px;
-    width: 60px;
+    font-size: 1.1rem;
+    padding: 6px 0;
+    width: 56px;
     text-align: center;
     margin-right: 20px;
     background-color: transparent;
@@ -909,6 +917,7 @@ body {
 }
 #mainCategoryFilter {
     width: 100%;
+    max-height: calc(10% - 6px);
     padding: 6px;
     border: 1px solid #ddd;
     border-radius: 6px;

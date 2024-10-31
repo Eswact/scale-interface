@@ -461,11 +461,12 @@ function resetAsideButtonsModal() {
 }
 
 function createFavoritesSortable(swap) {
+    console.log(swap);
     sortableFavorites = Sortable.create(document.getElementById('favoritesList'), {
         animation: 150,
         swap: swap,
         swapClass: "highlight",
-        handle: '.favorite-item',
+        handle: '.favorite-item .handle',
         ghostClass: 'ghost-item',
         filter: ".ignore-elements",
         onEnd: function(evt) {
@@ -478,6 +479,7 @@ function createFavoritesList(favorites) {
     favorites = favorites.sort((a, b) => a.favOrder - b.favOrder);
     let favotireList = favorites.map((fav, index) => {
         return `<li class="favorite-item" data-id="${fav.id}" data-order=${fav.favOrder}>
+                    <i class="handle fa-solid fa-grip-vertical"></i>
                     <input type="number" class="fav-order-input" value="${fav.favOrder}" min="1" />
                     <div>
                         <span class="fav-barcode three-dots">[${fav.barcode}]</span>
@@ -575,7 +577,7 @@ function createFavoritesList(favorites) {
         if (sortableFavorites) { sortableFavorites.destroy(); }
         createFavoritesSortable(swapMode);
     });
-    $('#mainCategoryFilter').trigger('change');
+    // $('#mainCategoryFilter').trigger('change');
 }
 function fillMainCategoryFilter() {
     let mainCats = categories.filter(x => x.parentId == null);
