@@ -571,9 +571,11 @@ function createFavoritesList(favorites) {
             $(`.favorite-item`).css('display','flex');
             swapMode = false;
         }
-        sortableFavorites.destroy();
+
+        if (sortableFavorites) { sortableFavorites.destroy(); }
         createFavoritesSortable(swapMode);
     });
+    $('#mainCategoryFilter').trigger('change');
 }
 function fillMainCategoryFilter() {
     let mainCats = categories.filter(x => x.parentId == null);
@@ -589,7 +591,7 @@ function updateOrderNumbers(evt) {
     let newIndex = evt.newIndex + 1;
     let $oldItem = $(`.favorite-item[data-order=${oldIndex}]`);
     let $newItem = $(`.favorite-item[data-order=${newIndex}]`);
-    
+
     if (newIndex > $('.favorite-item').length) {
         newIndex = $('.favorite-item').length;
     }
@@ -921,9 +923,9 @@ function AsideBarButtons(containerId, buttonsPerPage) {
             }
             fillAsideButtonsModal(bodyHtml, footerHtml);
             createFavoritesList(favorites);
-            fillMainCategoryFilter();
 
             if (favorites.length > 0) {
+                fillMainCategoryFilter();
                 swapMode = false;
                 createFavoritesSortable(swapMode);
             }
