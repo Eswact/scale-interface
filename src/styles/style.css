@@ -907,6 +907,17 @@ body {
     background-color: transparent;
     color: var(--red);
 }
+#mainCategoryFilter {
+    width: 100%;
+    padding: 6px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    margin-bottom: 6px;
+    font-size: 1.25rem;
+}
+#mainCategoryFilter option {
+    font-size: 1.25rem;
+}
 /* favorite end start */
 
 /* resolution-warning start */

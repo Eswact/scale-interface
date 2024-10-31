@@ -104,6 +104,7 @@ let backArray = [];
 let printMemory = [];
 
 let sortableFavorites;
+let swapMode = false;
 let tempRemovedFavorites = [];
 
 // css injection
@@ -459,6 +460,20 @@ function resetAsideButtonsModal() {
     $('#asideButtonsModal .modalBg .modalFooter').html('');
 }
 
+function createFavoritesSortable(swap) {
+    sortableFavorites = Sortable.create(document.getElementById('favoritesList'), {
+        animation: 150,
+        swap: swap,
+        swapClass: "highlight",
+        handle: '.favorite-item',
+        ghostClass: 'ghost-item',
+        filter: ".ignore-elements",
+        onEnd: function(evt) {
+            updateOrderNumbers(evt);
+        }
+    });
+}
+
 function createFavoritesList(favorites) {
     favorites = favorites.sort((a, b) => a.favOrder - b.favOrder);
     let favotireList = favorites.map((fav, index) => {
@@ -539,32 +554,66 @@ function createFavoritesList(favorites) {
         });
         return favorites
     }
+
+    $('#mainCategoryFilter').off('change').on('change', function(){
+        if ($('#mainCategoryFilter').val()) {
+            favorites.forEach(function(item,index){
+                if (item.hierarchyPath.includes(`/${$('#mainCategoryFilter').val()}/`)) {
+                    $(`.favorite-item[data-id=${item.id}]`).css('display','flex');
+                }
+                else {
+                    $(`.favorite-item[data-id=${item.id}]`).css('display','none');
+                }
+            });
+            swapMode = true;
+        }
+        else {
+            $(`.favorite-item`).css('display','flex');
+            swapMode = false;
+        }
+        sortableFavorites.destroy();
+        createFavoritesSortable(swapMode);
+    });
+}
+function fillMainCategoryFilter() {
+    let mainCats = categories.filter(x => x.parentId == null);
+    let mainCatOptions = `<option value="">Tümü</option>`;
+    mainCatOptions += mainCats.map(function(item, index){
+        return `<option value="${item.id}">${item.name}</option>`;
+    }).join('');
+    document.getElementById('mainCategoryFilter').innerHTML = mainCatOptions;
 }
 
 function updateOrderNumbers(evt) {
     let oldIndex = evt.oldIndex + 1;
     let newIndex = evt.newIndex + 1;
-    let $thisIndex = $(`.favorite-item[data-order=${oldIndex}]`);
-
+    let $oldItem = $(`.favorite-item[data-order=${oldIndex}]`);
+    let $newItem = $(`.favorite-item[data-order=${newIndex}]`);
+    
     if (newIndex > $('.favorite-item').length) {
         newIndex = $('.favorite-item').length;
     }
-    
-    if (newIndex > oldIndex) {
-        for (let i = oldIndex + 1; i <= newIndex; i++) {
-            $(`.favorite-item[data-order=${i}]`).find('input').val(i - 1);
-            $(`.favorite-item[data-order=${i}]`).attr('data-order', i - 1);
-        }
-    } 
-    if (newIndex < oldIndex) {
-        for (let i = oldIndex - 1; i >= newIndex; i--) {
-            $(`.favorite-item[data-order=${i}]`).find('input').val(i + 1);
-            $(`.favorite-item[data-order=${i}]`).attr('data-order', i + 1);
-        }
+
+    if (swapMode) {
+        $oldItem.attr('data-order', newIndex).find('input').val(newIndex);
+        $newItem.attr('data-order', oldIndex).find('input').val(oldIndex);
     }
-    
-    $thisIndex.find('input').val(newIndex);
-    $thisIndex.attr('data-order', newIndex);
+    else {
+        if (newIndex > oldIndex) {
+            for (let i = oldIndex + 1; i <= newIndex; i++) {
+                $(`.favorite-item[data-order=${i}]`).find('input').val(i - 1);
+                $(`.favorite-item[data-order=${i}]`).attr('data-order', i - 1);
+            }
+        } 
+        if (newIndex < oldIndex) {
+            for (let i = oldIndex - 1; i >= newIndex; i--) {
+                $(`.favorite-item[data-order=${i}]`).find('input').val(i + 1);
+                $(`.favorite-item[data-order=${i}]`).attr('data-order', i + 1);
+            }
+        }
+        $oldItem.find('input').val(newIndex);
+        $oldItem.attr('data-order', newIndex);
+    }
 }
 
 function saveFavoritesOrder() {
@@ -860,7 +909,8 @@ function AsideBarButtons(containerId, buttonsPerPage) {
             let favorites = categories.filter(x => x.isFav == true).sort((a, b) => a.favOrder - b.favOrder);
             console.log(favorites.length  > 0);
             if (favorites.length > 0) {
-                bodyHtml = `<ul id="favoritesList" class="sortable"></ul>`;
+                bodyHtml = `<select id="mainCategoryFilter"></select>
+                            <ul id="favoritesList" class="sortable"></ul>`;
                 footerHtml = `<button id="saveFavoritesOrder" onclick="saveFavoritesOrder()"  class="saveButton">Kaydet</button>
                               <button id="resetFavorites" onclick="resetFavorites()" class="resetButton">Tümünü Kaldır</button>`;
             }
@@ -871,19 +921,11 @@ function AsideBarButtons(containerId, buttonsPerPage) {
             }
             fillAsideButtonsModal(bodyHtml, footerHtml);
             createFavoritesList(favorites);
+            fillMainCategoryFilter();
 
             if (favorites.length > 0) {
-                sortableFavorites = Sortable.create(document.getElementById('favoritesList'), {
-                    animation: 150,
-                    // swap: true,
-                    // swapClass: "highlight",
-                    handle: '.favorite-item',
-                    ghostClass: 'ghost-item',
-                    filter: ".ignore-elements",
-                    onEnd: function(evt) {
-                        updateOrderNumbers(evt);
-                    }
-                });
+                swapMode = false;
+                createFavoritesSortable(swapMode);
             }
         },
         suspend: async function() {
