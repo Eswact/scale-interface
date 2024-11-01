@@ -9,6 +9,7 @@
         "hierarchyPath": "/1",
         "barcode": null,
         "price": null,
+        "ponderable": true,
         "image": null,
         "isFav": false,
         "favOrder": null
@@ -23,6 +24,7 @@
         "hierarchyPath": "/2",
         "barcode": null,
         "price": null,
+        "ponderable": true,
         "image": null,
         "isFav": false,
         "favOrder": null
@@ -37,6 +39,7 @@
         "hierarchyPath": "/3",
         "barcode": null,
         "price": null,
+        "ponderable": true,
         "image": null,
         "isFav": false,
         "favOrder": null
@@ -51,6 +54,7 @@
         "hierarchyPath": "/4",
         "barcode": null,
         "price": null,
+        "ponderable": true,
         "image": null,
         "isFav": false,
         "favOrder": null
@@ -65,6 +69,7 @@
         "hierarchyPath": "/5",
         "barcode": null,
         "price": null,
+        "ponderable": true,
         "image": null,
         "isFav": false,
         "favOrder": null
@@ -79,6 +84,7 @@
         "hierarchyPath": "/1/6",
         "barcode": null,
         "price": null,
+        "ponderable": true,
         "image": "https://www.turkflowers.com/buyukresim/Belarus-6-kg-meyve-sepeti.jpg",
         "isFav": false,
         "favOrder": null
@@ -93,6 +99,7 @@
         "hierarchyPath": "/1/7",
         "barcode": null,
         "price": null,
+        "ponderable": true,
         "image": "https://png.pngtree.com/png-vector/20231230/ourlarge/pngtree-3d-decorative-vegetables-and-vegetable-basket-png-image_11390630.png",
         "isFav": false,
         "favOrder": null
@@ -107,6 +114,7 @@
         "hierarchyPath": "/1/6/8",
         "barcode": 123456789012,
         "price": 17.99,
+        "ponderable": true,
         "image": "https://static.ticimax.cloud/48857/uploads/urunresimleri/buyuk/1008825-f2c8a-.jpg",
         "isFav": false,
         "favOrder": null
@@ -121,6 +129,7 @@
         "hierarchyPath": "/1/6/9",
         "barcode": 987654321098,
         "price": 15.50,
+        "ponderable": true,
         "image": "https://www.agfresh.com.tr/public/uploads/elma.webp",
         "isFav": false,
         "favOrder": null
@@ -135,6 +144,7 @@
         "hierarchyPath": "/1/6/10",
         "barcode": 123123123123,
         "price": 19.99,
+        "ponderable": true,
         "image": "https://tumentarim.com/content/upload/kavun.3.jpg",
         "isFav": false,
         "favOrder": null
@@ -149,6 +159,7 @@
         "hierarchyPath": "/1/7/11",
         "barcode": 123321123321,
         "price": 7.75,
+        "ponderable": true,
         "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSVEBJfV-aY0bUF6kEcaUDglmACgKPaL2qlMA&s",
         "isFav": false,
         "favOrder": null
@@ -163,6 +174,7 @@
         "hierarchyPath": "/1/7/12",
         "barcode": 999888777666,
         "price": 11.45,
+        "ponderable": true,
         "image": "https://static.ticimax.cloud/cdn-cgi/image/width=-,quality=85/48857/uploads/urunresimleri/buyuk/1008997-7276ee.jpg",
         "isFav": false,
         "favOrder": null
@@ -177,6 +189,7 @@
         "hierarchyPath": "/1/7/13",
         "barcode": 777666555444,
         "price": 6.50,
+        "ponderable": true,
         "image": "https://d1mm3tuyihn37h.cloudfront.net/wp-content/uploads/Salatalik.jpg",
         "isFav": false,
         "favOrder": null
@@ -191,6 +204,7 @@
         "hierarchyPath": "/2/14",
         "barcode": 888777666555,
         "price": 34.99,
+        "ponderable": true,
         "image": "https://ideacdn.net/idea/jt/56/myassets/products/178/sm-urun-gorselleri-peynirler-312000-kasar-peyniri-1000g.jpg?revision=1697143329",
         "isFav": false,
         "favOrder": null
@@ -205,6 +219,7 @@
         "hierarchyPath": "/2/15",
         "barcode": 333444555666,
         "price": 20.50,
+        "ponderable": false,
         "image": "https://images.migrosone.com/sanalmarket/product/11014567/11014567-50f9b6-1650x1650.jpg",
         "isFav": false,
         "favOrder": null
@@ -219,6 +234,7 @@
         "hierarchyPath": "/3/16",
         "barcode": 444555666777,
         "price": 60.99,
+        "ponderable": true,
         "image": "https://ideacdn.net/idea/ge/09/myassets/products/279/dana-yemeklik-kiyma.jpg?revision=1722246017",
         "isFav": false,
         "favOrder": null
@@ -233,6 +249,7 @@
         "hierarchyPath": "/3/17",
         "barcode": 555666777888,
         "price": 45.75,
+        "ponderable": true,
         "image": "https://arazetmarket.com.tr/image/cache/catalog/butun-tavuk-500x500.png",
         "isFav": false,
         "favOrder": null
@@ -247,6 +264,7 @@
         "hierarchyPath": "/4/18",
         "barcode": 666777888999,
         "price": 7.50,
+        "ponderable": false,
         "image": "https://productimages.hepsiburada.net/s/32/375-375/10377359851570.jpg",
         "isFav": false,
         "favOrder": null
@@ -261,6 +279,7 @@
         "hierarchyPath": "/4/45/19",
         "barcode": 222111333444,
         "price": 5.25,
+        "ponderable": false,
         "image": "https://productimages.hepsiburada.net/s/32/375-375/10364946645042.jpg",
         "isFav": false,
         "favOrder": null
@@ -275,6 +294,7 @@
         "hierarchyPath": "/5/20",
         "barcode": null,
         "price": null,
+        "ponderable": false,
         "image": "https://www.sekercity.com/UserFiles/Fotograflar/org/4864-2447buyuk1jpg-2447buyuk1.jpg",
         "isFav": false,
         "favOrder": null
@@ -289,6 +309,7 @@
         "hierarchyPath": "/5/21",
         "barcode": null,
         "price": null,
+        "ponderable": false,
         "image": "https://www.aydinliamca.com/class/INNOVAEditor/assets/yagli-siyah-zeytin-aydinli-amca-siyah-sele-zeytin-organik-siyah-zeytin-dogal-fermente-zeytin-en-iyi-siyah-zeytin-yagli-zeytin-aydin-zeytin-satisi-aydin-zeytin-fiyatlari-dogal-fermente-siyah-zeytin-aydin-sele-zeytin.jpg",
         "isFav": false,
         "favOrder": null
@@ -303,6 +324,7 @@
         "hierarchyPath": "/5/22",
         "barcode": 11111111111111,
         "price": 10,
+        "ponderable": false,
         "image": "https://ankarahalkekmek.com.tr/wp-content/uploads/2020/11/nekmek.jpg",
         "isFav": false,
         "favOrder": null
@@ -317,6 +339,7 @@
         "hierarchyPath": "/2/23",
         "barcode": 999888777666,
         "price": 18.50,
+        "ponderable": false,
         "image": "https://cdnprod.mopas.com.tr/sys-master-mopascdncontainer/h6b/h7d/8876523290654/53719_0_521Wx521H",
         "isFav": false,
         "favOrder": null
@@ -331,6 +354,7 @@
         "hierarchyPath": "/2/24",
         "barcode": 123987654321,
         "price": 5.75,
+        "ponderable": false,
         "image": "https://www.nazar.com.tr/wp-content/uploads/2020/12/ayran.jpg",
         "isFav": false,
         "favOrder": null
@@ -345,6 +369,7 @@
         "hierarchyPath": "/2/25",
         "barcode": 333222111555,
         "price": 30.99,
+        "ponderable": false,
         "image": "https://images.migrosone.com/sanalmarket/product/10017285/10017285-748163-1650x1650.jpg",
         "isFav": false,
         "favOrder": null
@@ -359,6 +384,7 @@
         "hierarchyPath": "/4/45/26",
         "barcode": 444111333222,
         "price": 60.75,
+        "ponderable": false,
         "image": "https://www.mismarsanalmarket.com/UserFiles/Fotograflar/org/137-8690504525011-jpg-8690504525011.jpg",
         "isFav": false,
         "favOrder": null
@@ -373,6 +399,7 @@
         "hierarchyPath": "/4/45/27",
         "barcode": 222999888777,
         "price": 8.99,
+        "ponderable": false,
         "image": "https://cdn.dsmcdn.com/ty1417/product/media/images/prod/QC/20240712/14/7d589b8b-9faa-3d54-93b6-4c6c97e9c020/1_org_zoom.jpg",
         "isFav": false,
         "favOrder": null
@@ -387,6 +414,7 @@
         "hierarchyPath": "/4/41/28",
         "barcode": 999333222111,
         "price": 12.50,
+        "ponderable": false,
         "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR0dql_hrQ3b5t0etzPFSLtjJHRfWme_p2BvQ&s",
         "isFav": false,
         "favOrder": null
@@ -401,6 +429,7 @@
         "hierarchyPath": "/5/29",
         "barcode": null,
         "price": null,
+        "ponderable": false,
         "image": "https://www.cankardeslerkuruyemis.com/class/INNOVAEditor/assets/ozel-karisik-kuruyemis.jpg",
         "isFav": false,
         "favOrder": null
@@ -415,6 +444,7 @@
         "hierarchyPath": "/5/30",
         "barcode": null,
         "price": null,
+        "ponderable": false,
         "image": "https://www.aylinaydin.com.tr/wp-content/uploads/2014/12/yumurta_saglikli_beslenme.jpg",
         "isFav": false,
         "favOrder": null
@@ -429,6 +459,7 @@
         "hierarchyPath": "/1/6/31",
         "barcode": 111999888777,
         "price": 27.99,
+        "ponderable": false,
         "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTJ1742w_QUtsZzEWogVVj_zmghUOIqVHVbdw&s",
         "isFav": false,
         "favOrder": null
@@ -443,6 +474,7 @@
         "hierarchyPath": "/1/6/32",
         "barcode": 444222333111,
         "price": 22.50,
+        "ponderable": false,
         "image": "https://cdn.cimri.io/market/260x260/mango-adet-_46033.jpg",
         "isFav": false,
         "favOrder": null
@@ -457,6 +489,7 @@
         "hierarchyPath": "/1/6/33",
         "barcode": 333222555666,
         "price": 19.99,
+        "ponderable": false,
         "image": "https://nebilcdn.blob.core.windows.net/gimatlinux/0010945_karpuz-kg-meyve_510.jpg",
         "isFav": false,
         "favOrder": null
@@ -471,6 +504,7 @@
         "hierarchyPath": "/1/6/34",
         "barcode": 666111333222,
         "price": 18.75,
+        "ponderable": true,
         "image": "https://www.tekfentarim.com/wp-content/uploads/2021/08/kayisi-1.png",
         "isFav": false,
         "favOrder": null
@@ -485,6 +519,7 @@
         "hierarchyPath": "/1/7/35",
         "barcode": 444666555222,
         "price": 8.99,
+        "ponderable": true,
         "image": "https://static.ticimax.cloud/48857/uploads/urunresimleri/buyuk/1009027-f6-451.jpg",
         "isFav": false,
         "favOrder": null
@@ -499,6 +534,7 @@
         "hierarchyPath": "/1/7/36",
         "barcode": 222333444555,
         "price": 12.99,
+        "ponderable": true,
         "image": "https://cdn.getir.com/product/patlican_5ced482a4a8a2a000137da47.png",
         "isFav": false,
         "favOrder": null
@@ -513,6 +549,7 @@
         "hierarchyPath": "/1/7/37",
         "barcode": 333444111222,
         "price": 9.75,
+        "ponderable": true,
         "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRpc3bpdf_wYsXE0tNHYow_-XTl1gUErLVwUw&s",
         "isFav": false,
         "favOrder": null
@@ -527,6 +564,7 @@
         "hierarchyPath": "/2/38",
         "barcode": 111666333222,
         "price": 40.50,
+        "ponderable": true,
         "image": "https://cdn.akakce.com/sutas/sutas-200-gr-z.jpg",
         "isFav": false,
         "favOrder": null
@@ -541,6 +579,7 @@
         "hierarchyPath": "/3/39",
         "barcode": 999111222555,
         "price": 80.99,
+        "ponderable": true,
         "image": "https://www.esk.gov.tr/upload/Node/10979/pics/Kolyoz.350px.jpg",
         "isFav": false,
         "favOrder": null
@@ -555,6 +594,7 @@
         "hierarchyPath": "/3/40",
         "barcode": 111888777333,
         "price": 55.75,
+        "ponderable": true,
         "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTFhmp9Udc1qvKWcFRBrv4kRjuON2TdPiQIcw&s",
         "isFav": false,
         "favOrder": null
@@ -569,6 +609,7 @@
         "hierarchyPath": "/4/41",
         "barcode": null,
         "price": null,
+        "ponderable": true,
         "image": "https://diyetisyengizemakbulut.com/images/uploads/yazilar/711193307912371.jpg",
         "isFav": false,
         "favOrder": null
@@ -583,6 +624,7 @@
         "hierarchyPath": "/4/41/42",
         "barcode": 333666555777,
         "price": 200.50,
+        "ponderable": false,
         "image": "https://nl.sarap.online/wp-content/uploads/2024/02/yeni-raki-02l.webp",
         "isFav": false,
         "favOrder": null
@@ -597,6 +639,7 @@
         "hierarchyPath": "/4/41/43",
         "barcode": 444999111222,
         "price": 250.99,
+        "ponderable": false,
         "image": "https://sc02.alicdn.com/kf/UTB8J684NVfFXKJk43Otq6xIPFXal/Jack-daniels-bottle-whisky-price-scotch-whisky.jpg",
         "isFav": false,
         "favOrder": null
@@ -611,6 +654,7 @@
         "hierarchyPath": "/4/41/44",
         "barcode": 222111999333,
         "price": 60.75,
+        "ponderable": false,
         "image": "https://ideacdn.net/idea/hx/67/myassets/products/209/hr-bottiglie-volupta-syrah-1.png?revision=1697143329",
         "isFav": false,
         "favOrder": null
@@ -625,6 +669,7 @@
         "hierarchyPath": "/4/41",
         "barcode": null,
         "price": null,
+        "ponderable": false,
         "image": "https://st3.depositphotos.com/1063437/19229/i/450/depositphotos_192299074-stock-photo-bottles-of-global-soft-drink.jpg",
         "isFav": false,
         "favOrder": null
@@ -639,6 +684,7 @@
         "hierarchyPath": "/5/20/46",
         "barcode": 111222333444,
         "price": 12.99,
+        "ponderable": false,
         "image": "https://img-bizimtoptan.mncdn.com/Content/Images/Thumbs/2001942.jpeg",
         "isFav": true,
         "favOrder": 1
@@ -653,6 +699,7 @@
         "hierarchyPath": "/5/20/47",
         "barcode": 111222333444,
         "price": 12.99,
+        "ponderable": false,
         "image": "https://reimg-carrefour.mncdn.com/mnresize/600/600/productimage/30099475/30099475_0_MC/8797926064178_1608636781267.jpg",
         "isFav": false,
         "favOrder": null
@@ -667,6 +714,7 @@
         "hierarchyPath": "/5/48",
         "barcode": null,
         "price": null,
+        "ponderable": false,
         "image": "https://d17wu0fn6x6rgz.cloudfront.net/img/w/yazi/mgt/geleneksektucc88rkmutfagcc86ibaharatlari-biostore-924.webp",
         "isFav": false,
         "favOrder": null
@@ -681,6 +729,7 @@
         "hierarchyPath": "/5/49",
         "barcode": null,
         "price": null,
+        "ponderable": false,
         "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQkxS-82Lvt-WtqYeBrMSjkq5pKzE009iVUGw&s",
         "isFav": false,
         "favOrder": null
@@ -695,6 +744,7 @@
         "hierarchyPath": "/5/50",
         "barcode": null,
         "price": null,
+        "ponderable": false,
         "image": "https://i.lezzet.com.tr/images-xxlarge-secondary/marmelat-yapimi-sef-aydin-demirden-5-kahvaltilik-marmelat-tarifi-ddd76e4a-3e2e-4ffe-bf6f-b55763ec175e.jpg",
         "isFav": false,
         "favOrder": null
@@ -709,6 +759,7 @@
         "hierarchyPath": "/5/49/51",
         "barcode": null,
         "price": null,
+        "ponderable": false,
         "image": "https://www.muglagurme.com/image/cache/catalog/Gorseller/ketcap-tatli-gorsel-seo-800x800w.jpg",
         "isFav": false,
         "favOrder": null
@@ -723,6 +774,7 @@
         "hierarchyPath": "/5/49/52",
         "barcode": null,
         "price": null,
+        "ponderable": false,
         "image": "https://www.muglagurme.com/image/cache/catalog/Gorseller/mayonez-gorsel-seoo-800x800w.jpg",
         "isFav": false,
         "favOrder": null
@@ -737,6 +789,7 @@
         "hierarchyPath": "/5/49/51/53",
         "barcode": 333555444111,
         "price": 40.00,
+        "ponderable": false,
         "image": "https://d23ic3f0nw4szy.cloudfront.net/marketpaketi/products/537757/heinz-ketcap-1-kg-372608001509109866.jpg",
         "isFav": false,
         "favOrder": null
@@ -751,6 +804,7 @@
         "hierarchyPath": "/5/49/52/54",
         "barcode": 333555444111,
         "price": 40.00,
+        "ponderable": false,
         "image": "https://images.migrosone.com/sanalmarket/product/16300543/16300543-e2dc61-1650x1650.jpg",
         "isFav": false,
         "favOrder": null

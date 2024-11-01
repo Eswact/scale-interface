@@ -1,6 +1,7 @@
 [
     {
         "name": "Favoriler",
+        "domId": "favoritesButton",
         "iconClass": "fa-solid fa-heart",
         "onClick": "open_favorites",
         "isModal": true,
@@ -8,11 +9,12 @@
         "modalHeight": 720
     },
     {
-        "name": "Askıya Al",
-        "iconClass": "fa-regular fa-clock",
+        "name": "Askı Listesi",
+        "domId": "suspendedButton",
+        "iconClass": "fa-solid fa-sd-card",
         "onClick": "suspend",
-        "isModal": false,
-        "modalWidth": null,
-        "modalHeight": null
+        "isModal": true,
+        "modalWidth": 600,
+        "modalHeight": 720
     }
 ]

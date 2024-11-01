@@ -101,7 +101,8 @@ let activeSubCategory = null;
 
 let backArray = [];
 
-let printMemory = [];
+let inMemory = [];
+let suspendedList = [];
 
 let sortableFavorites;
 let swapMode = false;
@@ -175,7 +176,7 @@ function inject() {
     $("head").append(newcss)
 }
 
-// 
+// reset view
 function getFirstView() {
     currentPageMain = 1;
     currentPageSub = 1
@@ -225,8 +226,11 @@ function renderProducts(page) {
 
     $('#cardContainer').empty();
     productsToShow.forEach(product => {
-        $('#cardContainer').append(`<div class="productCard ${(product.isFav)?'favorite':''}" data-product="${product.id}">
-                                        <i class="fa-solid fa-heart"></i>
+        $('#cardContainer').append(`<div class="productCard ${(product.isFav)?'favorite':''} ${(inMemory.find(x => x.id == product.id))?'memory':''}" data-product="${product.id}">
+                                        <div class="productCardIcons">
+                                            <i class="fa-solid fa-heart"></i>
+                                            <i class="fa-solid fa-sd-card"></i>
+                                        </div>
                                         <img src="${product.image}" />
                                         <div>
                                             <span class="productName truncatedText2" title="${product.name}">${product.name}</span>
@@ -381,31 +385,6 @@ function goBack() {
     }
     getPrevCategoryName();
 }
-
-function setProductDetail(productId) {
-    selectedProductId = productId;
-    $('#productDetailDiv').addClass('show');
-    $('#chooseProductDiv').addClass('unshow');
-    let selectedProduct = categories.find(x => x.id == selectedProductId);
-    $("#productDetailImg").attr("src", selectedProduct.image);
-    $('#productDetailBarcode').html(selectedProduct.barcode);
-    $('#productDetailName').html(selectedProduct.name);
-    $('#productDetailPrice').html(convert2Price(selectedProduct.price));
-    if (selectedProduct.isFav) { $('#productDetailDiv').addClass('favorites'); }
-    else { $('#productDetailDiv').removeClass('favorites'); }
-    setUnitPrice(selectedProduct.price);
-    if ($('.keypad-header input').val() != '' && confirmation_keypad._currentState == 'default') $('.keypad-action-button-right').click();
-    calculateTotalAmount();
-}
-
-function resetProductDetail() {
-    selectedProductId = null;
-    $('#productDetailDiv').removeClass('show');
-    $('#chooseProductDiv').removeClass('unshow');
-    setUnitPrice(0);
-    calculateTotalAmount();
-}
-
 function getPrevCategoryName(){
     if (backArray.length < 1) {
         $('#goBackCategory span').html('');
@@ -419,7 +398,33 @@ function getPrevCategoryName(){
     }
 }
 
+// product detail
+function setProductDetail(productId) {
+    selectedProductId = productId;
+    $('#productDetailDiv').addClass('show');
+    $('#chooseProductDiv').addClass('unshow');
+    let selectedProduct = categories.find(x => x.id == selectedProductId);
+    $("#productDetailImg").attr("src", selectedProduct.image);
+    $('#productDetailBarcode').html(selectedProduct.barcode);
+    $('#productDetailName').html(selectedProduct.name);
+    $('#productDetailPrice').html(convert2Price(selectedProduct.price));
+    if (selectedProduct.isFav) { $('#productDetailDiv').addClass('favorites'); }
+    else { $('#productDetailDiv').removeClass('favorites'); }
+    setUnitPrice(selectedProduct.price);
+    if ($('.keypad-header input').val() != '' && confirmation_keypad._currentState == 'default') { $('.keypad-action-button-right').click(); }
+    else { if (!selectedProduct.ponderable) { setWeighed(1); } }
+    calculateTotalAmount();
+}
+function resetProductDetail() {
+    selectedProductId = null;
+    $('#productDetailDiv').removeClass('show');
+    $('#chooseProductDiv').removeClass('unshow');
+    $('.productCard').removeClass('selected');
+    setUnitPrice(0);
+    calculateTotalAmount();
+}
 
+// barcode filter
 function filterByBarcode(value) {
     getFirstView();
     products = categories.filter(x => JSON.stringify(x.barcode).includes(value));
@@ -431,10 +436,12 @@ function filterByBarcode(value) {
     getPrevCategoryName();
 }
 
+// amount calcutor
 function calculateTotalAmount() {
     setAmount(getWeighed() * getUnitPrice());
 }
 
+// modals
 function closeModalE() {
     $('.modalE').removeClass('show');
 }
@@ -461,6 +468,7 @@ function resetAsideButtonsModal() {
     $('#asideButtonsModal .modalBg .modalFooter').html('');
 }
 
+// favorites
 function createFavoritesSortable(swap) {
     sortableFavorites = Sortable.create(document.getElementById('favoritesList'), {
         animation: 150,
@@ -661,6 +669,27 @@ function resetFavorites() {
     }
 }
 
+// suspended
+function inMemory2Suspended() {
+    if (inMemory != '') {
+        let maxId = (suspendedList.length > 0) ? Math.max(...suspendedList.map(item => item.id)) + 1 : 1;
+        suspendedList.push({
+            id: maxId,
+            products: inMemory
+        });
+    }
+    resetMemory();
+}
+function printMemory() {
+    console.log(inMemory);
+    resetMemory();
+}
+// function printSuspended(id) {}
+function resetMemory() {
+    inMemory = [];
+    $('.productCard').removeClass('memory');
+}
+
 // ready
 $(document).ready(function () {
     // get options && data
@@ -736,8 +765,32 @@ $(document).ready(function () {
     });
 
     $('#memoryProductButton').click(function() {
-        if (selectedProductId != null && printMemory.every(x => x != selectedProductId)) {
-            printMemory.push(selectedProductId);
+        if ($('.keypad-header input').val() != '' && confirmation_keypad._currentState == 'default') $('.keypad-action-button-right').click();
+        if (selectedProductId != null) {
+            if (getWeighed() <= 0 && selectedProductId != null) {
+                alert('Lütfen Kilo/Adet giriniz.');
+                return;
+            }
+
+            let existingProduct = inMemory.find(x => x.id == selectedProductId);
+            if (!existingProduct) {
+                inMemory.push({
+                    id: JSON.stringify(selectedProductId),
+                    name: categories.find(x => x.id == selectedProductId).name,
+                    barcode: categories.find(x => x.id == selectedProductId).barcode,
+                    weighed: getWeighed(),
+                    unitPrice: getUnitPrice(),
+                    tare: getTare(),
+                    amount: getAmount()
+                });
+            } else {
+                existingProduct.weighed += getWeighed();
+                existingProduct.amount += getAmount();
+            }
+
+            $('.productCard.selected').addClass('memory');
+            resetProductDetail();
+            setWeighed(0);
         }
     });
     $('#addFavoritesButton').click(function() {
@@ -764,10 +817,9 @@ $(document).ready(function () {
         }
     });
     $('#printProductButton').click(function() {
-        if (selectedProductId != null && printMemory.every(x => x != selectedProductId)) {
-            printMemory.push(selectedProductId);
-        }
-        console.log(printMemory);
+        if (selectedProductId != null) { $('#memoryProductButton').click(); }
+        if (inMemory != '') { printMemory(); }
+        else { $('#suspendedButton').click(); }
     });
     $('#otherButtons').click(function() {
         $('#content').toggleClass('full');
@@ -934,7 +986,17 @@ function AsideBarButtons(containerId, buttonsPerPage) {
             }
         },
         suspend: async function() {
-            console.log(printMemory);
+            let bodyHtml;
+            let footerHtml;
+            if (inMemory != '' || suspendedList != '') {
+                bodyHtml = `inmemory card + suspendedList`;
+                footerHtml = `<button id="resetSuspended" onclick="resetSuspended()" class="resetButton">Tümünü Kaldır</button>`;
+            }
+            else {
+                bodyHtml = `Askı listeniz boş.`;
+                footerHtml = `<button id="resetSuspended" onclick="resetSuspended()" class="resetButton" disabled>Tümünü Kaldır</button>`;
+            }
+            fillAsideButtonsModal(bodyHtml, footerHtml);
         },
     };    
 
@@ -947,15 +1009,14 @@ function AsideBarButtons(containerId, buttonsPerPage) {
         for (let i = startIndex; i < endIndex; i++) {
             let button = this.buttonsData[i];
             let li = $('<li></li>');
-            let buttonElement = $('<button></button>')
-                .attr('title', button.name)
-                .append(`<i class="${button.iconClass}"></i> <span class="threeDots">${button.name}</span>`);
+            let buttonElement = $(`<button id="${button.domId}" title="${button.name}"><i class="${button.iconClass}"></i> <span class="threeDots">${button.name}</span></button>`);
 
             if (this.functionMap[button.onClick]) {
                 if (button.isModal) {
                     buttonElement.on('click', (function(button) {
                         return async () => {
                             let buttonProps = { name: button.name, iconClass: button.iconClass, modalWidth: button.modalWidth, modalHeight: button.modalHeight }
+                            fillAsideButtonsModal(); //reset
                             openAsideButtonsModal(buttonProps);
                             $('#asideButtonsModal').addClass('load');
     

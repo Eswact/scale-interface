@@ -72,10 +72,11 @@ input[type="number"] {
     --third-color-25: rgba(176, 215, 225, 0.25);
     --active-color: rgb(241, 128, 45);
     --active-color-25: rgb(241, 128, 45, 0.25);
-    --scale-color: rgb(57, 239, 57);
+    --scale-color: rgb(113, 255, 113);
     --scale-bg: rgb(41, 31, 31);
     --red: rgb(236, 54, 67);
     --green: rgb(67, 160, 71);
+    --aside-bar: rgb(15, 76, 92);
 
     --base-font-size: 16px;
 
@@ -168,8 +169,8 @@ body {
     width: 100px;
     height: 100%;
     padding: 48px 4px 24px 4px;
-    background-color: var(--first-color-75);
-    border: 2px solid var(--first-color);
+    background-color: var(--aside-bar);
+    /* border: 2px solid var(--first-color); */
     overflow: hidden;
     display: flex;
     flex-direction: column;
@@ -323,16 +324,27 @@ body {
     flex-direction: column;
     width: 55%;
 }
-#cardContainer .productCard .fa-heart {
-    display: none;
-}
-#cardContainer .productCard.favorite .fa-heart {
-    display: block;
+#cardContainer .productCard .productCardIcons {
+    display: flex;
+    flex-direction: row;
     position: absolute;
     left: 6px;
     top: 6px;
     font-size: 1.5rem;
     color: var(--active-color);
+}
+#cardContainer .productCard .productCardIcons i {
+    display: none;
+    margin-left: 12px;
+}
+#cardContainer .productCard .productCardIcons i:first-child {
+    margin-left: 0;
+}
+#cardContainer .productCard.favorite .productCardIcons .fa-heart {
+    display: block;
+}
+#cardContainer .productCard.memory .productCardIcons .fa-sd-card {
+    display: block;
 }
 #cardContainer .productCard .productName {
     font-family: "Krona One", sans-serif;
@@ -538,7 +550,7 @@ body {
     display: flex;
     font-size: 2.5rem;
     color: white;
-    background-color: var(--red);
+    background-color: var(--first-color);
     border: none;
     padding: 0 24px;
     border-radius: 6px;
@@ -627,8 +639,9 @@ body {
     object-fit: contain;
     object-position: center;
     background-color: white;
-    border: 2px solid var(--first-color);
-    border-radius: 24px;
+    border: 2px solid var(--active-color-25);
+    /* box-shadow: 0 0 1px 1px var(--active-color-25); */
+    border-radius: 20px;
 }
 #productDetailDiv .generalDetails {
     padding: 12px 6px 12px 24px;
@@ -1075,6 +1088,12 @@ body {
     }
     #favoritesList .favorite-item input {
         font-size: 1.5rem;
+    }
+    #cardContainer .productCard .productName {
+        text-shadow: 1px 1px var(--first-color-25);
+    }
+    #cardContainer .productCard .productPrice {
+        text-shadow: 1px 1px var(--first-color-25);
     }
 }
 /* 1368x768 - 1024x720 */
