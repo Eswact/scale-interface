@@ -462,7 +462,6 @@ function resetAsideButtonsModal() {
 }
 
 function createFavoritesSortable(swap) {
-    console.log(swap);
     sortableFavorites = Sortable.create(document.getElementById('favoritesList'), {
         animation: 150,
         swap: swap,
@@ -477,8 +476,8 @@ function createFavoritesSortable(swap) {
 }
 
 function createFavoritesList(favorites) {
-    favorites = favorites.sort((a, b) => a.favOrder - b.favOrder);
-    let favotireList = favorites.map((fav, index) => {
+    let tempFavorites = JSON.parse(JSON.stringify(favorites.sort((a, b) => a.favOrder - b.favOrder)));
+    let favotireList = tempFavorites.map((fav, index) => {
         return `<li class="favorite-item" data-id="${fav.id}" data-order=${fav.favOrder}>
                     <i class="handle fa-solid fa-grip-vertical"></i>
                     <input type="number" class="fav-order-input" value="${fav.favOrder}" min="1" />
@@ -500,7 +499,7 @@ function createFavoritesList(favorites) {
 
         const input = $(this);
         const currentItemId = JSON.stringify(input.closest('.favorite-item').data('id'));
-        const currentItem = favorites.find(fav => fav.id == currentItemId);
+        const currentItem = tempFavorites.find(fav => fav.id == currentItemId);
         const oldOrder = currentItem.favOrder;
         const newOrder = parseInt(input.val());
 
@@ -509,15 +508,15 @@ function createFavoritesList(favorites) {
             input.val(oldOrder);
             return;
         }
-        if (newOrder > favorites.length) {
-            input.val(favorites.length);
+        if (newOrder > tempFavorites.length) {
+            input.val(tempFavorites.length);
         }
 
         // current
         currentItem.favOrder = parseInt(input.val());
 
         // others
-        favorites.forEach(fav => {
+        tempFavorites.forEach(fav => {
             if (fav.id !== currentItemId) {
                 if (currentItem.favOrder < oldOrder && fav.favOrder >= currentItem.favOrder && fav.favOrder < oldOrder) {
                     fav.favOrder += 1;
@@ -528,13 +527,13 @@ function createFavoritesList(favorites) {
             }
         });
 
-        createFavoritesList(favorites);
+        createFavoritesList(tempFavorites);
     });
 
     $('.removeFromFavoriteList').off('click').on('click', function(){
         removedId = $(this).closest('.favorite-item').data('id');
         tempRemovedFavorites.push(JSON.stringify(removedId));
-        currentFavoritesOrder = getCurrentFavoritesOrder(favorites);
+        let currentFavoritesOrder = getCurrentFavoritesOrder(tempFavorites);
         removedFavOrder = currentFavoritesOrder.find(x => x.id == removedId).favOrder;
         currentFavoritesOrder.splice(currentFavoritesOrder.findIndex(x => x.id == removedId),1);
         currentFavoritesOrder.forEach(function(item,index){
@@ -546,16 +545,16 @@ function createFavoritesList(favorites) {
         createFavoritesList(currentFavoritesOrder);
     });
 
-    function getCurrentFavoritesOrder(favorites) {
+    function getCurrentFavoritesOrder(tempFavorites) {
         $('.favorite-item').each(function() {
             let id = JSON.stringify($(this).data('id'));
             let favOrder = parseInt($(this).data('order'), 10);
-            let category = favorites.find(cat => cat.id == id);
+            let category = tempFavorites.find(cat => cat.id == id);
             if (category) {
                 category.favOrder = favOrder;
             }
         });
-        return favorites
+        return tempFavorites
     }
 
     $('#favoriteCategoryFilter input').off('change').on('change', function(){
@@ -565,7 +564,7 @@ function createFavoritesList(favorites) {
     function selectedCategoryFilter() {
         let activeSelectedCategory = activeSubCategory || activeMainCategory;
         if ($('#favoriteCategoryFilter input').is(':checked') && activeSelectedCategory) {
-            favorites.forEach(function(item,index){
+            tempFavorites.forEach(function(item,index){
                 if (item.hierarchyPath.includes(`/${activeSelectedCategory}/`)) {
                     $(`.favorite-item[data-id=${item.id}]`).css('display','flex');
                 }
@@ -583,7 +582,10 @@ function createFavoritesList(favorites) {
         if (sortableFavorites) { sortableFavorites.destroy(); }
         createFavoritesSortable(swapMode);
     }
-    // selectedCategoryFilter();
+
+    if ($('#favoriteCategoryFilter input').is(':checked')) {
+        $('#favoriteCategoryFilter input').trigger('change')
+    }
 }
 
 function updateOrderNumbers(evt) {
@@ -908,8 +910,7 @@ function AsideBarButtons(containerId, buttonsPerPage) {
             tempRemovedFavorites = [];
             let bodyHtml;
             let footerHtml;
-            let favorites = categories.filter(x => x.isFav == true).sort((a, b) => a.favOrder - b.favOrder);
-            console.log(favorites.length  > 0);
+            let favorites = [...categories.filter(x => x.isFav).sort((a, b) => a.favOrder - b.favOrder)];
             if (favorites.length > 0) {
                 bodyHtml = `<div id="favoriteCategoryFilter"><input class="" type="checkbox" /><label>Seçili olan kategorinin ürünlerini göster</label></div>
                             <ul id="favoritesList" class="sortable"></ul>`;
