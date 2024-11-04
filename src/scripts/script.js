@@ -31,6 +31,25 @@
     handlePagination(direction) => Yön tuşlarına göre sayfa değiştirme işlemi yapar. 'up' veya 'down' yönünde kullanılabilir.
     createArrows() => Aşağı ve yukarı ok butonlarını oluşturur ve container'a ekler.
     KeypadJS kullanılarak keypad oluşturuldu.
+    closeModalE() => modalE sınıfına sahip modal'leri kapatmak için kullanılır.
+    openAsideButtonsModal(buttonProps) => buttonProps objesine göre #asideButtonsModal modal'ini oluşturur.
+    fillAsideButtonsModal(bodyHtml, footerHtml) => bodyHtml ve footerHtml değerlerine göre #asideButtonsModal modal'ini doldurur.
+    resetAsideButtonsModal() => #asideButtonsModal modal'inin içeriğini temizler.
+    createFavoritesSortable(swap) => swap parametresi ile sıralanabilir bir favori listesi oluşturur.
+    createFavoritesList(favorites) => Favorilerden bir HTML listesi oluşturur ve giriş odak/kaydırma olaylarını ele alarak madde sırasını ayarlar.
+    updateOrderNumbers(evt) => Sürükle-bırak sıralamaya göre sıra numaralarını günceller.
+    saveFavoritesOrder() => Mevcut favori sırasını kaydeder ve kaldırılan öğeleri temizler.
+    resetFavorites() => Tüm favorileri kaldırır.
+    printProducts(products) => products Değerini konsola yazar.
+    resetMemory() => Hafızayı temizler. (inMemory dizisini boşaltır)
+    printMemory() => Hafızadaki (inMemory dizisindeki) öğelerin product bilgilerini printProducts(products) fonksiyonunu tetikleyerek yazdırır.
+    inMemory2Suspended() => Hafızadaki öğeleri askıya alınmış öğelere taşır. inMemory --> suspendedList
+    deleteMemory() => Hafızadaki öğeleri siler.
+    printSuspended(id) =>  Verilen idye sahip askıya alınmış öğelerin product bilgilerini printProducts(products) fonksiyonunu tetikleyerek yazdırır.
+    deleteSuspended(id) => Verilen idye sahip askıya alınmış öğeleri siler.
+    resetSuspended() => Tüm askıya alınmış öğeleri kaldırır.
+    fillMemoryCard() => Hafıza kartı ile ilgili içeriği doldurur.
+    fillSuspendedList() => Askıya alınmış öğe listesini ilgili içerikle doldurur.
 
     EN -- Documentation
     getFirstView() => The first view is created.
@@ -64,6 +83,25 @@
     handlePagination(direction) => Handles pagination based on direction keys. Can be used with 'up' or 'down' direction.
     createArrows() => Creates up and down arrow buttons and appends them to the container.
     Keypad was created using KeypadJS.
+    closeModalE() => Closes modals with the class modalE.
+    openAsideButtonsModal(buttonProps) => Creates #asideButtonsModal modal based on the buttonProps object.
+    fillAsideButtonsModal(bodyHtml, footerHtml) => Fills the #asideButtonsModal modal with body and footer HTML.
+    resetAsideButtonsModal() => Clears the content of #asideButtonsModal modal.
+    createFavoritesSortable(swap) => Creates a sortable favorites list based on the swap parameter.
+    createFavoritesList(favorites) => Creates an HTML list from favorites and handles input focus/blur events to adjust item order.
+    updateOrderNumbers(evt) => Updates order numbers based on drag-and-drop sorting.
+    saveFavoritesOrder() => Saves the current favorites order and clears removed items.
+    resetFavorites() => Removes all favorites.
+    printProducts(products) => Logs products value to the console.
+    resetMemory() => Clears Memory (inMemory Array). 
+    printMemory() => Triggers printProducts(products) to print the product information of items in memory (inMemory Array).
+    inMemory2Suspended() => Moves items from memory to suspended items. inMemory --> suspendedList
+    deleteMemory() => Deletes items in memory.
+    printSuspended(id) => Triggers printProducts(products) to print the product information of suspended items with the given id.
+    deleteSuspended(id) => Deletes suspended items with the specified id.
+    resetSuspended() => Removes all suspended items.
+    fillMemoryCard() => Fills the memory card with the relevant content.
+    fillSuspendedList() => Fills the suspended list with the relevant content.
 */
 
 
@@ -669,21 +707,22 @@ function resetFavorites() {
     }
 }
 
-// memory/print/suspended
+// print && memory && suspended
+function printProducts(products){
+    console.log(products);
+}
 
+function resetMemory() {
+    inMemory = [];
+    $('.productCard').removeClass('memory');
+    fillMemoryCard();
+}
 function printMemory() {
     if (confirm("Emin misiniz?") == true) {
-        console.log(inMemory);
+        printProducts(inMemory);
         resetMemory();
         closeModalE();
         alert("Yazdırma işlemi gerçekleşti.");
-    }
-}
-function resetMemory() {
-    if (confirm("Emin misiniz?") == true) {
-        inMemory = [];
-        $('.productCard').removeClass('memory');
-        fillMemoryCard();
     }
 }
 function inMemory2Suspended() {
@@ -699,19 +738,69 @@ function inMemory2Suspended() {
         fillMemoryCard();
         fillSuspendedList();
         alert("Hafıza askıya alındı.");
+        $('#resetSuspended').attr('disabled', false);
     }
 }
+function deleteMemory() {
+    if (confirm("Emin misiniz?") == true) {
+        inMemory = [];
+        $('.productCard').removeClass('memory');
+        fillMemoryCard();
+    }
+}
+
 function printSuspended(id) {
-    console.log(suspendedList.find(x => x.id = id));
+    if (confirm("Emin misiniz?") == true) {
+        printProducts(suspendedList.find(x => x.id = id).products);
+        suspendedList.splice(suspendedList.findIndex(x => x.id = id), 1);
+        if (suspendedList == '') {
+            if (inMemory == '') {
+                closeModalE();
+            }
+            else {
+                $('#resetSuspended').attr('disabled', true);
+                fillSuspendedList();
+            }
+        }
+        else {
+            fillSuspendedList();
+        }
+    }
 }
 function deleteSuspended(id) {
-    console.log(suspendedList.find(x => x.id = id));
+    if (confirm("Emin misiniz?") == true) {
+        suspendedList.splice(suspendedList.findIndex(x => x.id = id), 1);
+        if (suspendedList == '') {
+            if (inMemory == '') {
+                closeModalE();
+            }
+            else {
+                $('#resetSuspended').attr('disabled', true);
+                fillSuspendedList();
+            }
+        }
+        else {
+            fillSuspendedList();
+        }
+    }
+}
+function resetSuspended() {
+    if (confirm("Emin misiniz?") == true) {
+        suspendedList = [];
+        if (inMemory == '') {
+            closeModalE();
+        }
+        else {
+            $('#resetSuspended').attr('disabled', true);
+            fillSuspendedList();
+        }
+        alert("Askı listesi sıfırlandı.");
+    }
 }
 
 function toggleListVis(id) {
     $(`.suspendedCard[data-id=${id}] .liCard`).toggleClass('showFull');
 }
-
 function fillMemoryCard() {
     $('#memoryCardDiv').html('');
     if (inMemory != '') {
@@ -749,7 +838,7 @@ function fillMemoryCard() {
                                                 </div>
                                             </div>
                                             <div class="actionButtons">
-                                                <button onclick="resetMemory()" class="deleteLiButton"><i class="fa-solid fa-trash-can"></i></button>
+                                                <button onclick="deleteMemory()" class="deleteLiButton"><i class="fa-solid fa-trash-can"></i></button>
                                                 <button onclick="inMemory2Suspended()" class="suspendLiButton"><i class="fa-regular fa-clock"></i></button>
                                                 <button onclick="printMemory()" class="printLiButton"><i class="fa-solid fa-print"></i></button>
                                             </div>
@@ -762,6 +851,7 @@ function fillSuspendedList() {
     $('#suspendedListDiv').html('Askı listesi boş');
     if (suspendedList != '') {
         let suspendedListHtml = '';
+        suspendedList = suspendedList.sort((a, b) => b.id - a.id);
         suspendedList.forEach(function(suspend, index) {
             let sumPrice = suspend.products.reduce((total, item) => total + item.amount, 0);
             let shortList = suspend.products.slice(0, 2).map(function(item, index) {
@@ -805,7 +895,6 @@ function fillSuspendedList() {
         $('#suspendedListDiv').html(suspendedListHtml);
     }
 }
-
 
 // ready
 $(document).ready(function () {
@@ -1108,7 +1197,7 @@ function AsideBarButtons(containerId, buttonsPerPage) {
             if (inMemory != '' || suspendedList != '') {
                 bodyHtml = `<div id="memoryCardDiv"></div>
                             <div id="suspendedListDiv"></div>`;
-                footerHtml = `<button id="resetSuspended" onclick="resetSuspended()" class="resetButton">Tümünü Kaldır</button>`;
+                footerHtml = `<button id="resetSuspended" onclick="resetSuspended()" class="resetButton" ${(suspendedList == '') ? 'disabled' : ''}>Tümünü Kaldır</button>`;
             }
             else {
                 bodyHtml = `Askı listeniz boş.`;

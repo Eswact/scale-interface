@@ -959,7 +959,7 @@ body {
     margin: 16px 2px;
 }
 #memoryCard {
-    border: 2px dashed #ddd;
+    border: 2px dashed var(--active-color);
 }
 .suspendedCard {
     width: 100%;
