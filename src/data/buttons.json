@@ -5,6 +5,7 @@
         "iconClass": "fa-solid fa-heart",
         "onClick": "open_favorites",
         "isModal": true,
+        "customClose": "close_favorites",
         "modalWidth": 600,
         "modalHeight": 720
     },
@@ -14,6 +15,7 @@
         "iconClass": "fa-solid fa-sd-card",
         "onClick": "suspend",
         "isModal": true,
+        "customClose": null,
         "modalWidth": 720,
         "modalHeight": 840
     }

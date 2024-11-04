@@ -707,6 +707,16 @@ function resetFavorites() {
     }
 }
 
+function isFavoritesChanged() {
+    return categories
+        .filter(x => x.isFav)
+        .sort((a, b) => a.favOrder - b.favOrder)
+        .some((item, index) => {
+            return !$(`.favorite-item[data-id=${item.id}]`).is(':visible') || 
+                   $(`.favorite-item[data-id=${item.id}]`).attr('data-order') != item.favOrder;
+        });
+}
+
 // print && memory && suspended
 function printProducts(products){
     console.log(products);
@@ -808,14 +818,14 @@ function fillMemoryCard() {
         let shortList = inMemory.slice(0, 2).map(function(item, index) {
             return `<li>
                         <span class="liBarcode">[${item.barcode}]</span>
-                        <span class="liPrice">(${convert2Kg(item.weighed)} x ${convert2Price(item.unitPrice)} = <span class="singleAmount">${convert2Price(item.amount)}</span>)</span>
+                        <span class="liPrice">(${(item.ponderable) ? convert2Kg(item.weighed) : item.weighed} x ${convert2Price(item.unitPrice)} = <span class="singleAmount">${convert2Price(item.amount)}</span>)</span>
                         <span class="liName">${item.name}</span>
                     </li>`
         }).join('');
         let longList = inMemory.map(function(item, index) {
             return `<li>
                         <span class="liBarcode">[${item.barcode}]</span>
-                        <span class="liPrice">(${item.weighed} x ${convert2Price(item.unitPrice)} = <span class="singleAmount">${convert2Price(item.amount)}</span>)</span>
+                        <span class="liPrice">(${(item.ponderable) ? convert2Kg(item.weighed) : item.weighed} x ${convert2Price(item.unitPrice)} = <span class="singleAmount">${convert2Price(item.amount)}</span>)</span>
                         <span class="liName">${item.name}</span>
                     </li>`
         }).join('');
@@ -984,6 +994,7 @@ $(document).ready(function () {
                     id: JSON.stringify(selectedProductId),
                     name: categories.find(x => x.id == selectedProductId).name,
                     barcode: categories.find(x => x.id == selectedProductId).barcode,
+                    ponderable: categories.find(x => x.id == selectedProductId).ponderable,
                     weighed: getWeighed(),
                     unitPrice: getUnitPrice(),
                     tare: getTare(),
@@ -1191,6 +1202,16 @@ function AsideBarButtons(containerId, buttonsPerPage) {
                 createFavoritesSortable(swapMode);
             }
         },
+        close_favorites: function() {
+            if (isFavoritesChanged()){
+                if (confirm("Kaydedilmemiş değişiklikler var. Emin misiniz?") == true) {
+                    closeModalE();
+                }
+            }
+            else {
+                closeModalE();
+            }
+        },
         suspend: async function() {
             let bodyHtml;
             let footerHtml;
@@ -1228,7 +1249,9 @@ function AsideBarButtons(containerId, buttonsPerPage) {
                             fillAsideButtonsModal(); //reset
                             openAsideButtonsModal(buttonProps);
                             $('#asideButtonsModal').addClass('load');
-    
+                            if (button.customClose) { $('#asideButtonsModal .closeModalE').off('click').on('click', () => { this.functionMap[button.customClose](); }); } 
+                            else { $('#asideButtonsModal .closeModalE').off('click').on('click', () => { closeModalE(); }); }
+
                             try {
                                 await this.functionMap[button.onClick]();
                                 $('#asideButtonsModal').removeClass('load');
