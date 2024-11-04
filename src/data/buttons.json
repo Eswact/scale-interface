@@ -14,7 +14,7 @@
         "iconClass": "fa-solid fa-sd-card",
         "onClick": "suspend",
         "isModal": true,
-        "modalWidth": 600,
-        "modalHeight": 720
+        "modalWidth": 720,
+        "modalHeight": 840
     }
 ]

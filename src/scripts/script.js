@@ -669,26 +669,143 @@ function resetFavorites() {
     }
 }
 
-// suspended
-function inMemory2Suspended() {
-    if (inMemory != '') {
-        let maxId = (suspendedList.length > 0) ? Math.max(...suspendedList.map(item => item.id)) + 1 : 1;
-        suspendedList.push({
-            id: maxId,
-            products: inMemory
-        });
-    }
-    resetMemory();
-}
+// memory/print/suspended
+
 function printMemory() {
-    console.log(inMemory);
-    resetMemory();
+    if (confirm("Emin misiniz?") == true) {
+        console.log(inMemory);
+        resetMemory();
+        closeModalE();
+        alert("Yazdırma işlemi gerçekleşti.");
+    }
 }
-// function printSuspended(id) {}
 function resetMemory() {
-    inMemory = [];
-    $('.productCard').removeClass('memory');
+    if (confirm("Emin misiniz?") == true) {
+        inMemory = [];
+        $('.productCard').removeClass('memory');
+        fillMemoryCard();
+    }
 }
+function inMemory2Suspended() {
+    if (confirm("Emin misiniz?") == true) {
+        if (inMemory != '') {
+            let maxId = (suspendedList.length > 0) ? Math.max(...suspendedList.map(item => item.id)) + 1 : 1;
+            suspendedList.push({
+                id: maxId,
+                products: inMemory
+            });
+        }
+        resetMemory();
+        fillMemoryCard();
+        fillSuspendedList();
+        alert("Hafıza askıya alındı.");
+    }
+}
+function printSuspended(id) {
+    console.log(suspendedList.find(x => x.id = id));
+}
+function deleteSuspended(id) {
+    console.log(suspendedList.find(x => x.id = id));
+}
+
+function toggleListVis(id) {
+    $(`.suspendedCard[data-id=${id}] .liCard`).toggleClass('showFull');
+}
+
+function fillMemoryCard() {
+    $('#memoryCardDiv').html('');
+    if (inMemory != '') {
+        let sumPrice = inMemory.reduce((total, item) => total + item.amount, 0);
+        let shortList = inMemory.slice(0, 2).map(function(item, index) {
+            return `<li>
+                        <span class="liBarcode">[${item.barcode}]</span>
+                        <span class="liPrice">(${convert2Kg(item.weighed)} x ${convert2Price(item.unitPrice)} = <span class="singleAmount">${convert2Price(item.amount)}</span>)</span>
+                        <span class="liName">${item.name}</span>
+                    </li>`
+        }).join('');
+        let longList = inMemory.map(function(item, index) {
+            return `<li>
+                        <span class="liBarcode">[${item.barcode}]</span>
+                        <span class="liPrice">(${item.weighed} x ${convert2Price(item.unitPrice)} = <span class="singleAmount">${convert2Price(item.amount)}</span>)</span>
+                        <span class="liName">${item.name}</span>
+                    </li>`
+        }).join('');
+
+        $('#memoryCardDiv').html(`<h3>Anlık Hafıza</h3>
+                                    <div id="memoryCard" class="suspendedCard" data-id="0">
+                                        <div class="liCard">
+                                            <div class="productLists">
+                                                <ul class="shortList">
+                                                    ${shortList}
+                                                    ${inMemory.length > 2 ? `<li><button onclick="toggleListVis(0)" class="showFullListButton"><i class="fa-solid fa-chevron-down"></i></button></li>` : ''}
+                                                </ul>
+                                                <ul class="longList">
+                                                    ${longList}
+                                                     ${inMemory.length > 2 ? `<li><button onclick="toggleListVis(0)" class="showShortListButton"><i class="fa-solid fa-chevron-up"></i></button></li>` : ''}
+                                                </ul>
+                                                <div>
+                                                    <span>Kalem: ${inMemory.length}</span>
+                                                    <span>Yekün: ${convert2Price(sumPrice)}</span>
+                                                </div>
+                                            </div>
+                                            <div class="actionButtons">
+                                                <button onclick="resetMemory()" class="deleteLiButton"><i class="fa-solid fa-trash-can"></i></button>
+                                                <button onclick="inMemory2Suspended()" class="suspendLiButton"><i class="fa-regular fa-clock"></i></button>
+                                                <button onclick="printMemory()" class="printLiButton"><i class="fa-solid fa-print"></i></button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <hr class="hrSpace"/>`);
+    }
+}
+function fillSuspendedList() {
+    $('#suspendedListDiv').html('Askı listesi boş');
+    if (suspendedList != '') {
+        let suspendedListHtml = '';
+        suspendedList.forEach(function(suspend, index) {
+            let sumPrice = suspend.products.reduce((total, item) => total + item.amount, 0);
+            let shortList = suspend.products.slice(0, 2).map(function(item, index) {
+                return `<li>
+                            <span class="liBarcode">[${item.barcode}]</span>
+                            <span class="liPrice">(${convert2Kg(item.weighed)} x ${convert2Price(item.unitPrice)} = <span class="singleAmount">${convert2Price(item.amount)}</span>)</span>
+                            <span class="liName">${item.name}</span>
+                        </li>`
+            }).join('');
+            let longList = suspend.products.map(function(item, index) {
+                return `<li>
+                            <span class="liBarcode">[${item.barcode}]</span>
+                            <span class="liPrice">(${item.weighed} x ${convert2Price(item.unitPrice)} = <span class="singleAmount">${convert2Price(item.amount)}</span>)</span>
+                            <span class="liName">${item.name}</span>
+                        </li>`
+            }).join('');
+
+            suspendedListHtml += `<div class="suspendedCard" data-id="${suspend.id}">
+                                            <div class="liCard">
+                                                <div class="productLists">
+                                                    <ul class="shortList">
+                                                        ${shortList}
+                                                        ${suspend.products.length > 2 ? `<li><button onclick="toggleListVis(${suspend.id})" class="showFullListButton"><i class="fa-solid fa-chevron-down"></i></button></li>` : ''}
+                                                    </ul>
+                                                    <ul class="longList">
+                                                        ${longList}
+                                                        ${suspend.products.length > 2 ? `<li><button onclick="toggleListVis(${suspend.id})" class="showShortListButton"><i class="fa-solid fa-chevron-up"></i></button></li>` : ''}
+                                                    </ul>
+                                                    <div>
+                                                        <span>Kalem: ${suspend.products.length}</span>
+                                                        <span>Yekün: ${convert2Price(sumPrice)}</span>
+                                                    </div>
+                                                </div>
+                                                <div class="actionButtons">
+                                                    <button onclick="deleteSuspended(${suspend.id})" class="deleteLiButton"><i class="fa-solid fa-trash-can"></i></button>
+                                                    <button onclick="printSuspended(${suspend.id})" class="printLiButton"><i class="fa-solid fa-print"></i></button>
+                                                </div>
+                                            </div>
+                                        </div>`;
+        });
+        $('#suspendedListDiv').html(suspendedListHtml);
+    }
+}
+
 
 // ready
 $(document).ready(function () {
@@ -989,7 +1106,8 @@ function AsideBarButtons(containerId, buttonsPerPage) {
             let bodyHtml;
             let footerHtml;
             if (inMemory != '' || suspendedList != '') {
-                bodyHtml = `inmemory card + suspendedList`;
+                bodyHtml = `<div id="memoryCardDiv"></div>
+                            <div id="suspendedListDiv"></div>`;
                 footerHtml = `<button id="resetSuspended" onclick="resetSuspended()" class="resetButton">Tümünü Kaldır</button>`;
             }
             else {
@@ -997,6 +1115,8 @@ function AsideBarButtons(containerId, buttonsPerPage) {
                 footerHtml = `<button id="resetSuspended" onclick="resetSuspended()" class="resetButton" disabled>Tümünü Kaldır</button>`;
             }
             fillAsideButtonsModal(bodyHtml, footerHtml);
+            fillMemoryCard();
+            fillSuspendedList();
         },
     };    
 
