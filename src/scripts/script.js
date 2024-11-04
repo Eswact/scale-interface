@@ -1181,7 +1181,7 @@ function AsideBarButtons(containerId, buttonsPerPage) {
             let footerHtml;
             let favorites = [...categories.filter(x => x.isFav).sort((a, b) => a.favOrder - b.favOrder)];
             if (favorites.length > 0) {
-                bodyHtml = `<div id="favoriteCategoryFilter"><input class="" type="checkbox" /><label>Seçili olan kategorinin ürünlerini göster</label></div>
+                bodyHtml = `<div id="favoriteCategoryFilter"><input id="categoryFilterCheck" name="categoryFilterCheck" type="checkbox" /><label for="categoryFilterCheck">Seçili olan kategorinin ürünlerini göster</label></div>
                             <ul id="favoritesList" class="sortable"></ul>`;
                 footerHtml = `<button id="saveFavoritesOrder" onclick="saveFavoritesOrder()"  class="saveButton">Kaydet</button>
                               <button id="resetFavorites" onclick="resetFavorites()" class="resetButton">Tümünü Kaldır</button>`;
