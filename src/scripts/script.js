@@ -449,7 +449,7 @@ function setProductDetail(productId) {
     if (selectedProduct.isFav) { $('#productDetailDiv').addClass('favorites'); }
     else { $('#productDetailDiv').removeClass('favorites'); }
     setUnitPrice(selectedProduct.price);
-    if ($('.keypad-header input').val() != '' && confirmation_keypad._currentState == 'default') { $('.keypad-action-button-right').click(); }
+    if ($('.keypad-header input').val() != '' && confirmation_keypad._currentState == 'default') { setWeighed(confirmation_keypad.getNumericValue(true)); }
     else { if (!selectedProduct.ponderable) { setWeighed(1); } }
     calculateTotalAmount();
 }
