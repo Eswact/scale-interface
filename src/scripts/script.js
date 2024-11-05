@@ -104,11 +104,18 @@
     fillSuspendedList() => Fills the suspended list with the relevant content.
 */
 
+// enums
+const scaleModes = {
+    default: 0,
+    sales: 1
+}
+
 
 // all data
 let categories;
 
 // options
+let scaleMode;
 let columnCount;
 let rowCount;
 let barCount;
@@ -139,16 +146,24 @@ let activeSubCategory = null;
 
 let backArray = [];
 
-let inMemory = [];
-let suspendedList = [];
-
+// favorites
 let sortableFavorites;
 let swapMode = false;
 let tempRemovedFavorites = [];
 
+// memory && suspended
+let inMemory = [];
+let suspendedList = [];
+
+// sales cart
+let salesBasket = [];
+
+// keypad
+var confirmation_keypad;
+
 // css injection
 var options = localStorage.getItem("options");
-var default_options = { columnCount: 4, rowCount: 3, barCount: 5, bar2Count: 5, baseFont: 16, sellerman: false, buttonCount: 5, fullScreen: true };
+var default_options = { scaleMode: scaleModes.default, columnCount: 4, rowCount: 3, barCount: 5, bar2Count: 5, baseFont: 16, sellerman: false, buttonCount: 5, fullScreen: true };
 function getOptions() {
     if (options === undefined || options === null) {
         options = default_options;
@@ -166,6 +181,7 @@ function updateOptions(kullanici_yeni_opts) {
     fetchCategories();
 }
 function applyOptions() {
+    scaleMode = options.scaleMode;
     columnCount = options.columnCount;
     rowCount = options.rowCount;
     cardsPerPage = rowCount * columnCount;
@@ -450,8 +466,12 @@ function setProductDetail(productId) {
     else { $('#productDetailDiv').removeClass('favorites'); }
     setUnitPrice(selectedProduct.price);
     if ($('.keypad-header input').val() != '' && confirmation_keypad._currentState == 'default') { setWeighed(confirmation_keypad.getNumericValue(true)); }
-    else { if (!selectedProduct.ponderable) { setWeighed(1); } }
+    else { if (!selectedProduct.ponderable && scaleMode != scaleModes.sales) { setWeighed(1); } }
     calculateTotalAmount();
+
+    if(scaleMode == scaleModes.sales) {
+        add2Basket();
+    }
 }
 function resetProductDetail() {
     selectedProductId = null;
@@ -921,11 +941,44 @@ function fillSuspendedList() {
     }
 }
 
+// salesBasket
+function add2Basket() {
+    if (selectedProductId != null) {
+        if (getWeighed() <= 0 && selectedProductId != null) {
+            return;
+        }
+
+        let existingProduct = salesBasket.find(x => x.id == selectedProductId);
+        if (!existingProduct) {
+            salesBasket.push({
+                id: JSON.stringify(selectedProductId),
+                name: categories.find(x => x.id == selectedProductId).name,
+                barcode: categories.find(x => x.id == selectedProductId).barcode,
+                ponderable: categories.find(x => x.id == selectedProductId).ponderable,
+                weighed: getWeighed(),
+                unitPrice: getUnitPrice(),
+                tare: getTare(),
+                amount: getAmount()
+            });
+        } else {
+            existingProduct.weighed += getWeighed();
+            existingProduct.amount += getAmount();
+        }
+
+        $('#chooseProductDiv').html(`${(categories.find(x => x.id == selectedProductId).ponderable) ? `${convert2KgWithUnit(getWeighed())}` : `${getWeighed()} Adet`} ${categories.find(x => x.id == selectedProductId).name} sepete eklendi.`)
+        resetProductDetail();
+        setWeighed(0);
+    }
+}
+
 // ready
 $(document).ready(function () {
     // get options && data
     getOptions();
     fetchCategories();
+
+    // set keypad
+    setFirstKeypad();
 
     // main category click event
     $('#mainCategoryContainer').on('click', '.mainCategory', function () {
@@ -1171,39 +1224,105 @@ function reverseConvertFromPrice(value) {
 }
 
 // KeypadJS
-var confirmation_keypad = Keypad.generateFrom("#numpadContainer", [
-    {
-        statename: "filter-mod",
-        rightActionContent: "<i class='fa fa-magnifying-glass' style=\"font-family: 'FontAwesome'; color: #fff;\"></i>",
-        leftActionDisabled: true,
-        rightAction: function (keypad) {
-            filterByBarcode(keypad.getNumericValue(true));
-        },
-        watcher: function (keypad, char, prevVal, nextVal) {
-            if (nextVal.length < 6 || nextVal.includes(',')) {
-                keypad.setState("default");
-            }
-            return true;
-        }
-    },
-    {
-        statename: "default",
-        rightActionContent: "<i class='fa fa-check' style=\"font-family: 'FontAwesome'; color: var(--green);\"></i>",
-        rightAction: function (keypad) {
-            setWeighed(keypad.getNumericValue(true));
-            calculateTotalAmount();
-        },
-        watcher: function (keypad, char, prevVal, nextVal) {
-            if (nextVal.length >= 6 && !nextVal.includes(',')) {
-                keypad.setState("filter-mod");
-            }
-            return true;
-        }
-    },
-], {
-    html_mod: 1,
-});
-confirmation_keypad.setState("default");
+function setFirstKeypad() {
+    switch (scaleMode) {
+        case scaleModes.sales:
+            confirmation_keypad = Keypad.generateFrom("#numpadContainer", [
+                {
+                    statename: "filter-mod",
+                    rightActionContent: "<i class='fa fa-magnifying-glass' style=\"font-family: 'FontAwesome'; color: #fff;\"></i>",
+                    // leftActionDisabled: true,
+                    rightAction: function (keypad) {
+                        filterByBarcode(keypad.getNumericValue(true));
+                    },
+                    watcher: function (keypad, char, prevVal, nextVal) {
+                        if (char == 'x' || char == ',') {
+                            return false;
+                        }
+                        if (nextVal.length < 6 || nextVal.includes(',') || nextVal.includes('x')) {
+                            keypad.setState("default");
+                        }
+
+                        return true;
+                    }
+                },
+                {
+                    statename: "default",
+                    rightActionContent: "<i class='fa fa-check' style=\"font-family: 'FontAwesome'; color: var(--green);\"></i>",
+                    rightAction: function (keypad) {
+                        console.log(keypad.getValue())
+                        if (!keypad.getValue().includes('x')) {
+                            setWeighed(keypad.getNumericValue(true));
+                            calculateTotalAmount();
+                            add2Basket();
+                        }
+                        else {
+                            let currentValue = keypad.getValue(true);
+                            console.log(currentValue);
+                            // x'in solu adet/kg x'in sağı barkod
+                            // categories.find(barcode) => id else böyle bir ürün yok alert
+                            // selectedProductId = id
+                            // setWeight(xin solu)
+                            // add2Basket()
+                        }
+                    },
+                    watcher: function (keypad, char, prevVal, nextVal) {
+                        if (nextVal.length >= 6 && !nextVal.includes(',') && !nextVal.includes('x')) {
+                            keypad.setState("filter-mod");
+                        }
+                        if ((prevVal == '' && (char == 'x' || char == ',')) ||
+                            (prevVal.includes('x') && (char == 'x' || char == ',')) ||
+                            (prevVal.includes(',') && char == ',')) {
+                            return false;
+                        }
+                        // max length ?
+                        // x kullanıldıktan sonra x modu ?
+                        return true;
+                    }
+                }
+            ], {
+                html_mod: 2,
+            });
+            confirmation_keypad.setState("default");
+            break;
+        default:
+            confirmation_keypad = Keypad.generateFrom("#numpadContainer", [
+                {
+                    statename: "filter-mod",
+                    rightActionContent: "<i class='fa fa-magnifying-glass' style=\"font-family: 'FontAwesome'; color: #fff;\"></i>",
+                    leftActionDisabled: true,
+                    rightAction: function (keypad) {
+                        filterByBarcode(keypad.getNumericValue(true));
+                    },
+                    watcher: function (keypad, char, prevVal, nextVal) {
+                        if (nextVal.length < 6 || nextVal.includes(',')) {
+                            keypad.setState("default");
+                        }
+                        return true;
+                    }
+                },
+                {
+                    statename: "default",
+                    rightActionContent: "<i class='fa fa-check' style=\"font-family: 'FontAwesome'; color: var(--green);\"></i>",
+                    rightAction: function (keypad) {
+                        setWeighed(keypad.getNumericValue(true));
+                        calculateTotalAmount();
+                    },
+                    watcher: function (keypad, char, prevVal, nextVal) {
+                        if (nextVal.length >= 6 && !nextVal.includes(',')) {
+                            keypad.setState("filter-mod");
+                        }
+                        return true;
+                    }
+                },
+            ], {
+                html_mod: 1,
+            });
+            confirmation_keypad.setState("default");
+            break;
+    }
+}
+
 
 // asidebar buttons
 function AsideBarButtons(containerId, buttonsPerPage) {

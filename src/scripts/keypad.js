@@ -2,7 +2,8 @@
 
 var HTML_MOD_TYPES = {
     DEFAULT: 0,
-    EREN: 1,
+    SCALE_MODE: 1,
+    SALES_MOD: 2,
 }
 function TryParseInt(value, defaultValue) {
     try {
@@ -89,33 +90,59 @@ Keypad.prototype = {
 
         var _node = document.createElement("div");
         _node.classList.add("keypad-wrapper");
-        if (params.html_mod == HTML_MOD_TYPES.EREN) {
-            _node.innerHTML = `<div class="keypad-header">
-                                    <input type="text" readonly/>
-                                </div>
-                                <div class="keypad-grid">
-                                    <div class="keypad-number-buttons">
-                                        <button class="keypad-numeric-button keypad-button">7</button>
-                                        <button class="keypad-numeric-button keypad-button">8</button>
-                                        <button class="keypad-numeric-button keypad-button">9</button>
-                                        <button class="keypad-numeric-button keypad-button">4</button>
-                                        <button class="keypad-numeric-button keypad-button">5</button>
-                                        <button class="keypad-numeric-button keypad-button">6</button>
-                                        <button class="keypad-numeric-button keypad-button">1</button>
-                                        <button class="keypad-numeric-button keypad-button">2</button>
-                                        <button class="keypad-numeric-button keypad-button">3</button>
-                                        <button class="keypad-action-button-left keypad-button">,</button>
-                                        <button class="keypad-numeric-button keypad-button">0</button>
-                                        <button title="yazdır" id="printProductButton" class="keypad-button"><i class="fa-solid fa-print" style="font-family: \'FontAwesome\';"></i></button>
+        switch (params.html_mod) {
+            case HTML_MOD_TYPES.SCALE_MODE:
+                _node.innerHTML = `<div class="keypad-header">
+                                        <input type="text" readonly/>
                                     </div>
-                                    <div class="keypad-right-buttons">
-                                        <button class="keypad-delete-button keypad-button"><i class="fa fa-arrow-left" style="font-family: \'FontAwesome\';"></i></button>
-                                        <button class="keypad-action-button-right keypad-button">x</button>
-                                    </div>
-                                </div>`;
-        }
-        else { // DEFAULT
-            _node.innerHTML = '<div class="keypad-header">\
+                                    <div class="keypad-grid">
+                                        <div class="keypad-number-buttons">
+                                            <button class="keypad-numeric-button keypad-button">7</button>
+                                            <button class="keypad-numeric-button keypad-button">8</button>
+                                            <button class="keypad-numeric-button keypad-button">9</button>
+                                            <button class="keypad-numeric-button keypad-button">4</button>
+                                            <button class="keypad-numeric-button keypad-button">5</button>
+                                            <button class="keypad-numeric-button keypad-button">6</button>
+                                            <button class="keypad-numeric-button keypad-button">1</button>
+                                            <button class="keypad-numeric-button keypad-button">2</button>
+                                            <button class="keypad-numeric-button keypad-button">3</button>
+                                            <button class="keypad-action-button-left keypad-button">,</button>
+                                            <button class="keypad-numeric-button keypad-button">0</button>
+                                            <button title="yazdır" id="printProductButton" class="keypad-button"><i class="fa-solid fa-print" style="font-family: \'FontAwesome\';"></i></button>
+                                        </div>
+                                        <div class="keypad-right-buttons">
+                                            <button class="keypad-delete-button keypad-button"><i class="fa fa-arrow-left" style="font-family: \'FontAwesome\';"></i></button>
+                                            <button class="keypad-action-button-right keypad-button">x</button>
+                                        </div>
+                                    </div>`;
+                    break;
+            case HTML_MOD_TYPES.SALES_MOD:
+                    _node.innerHTML = `<div class="keypad-header">
+                                            <input type="text" readonly/>
+                                        </div>
+                                        <div class="keypad-grid">
+                                            <div class="keypad-number-buttons">
+                                                <button class="keypad-numeric-button keypad-button">7</button>
+                                                <button class="keypad-numeric-button keypad-button">8</button>
+                                                <button class="keypad-numeric-button keypad-button">9</button>
+                                                <button class="keypad-numeric-button keypad-button">4</button>
+                                                <button class="keypad-numeric-button keypad-button">5</button>
+                                                <button class="keypad-numeric-button keypad-button">6</button>
+                                                <button class="keypad-numeric-button keypad-button">1</button>
+                                                <button class="keypad-numeric-button keypad-button">2</button>
+                                                <button class="keypad-numeric-button keypad-button">3</button>
+                                                <button class="keypad-action-button-left keypad-button">,</button>
+                                                <button class="keypad-numeric-button keypad-button">0</button>
+                                                <button class="keypad-numeric-button keypad-button">x</button>
+                                            </div>
+                                            <div class="keypad-right-buttons">
+                                                <button class="keypad-delete-button keypad-button"><i class="fa fa-arrow-left" style="font-family: \'FontAwesome\';"></i></button>
+                                                <button class="keypad-action-button-right keypad-button">x</button>
+                                            </div>
+                                        </div>`;
+                    break;
+            default:
+                _node.innerHTML = '<div class="keypad-header">\
                                     <input type="text" readonly/>\
                                     <button class="keypad-delete-button keypad-button" style="min-width: 2em;"><i class="fa fa-arrow-left" style="font-family: \'FontAwesome\';"></i></button>\
                                 </div>\
@@ -139,7 +166,7 @@ Keypad.prototype = {
                                     <button class="keypad-numeric-button keypad-button">0</button>\
                                     <button class="keypad-action-button-right keypad-button">x</button>\
                                 </div>';
-            
+                break;
         }
         this._dom.appendChild(_node);
     },
