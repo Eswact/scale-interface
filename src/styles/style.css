@@ -269,7 +269,7 @@ body {
     font-optical-sizing: auto;
     font-style: normal;
     /* font-size: 2rem; */
-    font-size: 2.75rem;
+    font-size: 3rem;
     border: 4px solid var(--second-color);
     box-shadow: 0 3px 3px 2px var(--second-color-25);
     border-radius: 12px;
@@ -906,16 +906,16 @@ body {
     border: 1px solid #ddd;
     border-radius: 6px;
 }
-#favoritesList .favorite-item div {
+#favoritesList .favorite-item .itemInfoDiv {
     max-width: 100%;
     display: flex;
     flex-direction: column;
 }
-#favoritesList .favorite-item div span {
+#favoritesList .favorite-item .itemInfoDiv span {
     font-size: 1.4rem;
     max-width: 100%;
 }
-#favoritesList .favorite-item div span:first-child {
+#favoritesList .favorite-item .itemInfoDiv span:first-child {
     max-width: 100%;
     margin-bottom: 4px;
     font-family: monospace;
@@ -930,6 +930,10 @@ body {
     border: none;
     background-color: transparent;
     color: var(--red);
+}
+#favoritesList .favorite-item .pageInfo {
+    margin-right: 20px;
+    font-size: 1.25rem;
 }
 #favoriteCategoryFilter {
     width: 100%;

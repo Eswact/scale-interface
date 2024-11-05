@@ -527,7 +527,10 @@ function createFavoritesList(favorites) {
         return `<li class="favorite-item" data-id="${fav.id}" data-order=${fav.favOrder}>
                     <i class="handle fa-solid fa-grip-vertical"></i>
                     <input type="number" class="fav-order-input" value="${fav.favOrder}" min="1" />
-                    <div>
+                    <div class="pageInfo">
+                        <span>${Math.ceil(fav.favOrder / cardsPerPage)}/${(fav.favOrder % cardsPerPage == 0) ? cardsPerPage : fav.favOrder % cardsPerPage}</span>
+                    </div>
+                    <div class="itemInfoDiv">
                         <span class="fav-barcode three-dots">[${fav.barcode}]</span>
                         <span class="fav-name three-dots">${fav.name}</span>
                     </div>
@@ -664,6 +667,18 @@ function updateOrderNumbers(evt) {
         $oldItem.find('input').val(newIndex);
         $oldItem.attr('data-order', newIndex);
     }
+
+    updatePageInfo();
+}
+
+function updatePageInfo() {
+    $('.favorite-item').each(function() {
+        let $item = $(this);
+        let order = parseInt($item.attr('data-order'), 10);
+        let page = Math.ceil(order / cardsPerPage);
+        let position = ((order - 1) % cardsPerPage) + 1;
+        $item.find('.pageInfo span').text(`${page}/${position}`);
+    });
 }
 
 function saveFavoritesOrder() {
@@ -818,14 +833,14 @@ function fillMemoryCard() {
         let shortList = inMemory.slice(0, 2).map(function(item, index) {
             return `<li>
                         <span class="liBarcode">[${item.barcode}]</span>
-                        <span class="liPrice">(${(item.ponderable) ? convert2Kg(item.weighed) : item.weighed} x ${convert2Price(item.unitPrice)} = <span class="singleAmount">${convert2Price(item.amount)}</span>)</span>
+                        <span class="liPrice">(${(item.ponderable) ? convert2Kg(item.weighed) : item.weighed} x ${convert2PriceWithUnit(item.unitPrice)} = <span class="singleAmount">${convert2PriceWithUnit(item.amount)}</span>)</span>
                         <span class="liName">${item.name}</span>
                     </li>`
         }).join('');
         let longList = inMemory.map(function(item, index) {
             return `<li>
                         <span class="liBarcode">[${item.barcode}]</span>
-                        <span class="liPrice">(${(item.ponderable) ? convert2Kg(item.weighed) : item.weighed} x ${convert2Price(item.unitPrice)} = <span class="singleAmount">${convert2Price(item.amount)}</span>)</span>
+                        <span class="liPrice">(${(item.ponderable) ? convert2Kg(item.weighed) : item.weighed} x ${convert2PriceWithUnit(item.unitPrice)} = <span class="singleAmount">${convert2PriceWithUnit(item.amount)}</span>)</span>
                         <span class="liName">${item.name}</span>
                     </li>`
         }).join('');
@@ -844,7 +859,7 @@ function fillMemoryCard() {
                                                 </ul>
                                                 <div>
                                                     <span>Kalem: ${inMemory.length}</span>
-                                                    <span>Yekün: ${convert2Price(sumPrice)}</span>
+                                                    <span>Yekün: ${convert2PriceWithUnit(sumPrice)}</span>
                                                 </div>
                                             </div>
                                             <div class="actionButtons">
@@ -1092,13 +1107,37 @@ function convert2Price(value) {
         str = str.replace(/\./, "x");
         str = str.replace(/,/g, ".");
         str = str.replace(/x/, ",");
+        return str;
+    }
+    else {
+        return "0,00";
+    }
+}
+function convert2Kg(value) {
+    if (value != null && value != undefined) {
+        let str = value.toLocaleString('en-US', { minimumFractionDigits: 3, maximumFractionDigits: 3 });
+        str = str.replace(/\./, "x");
+        str = str.replace(/,/g, ".");
+        str = str.replace(/x/, ",");
+        return str;
+    }
+    else {
+        return "0,000";
+    }
+}
+function convert2PriceWithUnit(value) {
+    if (value != null && value != undefined) {
+        let str = value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        str = str.replace(/\./, "x");
+        str = str.replace(/,/g, ".");
+        str = str.replace(/x/, ",");
         return str + " ₺";
     }
     else {
         return "0,00 ₺";
     }
 }
-function convert2Kg(value) {
+function convert2KgWithUnit(value) {
     if (value != null && value != undefined) {
         let str = value.toLocaleString('en-US', { minimumFractionDigits: 3, maximumFractionDigits: 3 });
         str = str.replace(/\./, "x");
