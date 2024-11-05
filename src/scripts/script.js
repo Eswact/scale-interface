@@ -1253,20 +1253,28 @@ function setFirstKeypad() {
                     statename: "default",
                     rightActionContent: "<i class='fa fa-check' style=\"font-family: 'FontAwesome'; color: var(--green);\"></i>",
                     rightAction: function (keypad) {
-                        console.log(keypad.getValue())
+                        console.log(keypad.getValue());
                         if (!keypad.getValue().includes('x')) {
                             setWeighed(keypad.getNumericValue(true));
-                            calculateTotalAmount();
-                            add2Basket();
+                            if (selectedProductId != null) {
+                                calculateTotalAmount();
+                                add2Basket();
+                            }
                         }
                         else {
                             let currentValue = keypad.getValue(true);
-                            console.log(currentValue);
-                            // x'in solu adet/kg x'in sağı barkod
-                            // categories.find(barcode) => id else böyle bir ürün yok alert
-                            // selectedProductId = id
-                            // setWeight(xin solu)
-                            // add2Basket()
+                            let [leftX, rightX] = currentValue.split('x');
+                            let currentQuantity = parseFloat(leftX.replace(",", "."));
+                            console.log(leftX, currentQuantity);
+                            let currentBarcode = parseInt(rightX);
+                            if (categories.find(x => x.barcode == currentBarcode)) { 
+                                selectedProductId = categories.find(x => x.barcode == currentBarcode).id; 
+                                setWeighed(currentQuantity);
+                                add2Basket();
+                            }
+                            else {
+                                alert(`${currentBarcode} Barkodlu bir ürün bulunamadı.`)
+                            }
                         }
                     },
                     watcher: function (keypad, char, prevVal, nextVal) {
