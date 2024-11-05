@@ -996,7 +996,10 @@ $(document).ready(function () {
     });
 
     $('#memoryProductButton').click(function() {
-        if ($('.keypad-header input').val() != '' && confirmation_keypad._currentState == 'default') $('.keypad-action-button-right').click();
+        if ($('.keypad-header input').val() != '' && confirmation_keypad._currentState == 'default') {
+            setWeighed(confirmation_keypad.getNumericValue(true));
+            calculateTotalAmount();
+        }
         if (selectedProductId != null) {
             if (getWeighed() <= 0 && selectedProductId != null) {
                 alert('Lütfen Kilo/Adet giriniz.');
