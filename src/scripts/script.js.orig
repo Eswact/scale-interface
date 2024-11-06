@@ -158,12 +158,15 @@ let tempRemovedFavorites = [];
 let inMemory = [];
 let suspendedList = [];
 
+<<<<<<< HEAD
 // sales cart
 let salesBasket = [];
 
 // keypad
 var confirmation_keypad;
 
+=======
+>>>>>>> main
 // css injection
 var options = localStorage.getItem("options");
 var default_options = { scaleMode: scaleModes.default, columnCount: 4, rowCount: 3, barCount: 5, bar2Count: 5, baseFont: 16, sellerman: false, buttonCount: 5, fullScreen: true };
@@ -1111,7 +1114,13 @@ $(document).ready(function () {
     $('#printProductButton').click(function() {
         if (selectedProductId != null && $('.keypad-header input').val() != '' && confirmation_keypad._currentState == 'default') { $('#memoryProductButton').click(); }
         if (inMemory != '') { printMemory(); }
+<<<<<<< HEAD
+        else { 
+            asideBar.executeButtonAction('suspend');
+        }
+=======
         else { asideBar.executeButtonAction('suspendedButton'); }
+>>>>>>> main
     });
     $('#otherButtons').click(function() {
         $('#content').toggleClass('full');
@@ -1431,6 +1440,33 @@ function AsideBarButtons(containerId, buttonsPerPage) {
         }
     };
 
+    this.executeButtonAction = async function(buttonOnClick) {
+        const button = this.buttonsData.find(b => b.onClick === buttonOnClick);
+        if (button && this.functionMap[button.onClick]) {
+            let buttonProps = { name: button.name, iconClass: button.iconClass, modalWidth: button.modalWidth, modalHeight: button.modalHeight };
+            fillAsideButtonsModal(); // reset
+            openAsideButtonsModal(buttonProps);
+            $('#asideButtonsModal').addClass('load');
+
+            if (button.customClose) { 
+                $('#asideButtonsModal .closeModalE').off('click').on('click', () => { this.functionMap[button.customClose](); }); 
+            } else { 
+                $('#asideButtonsModal .closeModalE').off('click').on('click', () => { closeModalE(); }); 
+            }
+
+            try {
+                await this.functionMap[button.onClick]();
+                $('#asideButtonsModal').removeClass('load');
+            } catch (error) {
+                $('#asideButtonsModal').removeClass('load');
+                $('#asideButtonsModal').removeClass('show');
+                console.error(error);
+            }
+        } else {
+            console.warn('Fonksiyon bulunamadı:', buttonId);
+        }
+    };
+
     this.renderButtons = function() {
         this.container.empty();
 
@@ -1441,7 +1477,11 @@ function AsideBarButtons(containerId, buttonsPerPage) {
             let button = this.buttonsData[i];
             let li = $('<li></li>');
             let buttonElement = $(`<button id="${button.domId}" title="${button.name}"><i class="${button.iconClass}"></i> <span class="threeDots">${button.name}</span></button>`);
+<<<<<<< HEAD
+            buttonElement.on('click', () => this.executeButtonAction(button.onClick));
+=======
             buttonElement.on('click', () => this.executeButtonAction(button.domId));
+>>>>>>> main
 
             li.append(buttonElement);
             this.container.append(li);
