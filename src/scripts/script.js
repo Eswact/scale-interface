@@ -148,7 +148,10 @@ let backArray = [];
 
 // asideBar
 var asideBar;
+// asideBar
+var asideBar;
 
+// favorites
 // favorites
 let sortableFavorites;
 let swapMode = false;
@@ -1111,9 +1114,7 @@ $(document).ready(function () {
     $('#printProductButton').click(function() {
         if (selectedProductId != null && $('.keypad-header input').val() != '' && confirmation_keypad._currentState == 'default') { $('#memoryProductButton').click(); }
         if (inMemory != '') { printMemory(); }
-        else { 
-            asideBar.executeButtonAction('suspend');
-        }
+        else { asideBar.executeButtonAction('suspendedButton'); }
     });
     $('#otherButtons').click(function() {
         $('#content').toggleClass('full');
@@ -1404,10 +1405,10 @@ function AsideBarButtons(containerId, buttonsPerPage) {
             fillMemoryCard();
             fillSuspendedList();
         },
-    };    
-
-    this.executeButtonAction = async function(buttonOnClick) {
-        const button = this.buttonsData.find(b => b.onClick === buttonOnClick);
+    }; 
+    
+    this.executeButtonAction = async function(id) {
+        const button = this.buttonsData.find(b => b.domId === id);
         if (button && this.functionMap[button.onClick]) {
             let buttonProps = { name: button.name, iconClass: button.iconClass, modalWidth: button.modalWidth, modalHeight: button.modalHeight };
             fillAsideButtonsModal(); // reset
@@ -1443,7 +1444,7 @@ function AsideBarButtons(containerId, buttonsPerPage) {
             let button = this.buttonsData[i];
             let li = $('<li></li>');
             let buttonElement = $(`<button id="${button.domId}" title="${button.name}"><i class="${button.iconClass}"></i> <span class="threeDots">${button.name}</span></button>`);
-            buttonElement.on('click', () => this.executeButtonAction(button.onClick));
+            buttonElement.on('click', () => this.executeButtonAction(button.domId));
 
             li.append(buttonElement);
             this.container.append(li);
