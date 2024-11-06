@@ -755,6 +755,17 @@ function printMemory() {
         alert("Yazdırma işlemi gerçekleşti.");
     }
 }
+function printMemoryFromKeypad() {
+    if (confirm("Emin misiniz?") == true) {
+        printProducts(inMemory);
+        resetMemory();
+        alert("Yazdırma işlemi gerçekleşti.");
+    }
+    else {
+        let removedItem = inMemory.pop();
+        $(`.productCard[data-product=${removedItem.id}]`).removeClass('memory');
+    }
+}
 function inMemory2Suspended() {
     if (confirm("Emin misiniz?") == true) {
         if (inMemory != '') {
@@ -1058,7 +1069,7 @@ $(document).ready(function () {
     });
     $('#printProductButton').click(function() {
         if (selectedProductId != null && (($('.keypad-header input').val() != '' && confirmation_keypad._currentState == 'default') || getWeighed() > 0) ) { $('#memoryProductButton').click(); }
-        if (inMemory != '') { printMemory(); }
+        if (inMemory != '') { printMemoryFromKeypad(); }
         else { asideBar.executeButtonAction('suspendedButton'); }
     });
     $('#otherButtons').click(function() {
