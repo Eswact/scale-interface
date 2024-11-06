@@ -1109,7 +1109,7 @@ $(document).ready(function () {
         }
     });
     $('#printProductButton').click(function() {
-        if (selectedProductId != null && $('.keypad-header input').val() != '' && confirmation_keypad._currentState == 'default') { $('#memoryProductButton').click(); }
+        if (selectedProductId != null && (($('.keypad-header input').val() != '' && confirmation_keypad._currentState == 'default') || getWeighed() > 0) ) { $('#memoryProductButton').click(); }
         if (inMemory != '') { printMemory(); }
         else { asideBar.executeButtonAction('suspendedButton'); }
     });
