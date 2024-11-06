@@ -139,12 +139,17 @@ let activeSubCategory = null;
 
 let backArray = [];
 
-let inMemory = [];
-let suspendedList = [];
+// asideBar
+var asideBar;
 
+// favorites
 let sortableFavorites;
 let swapMode = false;
 let tempRemovedFavorites = [];
+
+// memory && suspended
+let inMemory = [];
+let suspendedList = [];
 
 // css injection
 var options = localStorage.getItem("options");
@@ -174,7 +179,7 @@ function applyOptions() {
     baseFont = options.baseFont;
     sellerman = options.sellerman ? "flex" : "none";
     options.fullScreen ? $('#content').addClass('full') : $('#content').removeClass('full');
-    const asideBar = new AsideBarButtons("#buttonsSide nav ul", options.buttonCount);
+    asideBar = new AsideBarButtons("#buttonsSide nav ul", options.buttonCount);
     asideBar.loadButtonsFromJSON('././data/buttons.json');
 
     inject();
@@ -1009,7 +1014,7 @@ $(document).ready(function () {
             let existingProduct = inMemory.find(x => x.id == selectedProductId);
             if (!existingProduct) {
                 inMemory.push({
-                    id: JSON.stringify(selectedProductId),
+                    id: typeof selectedProductId === 'string' ? selectedProductId : JSON.stringify(selectedProductId),
                     name: categories.find(x => x.id == selectedProductId).name,
                     barcode: categories.find(x => x.id == selectedProductId).barcode,
                     ponderable: categories.find(x => x.id == selectedProductId).ponderable,
@@ -1052,9 +1057,9 @@ $(document).ready(function () {
         }
     });
     $('#printProductButton').click(function() {
-        if (selectedProductId != null) { $('#memoryProductButton').click(); }
+        if (selectedProductId != null && $('.keypad-header input').val() != '' && confirmation_keypad._currentState == 'default') { $('#memoryProductButton').click(); }
         if (inMemory != '') { printMemory(); }
-        else { $('#suspendedButton').click(); }
+        else { asideBar.executeButtonAction('suspendedButton'); }
     });
     $('#otherButtons').click(function() {
         $('#content').toggleClass('full');
@@ -1270,7 +1275,34 @@ function AsideBarButtons(containerId, buttonsPerPage) {
             fillMemoryCard();
             fillSuspendedList();
         },
-    };    
+    }; 
+    
+    this.executeButtonAction = async function(id) {
+        const button = this.buttonsData.find(b => b.domId === id);
+        if (button && this.functionMap[button.onClick]) {
+            let buttonProps = { name: button.name, iconClass: button.iconClass, modalWidth: button.modalWidth, modalHeight: button.modalHeight };
+            fillAsideButtonsModal(); // reset
+            openAsideButtonsModal(buttonProps);
+            $('#asideButtonsModal').addClass('load');
+
+            if (button.customClose) { 
+                $('#asideButtonsModal .closeModalE').off('click').on('click', () => { this.functionMap[button.customClose](); }); 
+            } else { 
+                $('#asideButtonsModal .closeModalE').off('click').on('click', () => { closeModalE(); }); 
+            }
+
+            try {
+                await this.functionMap[button.onClick]();
+                $('#asideButtonsModal').removeClass('load');
+            } catch (error) {
+                $('#asideButtonsModal').removeClass('load');
+                $('#asideButtonsModal').removeClass('show');
+                console.error(error);
+            }
+        } else {
+            console.warn('Fonksiyon bulunamadı:', buttonId);
+        }
+    };
 
     this.renderButtons = function() {
         this.container.empty();
@@ -1282,32 +1314,7 @@ function AsideBarButtons(containerId, buttonsPerPage) {
             let button = this.buttonsData[i];
             let li = $('<li></li>');
             let buttonElement = $(`<button id="${button.domId}" title="${button.name}"><i class="${button.iconClass}"></i> <span class="threeDots">${button.name}</span></button>`);
-
-            if (this.functionMap[button.onClick]) {
-                if (button.isModal) {
-                    buttonElement.on('click', (function(button) {
-                        return async () => {
-                            let buttonProps = { name: button.name, iconClass: button.iconClass, modalWidth: button.modalWidth, modalHeight: button.modalHeight }
-                            fillAsideButtonsModal(); //reset
-                            openAsideButtonsModal(buttonProps);
-                            $('#asideButtonsModal').addClass('load');
-                            if (button.customClose) { $('#asideButtonsModal .closeModalE').off('click').on('click', () => { this.functionMap[button.customClose](); }); } 
-                            else { $('#asideButtonsModal .closeModalE').off('click').on('click', () => { closeModalE(); }); }
-
-                            try {
-                                await this.functionMap[button.onClick]();
-                                $('#asideButtonsModal').removeClass('load');
-                            } catch (error) {
-                                $('#asideButtonsModal').removeClass('load');
-                                $('#asideButtonsModal').removeClass('show');
-                                console.error(error);
-                            }
-                        };
-                    }).bind(this)(button));
-                }
-                else { buttonElement.on('click', this.functionMap[button.onClick].bind(this)); }
-            } 
-            else { console.warn('Function not found for:', button.onClick); }
+            buttonElement.on('click', () => this.executeButtonAction(button.domId));
 
             li.append(buttonElement);
             this.container.append(li);
