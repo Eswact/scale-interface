@@ -146,6 +146,9 @@ let activeSubCategory = null;
 
 let backArray = [];
 
+// asideBar
+var asideBar;
+
 // favorites
 let sortableFavorites;
 let swapMode = false;
@@ -190,7 +193,7 @@ function applyOptions() {
     baseFont = options.baseFont;
     sellerman = options.sellerman ? "flex" : "none";
     options.fullScreen ? $('#content').addClass('full') : $('#content').removeClass('full');
-    const asideBar = new AsideBarButtons("#buttonsSide nav ul", options.buttonCount);
+    asideBar = new AsideBarButtons("#buttonsSide nav ul", options.buttonCount);
     asideBar.loadButtonsFromJSON('././data/buttons.json');
 
     inject();
@@ -943,6 +946,7 @@ function fillSuspendedList() {
 
 // salesBasket
 function add2Basket() {
+    console.log(selectedProductId);
     if (selectedProductId != null) {
         if (getWeighed() <= 0 && selectedProductId != null) {
             return;
@@ -951,7 +955,7 @@ function add2Basket() {
         let existingProduct = salesBasket.find(x => x.id == selectedProductId);
         if (!existingProduct) {
             salesBasket.push({
-                id: JSON.stringify(selectedProductId),
+                id: typeof selectedProductId === 'string' ? selectedProductId : JSON.stringify(selectedProductId),
                 name: categories.find(x => x.id == selectedProductId).name,
                 barcode: categories.find(x => x.id == selectedProductId).barcode,
                 ponderable: categories.find(x => x.id == selectedProductId).ponderable,
@@ -1062,7 +1066,7 @@ $(document).ready(function () {
             let existingProduct = inMemory.find(x => x.id == selectedProductId);
             if (!existingProduct) {
                 inMemory.push({
-                    id: JSON.stringify(selectedProductId),
+                    id: typeof selectedProductId === 'string' ? selectedProductId : JSON.stringify(selectedProductId),
                     name: categories.find(x => x.id == selectedProductId).name,
                     barcode: categories.find(x => x.id == selectedProductId).barcode,
                     ponderable: categories.find(x => x.id == selectedProductId).ponderable,
@@ -1105,9 +1109,11 @@ $(document).ready(function () {
         }
     });
     $('#printProductButton').click(function() {
-        if (selectedProductId != null) { $('#memoryProductButton').click(); }
+        if (selectedProductId != null && $('.keypad-header input').val() != '' && confirmation_keypad._currentState == 'default') { $('#memoryProductButton').click(); }
         if (inMemory != '') { printMemory(); }
-        else { $('#suspendedButton').click(); }
+        else { 
+            asideBar.executeButtonAction('suspend');
+        }
     });
     $('#otherButtons').click(function() {
         $('#content').toggleClass('full');
@@ -1265,11 +1271,12 @@ function setFirstKeypad() {
                             let currentValue = keypad.getValue(true);
                             let [leftX, rightX] = currentValue.split('x');
                             let currentQuantity = parseFloat(leftX.replace(",", "."));
-                            console.log(leftX, currentQuantity);
                             let currentBarcode = parseInt(rightX);
                             if (categories.find(x => x.barcode == currentBarcode)) { 
-                                selectedProductId = categories.find(x => x.barcode == currentBarcode).id; 
+                                selectedProductId = categories.find(x => x.barcode == currentBarcode).id;
+                                setUnitPrice(categories.find(x => x.barcode == currentBarcode).price);
                                 setWeighed(currentQuantity);
+                                calculateTotalAmount();
                                 add2Basket();
                             }
                             else {
@@ -1399,6 +1406,33 @@ function AsideBarButtons(containerId, buttonsPerPage) {
         },
     };    
 
+    this.executeButtonAction = async function(buttonOnClick) {
+        const button = this.buttonsData.find(b => b.onClick === buttonOnClick);
+        if (button && this.functionMap[button.onClick]) {
+            let buttonProps = { name: button.name, iconClass: button.iconClass, modalWidth: button.modalWidth, modalHeight: button.modalHeight };
+            fillAsideButtonsModal(); // reset
+            openAsideButtonsModal(buttonProps);
+            $('#asideButtonsModal').addClass('load');
+
+            if (button.customClose) { 
+                $('#asideButtonsModal .closeModalE').off('click').on('click', () => { this.functionMap[button.customClose](); }); 
+            } else { 
+                $('#asideButtonsModal .closeModalE').off('click').on('click', () => { closeModalE(); }); 
+            }
+
+            try {
+                await this.functionMap[button.onClick]();
+                $('#asideButtonsModal').removeClass('load');
+            } catch (error) {
+                $('#asideButtonsModal').removeClass('load');
+                $('#asideButtonsModal').removeClass('show');
+                console.error(error);
+            }
+        } else {
+            console.warn('Fonksiyon bulunamadı:', buttonId);
+        }
+    };
+
     this.renderButtons = function() {
         this.container.empty();
 
@@ -1409,32 +1443,7 @@ function AsideBarButtons(containerId, buttonsPerPage) {
             let button = this.buttonsData[i];
             let li = $('<li></li>');
             let buttonElement = $(`<button id="${button.domId}" title="${button.name}"><i class="${button.iconClass}"></i> <span class="threeDots">${button.name}</span></button>`);
-
-            if (this.functionMap[button.onClick]) {
-                if (button.isModal) {
-                    buttonElement.on('click', (function(button) {
-                        return async () => {
-                            let buttonProps = { name: button.name, iconClass: button.iconClass, modalWidth: button.modalWidth, modalHeight: button.modalHeight }
-                            fillAsideButtonsModal(); //reset
-                            openAsideButtonsModal(buttonProps);
-                            $('#asideButtonsModal').addClass('load');
-                            if (button.customClose) { $('#asideButtonsModal .closeModalE').off('click').on('click', () => { this.functionMap[button.customClose](); }); } 
-                            else { $('#asideButtonsModal .closeModalE').off('click').on('click', () => { closeModalE(); }); }
-
-                            try {
-                                await this.functionMap[button.onClick]();
-                                $('#asideButtonsModal').removeClass('load');
-                            } catch (error) {
-                                $('#asideButtonsModal').removeClass('load');
-                                $('#asideButtonsModal').removeClass('show');
-                                console.error(error);
-                            }
-                        };
-                    }).bind(this)(button));
-                }
-                else { buttonElement.on('click', this.functionMap[button.onClick].bind(this)); }
-            } 
-            else { console.warn('Function not found for:', button.onClick); }
+            buttonElement.on('click', () => this.executeButtonAction(button.onClick));
 
             li.append(buttonElement);
             this.container.append(li);
