@@ -7,7 +7,8 @@
         "isModal": true,
         "customClose": "close_favorites",
         "modalWidth": 720,
-        "modalHeight": 720
+        "modalHeight": 720,
+        "modes": [0,1]
     },
     {
         "name": "Askı Listesi",
@@ -17,6 +18,18 @@
         "isModal": true,
         "customClose": null,
         "modalWidth": 720,
-        "modalHeight": 800
+        "modalHeight": 800,
+        "modes": [0,1]
+    },
+    {
+        "name": "Sepet",
+        "domId": "basketButton",
+        "iconClass": "fa-solid fa-basket-shopping",
+        "onClick": "open_basket",
+        "isModal": true,
+        "customClose": null,
+        "modalWidth": 1366,
+        "modalHeight": 768,
+        "modes": [1]
     }
 ]

@@ -123,6 +123,8 @@ let bar2Count;
 let baseFont;
 let sellerman;
 let buttonCount;
+let basketQuantityButtons;
+let basketQuantityInput;
 
 // selected product
 let selectedProductId = null;
@@ -166,7 +168,7 @@ var confirmation_keypad;
 
 // css injection
 var options = localStorage.getItem("options");
-var default_options = { scaleMode: scaleModes.default, columnCount: 4, rowCount: 3, barCount: 5, bar2Count: 5, baseFont: 16, sellerman: false, buttonCount: 5, fullScreen: true };
+var default_options = { scaleMode: scaleModes.default, columnCount: 4, rowCount: 3, barCount: 5, bar2Count: 5, baseFont: 16, sellerman: false, buttonCount: 5, fullScreen: true, basketQuantityButtons: true, basketQuantityInput: true };
 function getOptions() {
     if (options === undefined || options === null) {
         options = default_options;
@@ -182,9 +184,11 @@ function updateOptions(kullanici_yeni_opts) {
     localStorage.setItem("options", JSON.stringify(options));
     applyOptions();
     fetchCategories();
+    // closeModalE();
 }
 function applyOptions() {
     scaleMode = options.scaleMode;
+    setFirstKeypad();
     columnCount = options.columnCount;
     rowCount = options.rowCount;
     cardsPerPage = rowCount * columnCount;
@@ -193,6 +197,8 @@ function applyOptions() {
     baseFont = options.baseFont;
     sellerman = options.sellerman ? "flex" : "none";
     options.fullScreen ? $('#content').addClass('full') : $('#content').removeClass('full');
+    basketQuantityButtons = options.basketQuantityButtons ? "block" : "none";
+    basketQuantityInput = options.basketQuantityInput;
     asideBar = new AsideBarButtons("#buttonsSide nav ul", options.buttonCount);
     asideBar.loadButtonsFromJSON('././data/buttons.json');
 
@@ -228,6 +234,7 @@ function inject() {
                             --bar2-count: ${bar2Count};
                             --sellerman: ${sellerman};
                             --buttonCount: ${buttonCount};
+                            --basket-quantity-buttons: ${basketQuantityButtons};
                         }
                     </style>`
     $("head").append(newcss)
@@ -483,6 +490,8 @@ function resetProductDetail() {
     $('.productCard').removeClass('selected');
     setUnitPrice(0);
     calculateTotalAmount();
+
+    $('#chooseProductDiv').html('Lütfen ürün seçimi yapınız');
 }
 
 // barcode filter
@@ -957,7 +966,6 @@ function fillSuspendedList() {
 
 // salesBasket
 function add2Basket() {
-    console.log(selectedProductId);
     if (selectedProductId != null) {
         if (getWeighed() <= 0 && selectedProductId != null) {
             return;
@@ -969,6 +977,7 @@ function add2Basket() {
                 id: typeof selectedProductId === 'string' ? selectedProductId : JSON.stringify(selectedProductId),
                 name: categories.find(x => x.id == selectedProductId).name,
                 barcode: categories.find(x => x.id == selectedProductId).barcode,
+                image: categories.find(x => x.id == selectedProductId).image,
                 ponderable: categories.find(x => x.id == selectedProductId).ponderable,
                 weighed: getWeighed(),
                 unitPrice: getUnitPrice(),
@@ -980,10 +989,90 @@ function add2Basket() {
             existingProduct.amount += getAmount();
         }
 
-        $('#chooseProductDiv').html(`${(categories.find(x => x.id == selectedProductId).ponderable) ? `${convert2KgWithUnit(getWeighed())}` : `${getWeighed()} Adet`} ${categories.find(x => x.id == selectedProductId).name} sepete eklendi.`)
+        let notificationText = `${(categories.find(x => x.id == selectedProductId).ponderable) ? `${convert2KgWithUnit(getWeighed())}` : `${getWeighed()} Adet`} ${categories.find(x => x.id == selectedProductId).name} sepete eklendi.`;
         resetProductDetail();
+        $('#chooseProductDiv').html(notificationText);
         setWeighed(0);
     }
+}
+
+function reloadBasketProductList() {
+    let basketProductList = '';
+    salesBasket.forEach(function(item, index){
+        basketProductList += `<li data-product="${item.id}">
+                                <button onclick="deleteBasketLine(${item.id})" class="deleteLine"><i class="fa-solid fa-circle-xmark"></i></button>
+                                <div class="productInfos">
+                                    <img src="${item.image}"/>
+                                    <div>
+                                        <span>[${item.barcode}]</span>
+                                        <span title="${item.name}" class="threeDots">${item.name}</span>
+                                    </div>
+                                </div>
+                                <div class="payInfo">
+                                    <div class="quantityInfo">
+                                        <button onclick="decreaseWeigh(${item.id})"><i class="fa-solid fa-minus"></i></button>
+                                        <input onblur="setCustomWeigh(${item.id})" class="quantityInput" type="number" min="0" value="${(item.ponderable) ? convert2Kg(item.weighed).replace(',','.') : item.weighed}" ${!basketQuantityInput ? 'disabled' : ''}/>
+                                        <button onclick="incrementWeigh(${item.id})"><i class="fa-solid fa-plus"></i></button>
+                                    </div>
+                                    <div class="priceInfo">
+                                        <span class="calculateSpan threeDots">${(item.ponderable) ? convert2Kg(item.weighed) : item.weighed} x ${convert2PriceWithUnit(item.unitPrice)}</span>
+                                        <span class="amountSpan threeDots">${convert2PriceWithUnit(item.amount)}</span>
+                                    </div>
+                                </div>
+                            </li>`
+    });
+    updateTotalPrice();
+    return basketProductList;
+}
+
+function updateTotalPrice() {
+    $('#lineItemCount').text(`${salesBasket.length}`);
+    $('#totalPrice').text(`${convert2PriceWithUnit(salesBasket.reduce(function(total, item){ return total + item.amount },0))}`);
+}
+
+function incrementWeigh(id) {
+    let currentProduct = salesBasket.find(x => x.id == id);
+    currentProduct.weighed = currentProduct.weighed + 1;
+    lineWeighUpdate(currentProduct);
+}
+function decreaseWeigh(id) {
+    let currentProduct = salesBasket.find(x => x.id == id);
+    if (currentProduct.weighed - 1 > 0) {
+        currentProduct.weighed = currentProduct.weighed - 1;
+        lineWeighUpdate(currentProduct);
+    }
+}
+function setCustomWeigh(id) {
+    let currentProduct = salesBasket.find(x => x.id == id);
+    if ($(`#basketProductListSection li[data-product=${currentProduct.id}] .quantityInput`).val() > 0) {
+        currentProduct.weighed = parseFloat($(`#basketProductListSection li[data-product=${currentProduct.id}] .quantityInput`).val());
+        lineWeighUpdate(currentProduct);
+    }
+    else {
+        currentProduct.weighed = 1;
+        lineWeighUpdate(currentProduct);
+    }
+}
+function lineWeighUpdate(currentProduct) {
+    currentProduct.amount = currentProduct.weighed * currentProduct.unitPrice;
+    if (currentProduct.ponderable) {
+        $(`#basketProductListSection li[data-product=${currentProduct.id}] .quantityInput`).val(convert2Kg(currentProduct.weighed).replace(',','.'));
+    }
+    else {
+        $(`#basketProductListSection li[data-product=${currentProduct.id}] .quantityInput`).val(currentProduct.weighed);
+    }
+    $(`#basketProductListSection li[data-product=${currentProduct.id}] .calculateSpan`).text(`${(currentProduct.ponderable) ? convert2Kg(currentProduct.weighed) : currentProduct.weighed} x ${convert2PriceWithUnit(currentProduct.unitPrice)}`);
+    $(`#basketProductListSection li[data-product=${currentProduct.id}] .amountSpan`).text(`${convert2PriceWithUnit(currentProduct.amount)}`);
+
+    updateTotalPrice();
+}
+
+function deleteBasketLine(id) {
+    let productIndex = salesBasket.findIndex(x => x.id == id);
+    salesBasket.splice(productIndex, 1);
+    let newBasketProductList = reloadBasketProductList();
+    $('#basketProductListSection ul').html(newBasketProductList);
+    if (!salesBasket.length) closeModalE();
 }
 
 // ready
@@ -991,9 +1080,6 @@ $(document).ready(function () {
     // get options && data
     getOptions();
     fetchCategories();
-
-    // set keypad
-    setFirstKeypad();
 
     // main category click event
     $('#mainCategoryContainer').on('click', '.mainCategory', function () {
@@ -1243,6 +1329,8 @@ function reverseConvertFromPrice(value) {
 
 // KeypadJS
 function setFirstKeypad() {
+    confirmation_keypad = null;
+    $("#numpadContainer").html('');
     switch (scaleMode) {
         case scaleModes.sales:
             confirmation_keypad = Keypad.generateFrom("#numpadContainer", [
@@ -1268,7 +1356,6 @@ function setFirstKeypad() {
                     statename: "default",
                     rightActionContent: "<i class='fa fa-check' style=\"font-family: 'FontAwesome'; color: var(--green);\"></i>",
                     rightAction: function (keypad) {
-                        console.log(keypad.getValue());
                         if (!keypad.getValue().includes('x')) {
                             setWeighed(keypad.getNumericValue(true));
                             if (selectedProductId != null) {
@@ -1413,6 +1500,41 @@ function AsideBarButtons(containerId, buttonsPerPage) {
             fillMemoryCard();
             fillSuspendedList();
         },
+        open_basket: async function () {
+            let basketProductList = reloadBasketProductList();
+            let bodyHtml;
+            if (salesBasket.length > 0) {
+                bodyHtml = `<div id="basketModalBody">
+                                <div id="basketProductListSection">
+                                    <ul>
+                                        ${basketProductList}
+                                    </ul>
+                                    <div class="productListSummary">
+                                        <div>
+                                            <span>Kalem: </span>
+                                            <span id="lineItemCount">${salesBasket.length}</span>
+                                        </div>
+                                        <div>
+                                            <span>Yekün: </span>
+                                            <span id="totalPrice">${convert2PriceWithUnit(salesBasket.reduce(function(total, item){ return total + item.amount },0))}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="basketPaymentSection"></div>
+                            </div>`;
+            }
+            else {
+                bodyHtml = `<div id="emptyBasketModal">
+                                <h3>Sepetinizde hiç ürün bulunmuyor.</h3>
+                                <img src="./public/images/empty_basket.gif"/>
+                            </div>`;
+            }
+            fillAsideButtonsModal(bodyHtml);
+        },
+        close_basket: function() {
+            // kontroller gelicek
+            closeModalE();
+        },
     }; 
     
     this.executeButtonAction = async function(id) {
@@ -1450,12 +1572,14 @@ function AsideBarButtons(containerId, buttonsPerPage) {
 
         for (let i = startIndex; i < endIndex; i++) {
             let button = this.buttonsData[i];
-            let li = $('<li></li>');
-            let buttonElement = $(`<button id="${button.domId}" title="${button.name}"><i class="${button.iconClass}"></i> <span class="threeDots">${button.name}</span></button>`);
-            buttonElement.on('click', () => this.executeButtonAction(button.domId));
+            if (button.modes.some(x => x == scaleMode)) {
+                let li = $('<li></li>');
+                let buttonElement = $(`<button id="${button.domId}" title="${button.name}"><i class="${button.iconClass}"></i> <span class="threeDots">${button.name}</span></button>`);
+                buttonElement.on('click', () => this.executeButtonAction(button.domId));
 
-            li.append(buttonElement);
-            this.container.append(li);
+                li.append(buttonElement);
+                this.container.append(li);
+            }
         }
 
         let remainingButtons = this.buttonsPerPage - (endIndex - startIndex);

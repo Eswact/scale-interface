@@ -77,16 +77,17 @@ input[type="number"] {
     --red: rgb(236, 54, 67);
     --green: rgb(67, 160, 71);
     --aside-bar: rgb(15, 76, 92);
+    --gray: #777;
 
     --base-font-size: 16px;
 
-    /* 3 MOD --> 6/12/20 card */
-    --column-count: 3; /* 3/4/5 column */
+    --column-count: 3; /* recommended: 3/4/5 column */
     --row-count: calc(var(--column-count) - 1);
     --bar2-count: 5;
     --bar-count: 5;
     --sellerman: "none";
     --button-count: 5;
+    --basket-quantity-buttons: "block";
 }
 /* root end */
 
@@ -785,7 +786,7 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
+    margin-bottom: 14px;
 }
 .modalE .modalBg .modalHeader .modalInfo {
     display: flex;
@@ -804,7 +805,6 @@ body {
     width: 100%;
     height: 100%;
     overflow-y: auto;
-    margin-top: 10px;
 } 
 .modalE .modalBg .modalFooter {
     width: 100%;
@@ -1018,7 +1018,6 @@ body {
 }
 .shortList li .singleAmount, .longList li .singleAmount {
     font-size: 1.15rem;
-    color: var(--main-color);
 }
 .liCard .actionButtons {
     width: 20%;
@@ -1052,6 +1051,167 @@ body {
     border: none;
 }
 /* suspended list end */
+
+/* basket start */
+#basketModalBody {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    border-top: 2px solid #ddd;
+}
+#basketProductListSection {
+    width: calc(100% - 360px);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+#basketPaymentSection {
+    width: 360px;
+    height: 100%;
+    padding: 10px;
+    border-left: 2px solid #ddd;
+}
+#basketProductListSection ul {
+    width: 100%;
+    height: calc(100% - 80px);
+    padding: 10px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
+}
+#basketProductListSection ul li {
+    position: relative;
+    width: 100%;
+    padding: 4px 40px 4px 10px;
+    margin-top: 12px;
+    border: 1px solid #eee;
+    border-radius: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+#basketProductListSection ul li:first-child {
+    margin-top: 4px;
+}
+#basketProductListSection ul li .deleteLine {
+    position: absolute;
+    top: -1rem;
+    right: -1.2rem;
+    border: none;
+    background: transparent;
+    font-size: 2.4rem;
+    padding: 4px 8px;
+    color: var(--red);
+}
+#basketProductListSection ul li .productInfos {
+    display: flex;
+    align-items: center;
+    max-width: 50%;
+}
+#basketProductListSection ul li .productInfos img {
+    width: 100px;
+    height: 100px;
+    object-fit: contain;
+    margin-right: 20px;
+}
+#basketProductListSection ul li .productInfos div {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    font-size: 1.5rem;
+    max-width: calc(100% - 120px);
+}
+#basketProductListSection ul li .productInfos div span {
+    max-width: 100%;
+}
+#basketProductListSection ul li .productInfos div span:first-child {
+    margin-bottom: 6px;
+    font-family: monospace;
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+#basketProductListSection ul li .payInfo {
+    max-width: 50%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+#basketProductListSection ul li .payInfo .quantityInfo {
+    display: flex;
+    align-items: center;
+}
+#basketProductListSection ul li .payInfo .quantityInfo input {
+    text-align: center;
+    width: 7rem;
+    padding: 6px 4px;
+    font-size: 1rem;
+    margin: 0 6px;
+    border: 1px solid var(--first-color-25);
+    border-radius: 4px;
+}
+#basketProductListSection ul li .payInfo .quantityInfo button {
+    display: var(--basket-quantity-buttons);
+    font-size: 1.25rem;
+    background-color: var(--first-color);
+    color: white;
+    border: none;
+    padding: 4px 8px;
+    border-radius: 4px;
+}
+#basketProductListSection ul li .payInfo .priceInfo {
+    width: 14rem;
+    display: flex;
+    align-items: flex-end;
+    flex-direction: column;
+    font-size: 1.25rem;
+}
+#basketProductListSection ul li .payInfo .priceInfo span:first-child {
+    font-family: monospace;
+    font-weight: 600;
+    color: var(--gray);
+}
+#basketProductListSection .productListSummary {
+    width: 100%;
+    height: 80px;
+    padding: 10px 30px;
+    border-top: 2px solid #ddd;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 1.55rem;
+}
+#basketProductListSection .productListSummary div {
+    display: flex;
+    align-items: center;
+}
+#basketProductListSection .productListSummary div span:first-child {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-right: 8px;
+}
+#emptyBasketModal {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+#emptyBasketModal h3 {
+    font-size: 1.6rem;
+}
+#emptyBasketModal img {
+    transform: scale(1.1);
+    height: 480px;
+    width: auto;
+}
+/* basket end */
 
 /* resolution-warning start */
 #resolution-warning {
