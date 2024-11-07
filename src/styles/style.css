@@ -221,10 +221,26 @@ body {
 #buttonsDiv {
     width: 100%;
 }
+#buttonsDiv button {
+    position: relative;
+}
 #buttonsDiv button span {
     max-width: 100%;
     font-size: 0.8rem;
     margin-top: 8px;
+}
+#buttonsDiv button div {
+    display: none;
+    position: absolute;
+    top: 0;
+    right: 4px;
+    width: 1rem;
+    height: 1rem;
+    border-radius: 50%;
+    background-color: var(--red);
+}
+#buttonsDiv button.notif div {
+    display: block;
 }
 #buttonsDiv button.buttonsPagination {
     color: var(--active-color);
@@ -345,6 +361,17 @@ body {
     display: block;
 }
 #cardContainer .productCard.memory .productCardIcons .fa-sd-card {
+    display: block;
+}
+#cardContainer .productCard .fa-basket-shopping {
+    display: none;
+    position: absolute;
+    right: 6px;
+    bottom: 6px;
+    font-size: 1.5rem;
+    color: var(--active-color);
+}
+#cardContainer .productCard.basket .fa-basket-shopping {
     display: block;
 }
 #cardContainer .productCard .productName {
@@ -1086,9 +1113,9 @@ body {
 #basketProductListSection ul li {
     position: relative;
     width: 100%;
-    padding: 4px 40px 4px 10px;
+    padding: 4px 4rem 4px 10px;
     margin-top: 12px;
-    border: 1px solid #eee;
+    border: 1px solid var(--first-color-25);
     border-radius: 12px;
     display: flex;
     justify-content: space-between;
@@ -1099,12 +1126,11 @@ body {
 }
 #basketProductListSection ul li .deleteLine {
     position: absolute;
-    top: -1rem;
-    right: -1.2rem;
+    right: 0;
     border: none;
     background: transparent;
-    font-size: 2.4rem;
-    padding: 4px 8px;
+    font-size: 1.6rem;
+    padding: 8px 12px;
     color: var(--red);
 }
 #basketProductListSection ul li .productInfos {
@@ -1186,14 +1212,34 @@ body {
     align-items: center;
     font-size: 1.55rem;
 }
-#basketProductListSection .productListSummary div {
+#basketProductListSection .productListSummary .quantityAndTotalPrice {
     display: flex;
     align-items: center;
 }
-#basketProductListSection .productListSummary div span:first-child {
+#basketProductListSection .productListSummary .quantityAndTotalPrice div {
+    display: flex;
+    align-items: center;
+    margin-left: 3rem;
+}
+#basketProductListSection .productListSummary .quantityAndTotalPrice div span:first-child {
     font-size: 1.25rem;
     font-weight: 600;
     margin-right: 8px;
+    color: var(--first-color);
+}
+#basketProductListSection .productListSummary .productListButtons {
+    display: flex;
+    align-items: center;
+}
+#basketProductListSection .productListSummary .productListButtons button {
+    font-size: 1.25rem;
+    padding: 6px 12px;
+    border-radius: 6px;
+}
+#basketProductListSection .productListSummary .productListButtons #breakBasket {
+    background-color: var(--red);
+    color: white;
+    border: none;
 }
 #emptyBasketModal {
     width: 100%;
@@ -1210,6 +1256,36 @@ body {
     transform: scale(1.1);
     height: 480px;
     width: auto;
+}
+#openBasketButton {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    display: none;
+    align-items: center;
+    justify-content: space-around;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    color: white;
+    background-color: var(--active-color);
+    border: none;
+    border-radius: 0.75rem;
+}
+#openBasketButton.show {
+    display: flex;
+}
+#openBasketButton i {
+    font-size: 1.75rem;
+    margin-right: 0.75rem;
+}
+#openBasketButton div {
+    background-color: white;
+    min-width: 2rem;
+    min-height: 2rem;
+    padding: 5px;
+    border-radius: 50%;
+    font-weight: 600;
+    color: var(--active-color);
 }
 /* basket end */
 

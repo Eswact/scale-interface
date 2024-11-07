@@ -202,6 +202,13 @@ function applyOptions() {
     asideBar = new AsideBarButtons("#buttonsSide nav ul", options.buttonCount);
     asideBar.loadButtonsFromJSON('././data/buttons.json');
 
+    if (scaleMode = scaleModes.sales) {
+        $('#content').append(`<button onclick="openBasket()" id="openBasketButton">
+                                    <i class="fa-solid fa-basket-shopping"></i>
+                                    <div id="basketProductCounter"></div>
+                                </button>`);
+    }
+
     inject();
 }
 function inject() {
@@ -290,12 +297,13 @@ function renderProducts(page) {
 
     $('#cardContainer').empty();
     productsToShow.forEach(product => {
-        $('#cardContainer').append(`<div class="productCard ${(product.isFav)?'favorite':''} ${(inMemory.find(x => x.id == product.id))?'memory':''}" data-product="${product.id}">
+        $('#cardContainer').append(`<div class="productCard ${(product.isFav)?'favorite':''} ${(inMemory.find(x => x.id == product.id))?'memory':''} ${(salesBasket.find(x => x.id == product.id))?'basket':''}" data-product="${product.id}">
                                         <div class="productCardIcons">
                                             <i class="fa-solid fa-heart"></i>
                                             <i class="fa-solid fa-sd-card"></i>
                                         </div>
-                                        <img src="${product.image}" />
+                                        <i class="fa-solid fa-basket-shopping"></i>
+                                        <img src="${product.image || './public/images/default_image.png'}" onerror="this.src='./public/images/default_image.png';" />
                                         <div>
                                             <span class="productName truncatedText2" title="${product.name}">${product.name}</span>
                                             <span class="productPrice">${convert2Price(product.price)}</span>
@@ -468,7 +476,7 @@ function setProductDetail(productId) {
     $('#productDetailDiv').addClass('show');
     $('#chooseProductDiv').addClass('unshow');
     let selectedProduct = categories.find(x => x.id == selectedProductId);
-    $("#productDetailImg").attr("src", selectedProduct.image);
+    $("#productDetailImg").attr("src", selectedProduct.image || './public/images/default_image.png');
     $('#productDetailBarcode').html(selectedProduct.barcode);
     $('#productDetailName').html(selectedProduct.name);
     $('#productDetailPrice').html(convert2Price(selectedProduct.price));
@@ -972,6 +980,8 @@ function add2Basket() {
         }
 
         let existingProduct = salesBasket.find(x => x.id == selectedProductId);
+        let productLimit = categories.find(x => x.id == selectedProductId).limit || 999;
+        let newWeighed = (getWeighed() < productLimit) ? getWeighed() : productLimit;
         if (!existingProduct) {
             salesBasket.push({
                 id: typeof selectedProductId === 'string' ? selectedProductId : JSON.stringify(selectedProductId),
@@ -979,20 +989,29 @@ function add2Basket() {
                 barcode: categories.find(x => x.id == selectedProductId).barcode,
                 image: categories.find(x => x.id == selectedProductId).image,
                 ponderable: categories.find(x => x.id == selectedProductId).ponderable,
-                weighed: getWeighed(),
+                limit: productLimit,
+                weighed: newWeighed,
                 unitPrice: getUnitPrice(),
                 tare: getTare(),
                 amount: getAmount()
             });
         } else {
-            existingProduct.weighed += getWeighed();
+            if (existingProduct.weighed + newWeighed >= existingProduct.limit) {
+                newWeighed = existingProduct.limit - existingProduct.weighed;
+            }
+            existingProduct.weighed += newWeighed;
             existingProduct.amount += getAmount();
         }
 
-        let notificationText = `${(categories.find(x => x.id == selectedProductId).ponderable) ? `${convert2KgWithUnit(getWeighed())}` : `${getWeighed()} Adet`} ${categories.find(x => x.id == selectedProductId).name} sepete eklendi.`;
+        let notificationText;
+        if (newWeighed > 0) { notificationText = `${(categories.find(x => x.id == selectedProductId).ponderable) ? `${convert2KgWithUnit(newWeighed)}` : `${newWeighed} Adet`} ${categories.find(x => x.id == selectedProductId).name} sepete eklendi.`; }
+        else { notificationText = `Maksimum miktarda ${categories.find(x => x.id == selectedProductId).name} sepette bulunuyor.`}
+        $(`.productCard[data-product=${selectedProductId}]`).addClass('basket');
         resetProductDetail();
         $('#chooseProductDiv').html(notificationText);
         setWeighed(0);
+
+        basketNotification();
     }
 }
 
@@ -1000,9 +1019,9 @@ function reloadBasketProductList() {
     let basketProductList = '';
     salesBasket.forEach(function(item, index){
         basketProductList += `<li data-product="${item.id}">
-                                <button onclick="deleteBasketLine(${item.id})" class="deleteLine"><i class="fa-solid fa-circle-xmark"></i></button>
+                                <button onclick="deleteBasketLine(${item.id})" class="deleteLine"><i class="fa-solid fa-trash-can"></i></button>
                                 <div class="productInfos">
-                                    <img src="${item.image}"/>
+                                    <img src="${item.image || './public/images/default_image.png'}" onerror="this.src='./public/images/default_image.png';"/>
                                     <div>
                                         <span>[${item.barcode}]</span>
                                         <span title="${item.name}" class="threeDots">${item.name}</span>
@@ -1032,8 +1051,10 @@ function updateTotalPrice() {
 
 function incrementWeigh(id) {
     let currentProduct = salesBasket.find(x => x.id == id);
-    currentProduct.weighed = currentProduct.weighed + 1;
-    lineWeighUpdate(currentProduct);
+    if (currentProduct.weighed + 1 <= currentProduct.limit) {
+        currentProduct.weighed = currentProduct.weighed + 1;
+        lineWeighUpdate(currentProduct);
+    }
 }
 function decreaseWeigh(id) {
     let currentProduct = salesBasket.find(x => x.id == id);
@@ -1045,13 +1066,17 @@ function decreaseWeigh(id) {
 function setCustomWeigh(id) {
     let currentProduct = salesBasket.find(x => x.id == id);
     if ($(`#basketProductListSection li[data-product=${currentProduct.id}] .quantityInput`).val() > 0) {
-        currentProduct.weighed = parseFloat($(`#basketProductListSection li[data-product=${currentProduct.id}] .quantityInput`).val());
-        lineWeighUpdate(currentProduct);
+        if ($(`#basketProductListSection li[data-product=${currentProduct.id}] .quantityInput`).val() <= currentProduct.limit) {
+            currentProduct.weighed = parseFloat($(`#basketProductListSection li[data-product=${currentProduct.id}] .quantityInput`).val());
+        }
+        else {
+            currentProduct.weighed = currentProduct.limit;
+        }
     }
     else {
         currentProduct.weighed = 1;
-        lineWeighUpdate(currentProduct);
     }
+    lineWeighUpdate(currentProduct);
 }
 function lineWeighUpdate(currentProduct) {
     currentProduct.amount = currentProduct.weighed * currentProduct.unitPrice;
@@ -1072,7 +1097,34 @@ function deleteBasketLine(id) {
     salesBasket.splice(productIndex, 1);
     let newBasketProductList = reloadBasketProductList();
     $('#basketProductListSection ul').html(newBasketProductList);
-    if (!salesBasket.length) closeModalE();
+    $(`.productCard[data-product=${id}]`).removeClass('basket');
+    basketNotification();
+    if (!salesBasket.length) {
+        closeModalE();
+    }
+}
+function breakBasket() {
+    if (confirm("Sepet bozulacak. Emin misiniz?") == true) {
+        salesBasket = [];
+        basketNotification();
+        $(`.productCard`).removeClass('basket');
+        closeModalE();
+    }
+}
+
+function basketNotification() {
+    $('#basketProductCounter').html(salesBasket.length);
+    if (salesBasket.length) {
+        $('#basketButton').addClass('notif');
+        $('#openBasketButton').addClass('show');
+    }
+    else {
+        $('#basketButton').removeClass('notif');
+        $('#openBasketButton').removeClass('show');
+    }
+}
+function openBasket() {
+    asideBar.executeButtonAction('basketButton');
 }
 
 // ready
@@ -1510,13 +1562,18 @@ function AsideBarButtons(containerId, buttonsPerPage) {
                                         ${basketProductList}
                                     </ul>
                                     <div class="productListSummary">
-                                        <div>
-                                            <span>Kalem: </span>
-                                            <span id="lineItemCount">${salesBasket.length}</span>
+                                        <div class="productListButtons">
+                                            <button id="breakBasket" onclick="breakBasket();">Sepeti Boz</button>
                                         </div>
-                                        <div>
-                                            <span>Yekün: </span>
-                                            <span id="totalPrice">${convert2PriceWithUnit(salesBasket.reduce(function(total, item){ return total + item.amount },0))}</span>
+                                        <div class="quantityAndTotalPrice">
+                                            <div>
+                                                <span>Kalem: </span>
+                                                <span id="lineItemCount">${salesBasket.length}</span>
+                                            </div>
+                                            <div>
+                                                <span>Yekün: </span>
+                                                <span id="totalPrice">${convert2PriceWithUnit(salesBasket.reduce(function(total, item){ return total + item.amount },0))}</span>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -1574,7 +1631,7 @@ function AsideBarButtons(containerId, buttonsPerPage) {
             let button = this.buttonsData[i];
             if (button.modes.some(x => x == scaleMode)) {
                 let li = $('<li></li>');
-                let buttonElement = $(`<button id="${button.domId}" title="${button.name}"><i class="${button.iconClass}"></i> <span class="threeDots">${button.name}</span></button>`);
+                let buttonElement = $(`<button id="${button.domId}" title="${button.name}"><div class="notificationBubble"></div>  <i class="${button.iconClass}"></i> <span class="threeDots">${button.name}</span></button>`);
                 buttonElement.on('click', () => this.executeButtonAction(button.domId));
 
                 li.append(buttonElement);
