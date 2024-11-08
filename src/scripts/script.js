@@ -1146,6 +1146,8 @@ function breakBasket() {
         salesBasket = [];
         basketNotification();
         $(`.productCard`).removeClass('basket');
+        updateAmount2Paid(0);
+        partialPayment = [];
         closeModalE();
     }
 }
@@ -1163,6 +1165,7 @@ function basketNotification() {
 }
 function openBasket() {
     asideBar.executeButtonAction('basketButton');
+    resetProductDetail();
 }
 
 function disableBasketProductList() {
@@ -1170,20 +1173,39 @@ function disableBasketProductList() {
     $('#basketProductListSection ul button, #basketProductListSection ul input').attr('disabled', true);
 }
 
-function completePayment() {
-    $('basketPaymetSection ')
-    if (confirm(`${getPaymentName()} yöntemi ile ${convert2PriceWithUnit(amount2Paid)} tutarında ödeme yapılacak.`) == true) {
+function getPaymentName(optionId) {
+    let selectedPayment = Object.values(paymentOptions).find(option => option.id === optionId);
+    return selectedPayment ? selectedPayment.name : null;
+}
+function completePayment(amount ,amountOfChange) {
+    if (confirm(`${getPaymentName($('#basketPaymentSection .paymentOptions button.selected').data('option'))} yöntemi ile ${convert2PriceWithUnit(amount)} tutarında ödeme yapılacak. ${(amountOfChange) ? `para üstü: ${convert2PriceWithUnit(amountOfChange)}` : ''}`) == true) {
         salesBasket = [];
         basketNotification();
         $(`.productCard`).removeClass('basket');
-        closeModalE();
         updateAmount2Paid(0);
+        partialPayment = [];
+        closeModalE();
     }
 }
-function getPaymentName() {
-    let selectedPaymentId = $('#basketPaymentSection .paymentOptions button.selected').data('option');
-    let selectedPayment = Object.values(paymentOptions).find(option => option.id === selectedPaymentId);
-    return selectedPayment ? selectedPayment.name : null;
+function makePartialPayment(partialAmount) {
+    if (confirm(`${getPaymentName($('#basketPaymentSection .paymentOptions button.selected').data('option'))} yöntemi ile ${convert2PriceWithUnit(partialAmount)} tutarında ödeme yapılacak. Geri kalan ödenecek tutar: ${convert2PriceWithUnit(amount2Paid - partialAmount)}`) == true) {
+        partialPayment.push({
+            id: partialPayment.length > 0 ? Math.max(...partialPayment.map(payment => payment.id)) + 1 : 1,
+            option: $('#basketPaymentSection .paymentOptions button.selected').data('option'),
+            amount: partialAmount
+        });
+        createPartialPaymentList();
+        updateAmount2Paid(amount2Paid - partialAmount);
+        disableBasketProductList();
+    }
+}
+function createPartialPaymentList() {
+    $('.partialPaymentList ul').html(partialPayment.map(function(item) {
+        return `<li>
+                    <span>${getPaymentName(item.option)}</span>
+                    <span>-${convert2PriceWithUnit(item.amount)}</span>
+                </li>`
+    }).join(''));
 }
 
 // ready
@@ -1556,17 +1578,24 @@ function setBasketNumpad() {
             rightActionContent: "<i class='fa fa-check' style=\"font-family: 'FontAwesome'; color: var(--green);\"></i>",
             rightAction: function (keypad) {
                 if (keypad.getNumericValue() == '' || keypad.getNumericValue() >= amount2Paid) {
-                    completePayment();
-                    // keypad.getNumericValue(true);
+                    if (keypad.getNumericValue() >= amount2Paid) {
+                        if ($('#basketPaymentSection .paymentOptions button.selected').data('option') != paymentOptions.cash.id) {
+                            alert('Ödenecek tutardan daha fazla girdiğiniz için düzeltme yapıldı.');
+                            completePayment(amount2Paid);
+                        }
+                        else {
+                            completePayment(keypad.getNumericValue(), keypad.getNumericValue() - amount2Paid);
+                        }
+                    }
+                    else {
+                        completePayment(amount2Paid);
+                    }
                 }
                 else {
-                    //partial payment
-                    // disableBasketProductList();
-                    // && update amount2Paid
+                    makePartialPayment(keypad.getNumericValue(true));
                 }
             },
             watcher: function (keypad, char, prevVal, nextVal) {
-                // console.log(nextVal);
                 return true;
             }
         },
@@ -1676,6 +1705,7 @@ function AsideBarButtons(containerId, buttonsPerPage) {
                                             <span id="amount2PaidSpan">${convert2PriceWithUnit(basketTotalPrice)}</span>
                                         </div>
                                         <div class="partialPaymentList">
+                                            <ul></ul>
                                         </div>
                                         <div class="paymentOptions">
                                             <button data-option=${paymentOptions.cash.id} class="selected"><img src="./public/images/cash.svg" alt="Nakit" title="Nakit" /></button>
@@ -1705,8 +1735,12 @@ function AsideBarButtons(containerId, buttonsPerPage) {
             }
         },
         close_basket: function() {
-            // kontroller gelicek
-            closeModalE();
+            if (partialPayment.length) {
+                breakBasket();
+            }
+            else {
+                closeModalE();
+            }
         },
     }; 
     

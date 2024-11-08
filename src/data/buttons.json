@@ -27,7 +27,7 @@
         "iconClass": "fa-solid fa-basket-shopping",
         "onClick": "open_basket",
         "isModal": true,
-        "customClose": null,
+        "customClose": "close_basket",
         "modalWidth": 1366,
         "modalHeight": 768,
         "modes": [1]

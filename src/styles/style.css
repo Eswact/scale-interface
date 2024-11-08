@@ -1358,6 +1358,27 @@ body {
 }
 #basketPaymentSection .basketPaymentInfo .partialPaymentList {
     height: calc(100% - 16rem);
+    padding: 6px;
+}
+#basketPaymentSection .basketPaymentInfo .partialPaymentList ul {
+    height: 100%;
+    padding-right: 10px;
+    overflow-y: auto;
+}
+#basketPaymentSection .basketPaymentInfo .partialPaymentList ul li {
+    width: 100%;
+    padding: 12px 6px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: var(--first-color);
+    border-top: 1px solid var(--first-color-25);
+}
+#basketPaymentSection .basketPaymentInfo .partialPaymentList ul li:first-child {
+    border-top: none;
+}
+#basketPaymentSection .basketPaymentInfo .partialPaymentList ul li span:last-child {
+    color: var(--red);
 }
 #basketNumpadContainer {
     --keypad-wrapper-bg-color: var(--first-color);
