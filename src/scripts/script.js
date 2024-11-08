@@ -332,7 +332,7 @@ function renderProducts(page) {
                                         <img src="${product.image || './public/images/default_image.png'}" onerror="this.src='./public/images/default_image.png';" />
                                         <div>
                                             <span class="productName truncatedText2" title="${product.name}">${product.name}</span>
-                                            <span class="productPrice">${convert2Price(product.price)}</span>
+                                            <span class="productPrice">${convert2PriceWithUnit(product.price)} (${product.unitName})</span>
                                         <div>
                                         <span class="productBarcode">${product.barcode}</span>
                                     </div>`);
@@ -912,6 +912,7 @@ function fillMemoryCard() {
                         <span class="liBarcode">[${item.barcode}]</span>
                         <span class="liPrice">(${(item.ponderable) ? convert2Kg(item.weighed) : item.weighed} x ${convert2PriceWithUnit(item.unitPrice)} = <span class="singleAmount">${convert2PriceWithUnit(item.amount)}</span>)</span>
                         <span class="liName">${item.name}</span>
+                        <span class="liUnit">${item.unitName}</span>
                     </li>`
         }).join('');
         let longList = inMemory.map(function(item, index) {
@@ -919,6 +920,7 @@ function fillMemoryCard() {
                         <span class="liBarcode">[${item.barcode}]</span>
                         <span class="liPrice">(${(item.ponderable) ? convert2Kg(item.weighed) : item.weighed} x ${convert2PriceWithUnit(item.unitPrice)} = <span class="singleAmount">${convert2PriceWithUnit(item.amount)}</span>)</span>
                         <span class="liName">${item.name}</span>
+                        <span class="liUnit">${item.unitName}</span>
                     </li>`
         }).join('');
 
@@ -959,15 +961,17 @@ function fillSuspendedList() {
             let shortList = suspend.products.slice(0, 2).map(function(item, index) {
                 return `<li>
                             <span class="liBarcode">[${item.barcode}]</span>
-                            <span class="liPrice">(${convert2Kg(item.weighed)} x ${convert2Price(item.unitPrice)} = <span class="singleAmount">${convert2Price(item.amount)}</span>)</span>
+                            <span class="liPrice">(${convert2Kg(item.weighed)} x ${convert2PriceWithUnit(item.unitPrice)} = <span class="singleAmount">${convert2PriceWithUnit(item.amount)}</span>)</span>
                             <span class="liName">${item.name}</span>
+                            <span class="liUnit">${item.unitName}</span>
                         </li>`
             }).join('');
             let longList = suspend.products.map(function(item, index) {
                 return `<li>
                             <span class="liBarcode">[${item.barcode}]</span>
-                            <span class="liPrice">(${item.weighed} x ${convert2Price(item.unitPrice)} = <span class="singleAmount">${convert2Price(item.amount)}</span>)</span>
+                            <span class="liPrice">(${item.weighed} x ${convert2PriceWithUnit(item.unitPrice)} = <span class="singleAmount">${convert2PriceWithUnit(item.amount)}</span>)</span>
                             <span class="liName">${item.name}</span>
+                            <span class="liUnit">${item.unitName}</span>
                         </li>`
             }).join('');
 
@@ -984,7 +988,7 @@ function fillSuspendedList() {
                                                     </ul>
                                                     <div>
                                                         <span>Kalem: ${suspend.products.length}</span>
-                                                        <span>Yekün: ${convert2Price(sumPrice)}</span>
+                                                        <span>Yekün: ${convert2PriceWithUnit(sumPrice)}</span>
                                                     </div>
                                                 </div>
                                                 <div class="actionButtons">
@@ -1015,6 +1019,7 @@ function add2Basket() {
                 barcode: categories.find(x => x.id == selectedProductId).barcode,
                 image: categories.find(x => x.id == selectedProductId).image,
                 ponderable: categories.find(x => x.id == selectedProductId).ponderable,
+                unitName: categories.find(x => x.id == selectedProductId).unitName,
                 limit: productLimit,
                 weighed: newWeighed,
                 unitPrice: getUnitPrice(),
@@ -1030,7 +1035,7 @@ function add2Basket() {
         }
 
         let notificationText;
-        if (newWeighed > 0) { notificationText = `${(categories.find(x => x.id == selectedProductId).ponderable) ? `${convert2KgWithUnit(newWeighed)}` : `${newWeighed} Adet`} ${categories.find(x => x.id == selectedProductId).name} sepete eklendi.`; }
+        if (newWeighed > 0) { notificationText = `${(categories.find(x => x.id == selectedProductId).ponderable) ? `${convert2KgWithUnit(newWeighed, categories.find(x => x.id == selectedProductId).unitName)}` : `${newWeighed} ${categories.find(x => x.id == selectedProductId).unitName}`} ${categories.find(x => x.id == selectedProductId).name} sepete eklendi.`; }
         else { notificationText = `Maksimum miktarda ${categories.find(x => x.id == selectedProductId).name} sepette bulunuyor.`}
         $(`.productCard[data-product=${selectedProductId}]`).addClass('basket');
         resetProductDetail();
@@ -1050,7 +1055,8 @@ function reloadBasketProductList() {
                                     <img src="${item.image || './public/images/default_image.png'}" onerror="this.src='./public/images/default_image.png';"/>
                                     <div>
                                         <span>[${item.barcode}]</span>
-                                        <span title="${item.name}" class="threeDots">${item.name}</span>
+                                        <span title="${item.name}" class="itemName threeDots">${item.name}</span>
+                                        <span>(${item.unitName})</span>
                                     </div>
                                 </div>
                                 <div class="payInfo">
@@ -1261,7 +1267,7 @@ $(document).ready(function () {
         }
         if (selectedProductId != null) {
             if (getWeighed() <= 0 && selectedProductId != null) {
-                alert('Lütfen Kilo/Adet giriniz.');
+                alert('Lütfen birim sayısı giriniz.');
                 return;
             }
 
@@ -1272,6 +1278,7 @@ $(document).ready(function () {
                     name: categories.find(x => x.id == selectedProductId).name,
                     barcode: categories.find(x => x.id == selectedProductId).barcode,
                     ponderable: categories.find(x => x.id == selectedProductId).ponderable,
+                    unitName: categories.find(x => x.id == selectedProductId).unitName,
                     weighed: getWeighed(),
                     unitPrice: getUnitPrice(),
                     tare: getTare(),
@@ -1399,13 +1406,13 @@ function convert2PriceWithUnit(value) {
         return "0,00 ₺";
     }
 }
-function convert2KgWithUnit(value) {
+function convert2KgWithUnit(value, unitName) {
     if (value != null && value != undefined) {
         let str = value.toLocaleString('en-US', { minimumFractionDigits: 3, maximumFractionDigits: 3 });
         str = str.replace(/\./, "x");
         str = str.replace(/,/g, ".");
         str = str.replace(/x/, ",");
-        return str + " kg";
+        return str + ` ${unitName}`;
     }
     else {
         return "0,000 kg";
