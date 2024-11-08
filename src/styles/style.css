@@ -1098,8 +1098,11 @@ body {
 #basketPaymentSection {
     width: 360px;
     height: 100%;
-    padding: 10px;
+    /* padding: 10px; */
     border-left: 2px solid #ddd;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 #basketProductListSection ul {
     width: 100%;
@@ -1109,6 +1112,10 @@ body {
     overflow-x: hidden;
     display: flex;
     flex-direction: column;
+}
+#basketProductListSection ul.disabled {
+    background-color: rgba(200, 200, 200, 0.2);
+    filter: grayscale(0.75);
 }
 #basketProductListSection ul li {
     position: relative;
@@ -1286,6 +1293,92 @@ body {
     border-radius: 50%;
     font-weight: 600;
     color: var(--active-color);
+}
+#basketPaymentSection .basketPaymentInfo {
+    width: 100%;
+    height: 55%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+#basketPaymentSection .basketPaymentInfo .amount2Paid {
+    width: 100%;
+    height: 4rem;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 2px solid #ddd;
+    font-size: 1.25rem;
+    color: var(--green);
+}
+#basketPaymentSection .amount2Paid span:first-child {
+    font-size: 1rem;
+    font-weight: 600;
+    color: black;
+}
+#basketPaymentSection .basketPaymentInfo .paymentOptions {
+    width: 100%;
+    height: 12rem;
+    padding: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    /* justify-content: space-between; */
+    border-top: 2px solid #ddd;
+}
+#basketPaymentSection .basketPaymentInfo .paymentOptions button {
+    height: 40%;
+    width: 30%;
+    margin: 4px;
+    padding: 6px 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid var(--second-color);
+    background-color: var(--second-color-10);
+    border-radius: 12px;
+}
+#basketPaymentSection .basketPaymentInfo .paymentOptions button.selected {
+    border: 1px solid var(--active-color);
+    background-color: var(--active-color-25);
+}
+#basketPaymentSection .basketPaymentInfo .paymentOptions button img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+#basketPaymentSection .basketPaymentInfo .paymentOptions button i {
+    font-size: 2.75rem;
+    color: var(--first-color);
+}
+#basketPaymentSection .basketPaymentInfo .partialPaymentList {
+    height: calc(100% - 16rem);
+}
+#basketNumpadContainer {
+    --keypad-wrapper-bg-color: var(--first-color);
+    --keypad-wrapper-border-radius: 2px;
+
+    --keypad-key-bg-color: var(--second-color-25);
+    --keypad-key-fg-color: white;
+    --keypad-key-active-bg-color: #f7f7f7;
+    --keypad-key-disabled-bg-color: #444;
+    --keypad-key-disabled-box-shadow: none;
+    --keypad-key-border: 2px solid var(--first-color);
+    --keypad-key-border-radius: 2px;
+    --keypad-key-box-shadow:inset 0px 0px 16px 24px var(--first-color-25);
+
+    --keypad-key-delete-color: var(--red);
+
+    --keypad-input-bg-color: white;
+    --keypad-input-fg-color: #444;
+    --keypad-input-placeholder-color: #a0a0a0aa;
+
+    width: 100%;
+    height: 45%;
+    font-size: 1.25rem;
+    border: 2px solid var(--first-color);
+    background-color: var(--first-color);
 }
 /* basket end */
 

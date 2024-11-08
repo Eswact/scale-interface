@@ -109,6 +109,28 @@ const scaleModes = {
     default: 0,
     sales: 1
 }
+const paymentOptions = {
+    cash: {
+        id: 0,
+        name: "Nakit"
+    },
+    credit_card: {
+        id: 1,
+        name: "Kredi Kartı"
+    },
+    food_card: {
+        id: 2,
+        name: "Yemek Kartı"
+    },
+    eft: {
+        id: 3,
+        name: "EFT"
+    },
+    qr_code: {
+        id: 4,
+        name: "Qr Kodu"
+    }
+}
 
 
 // all data
@@ -125,6 +147,8 @@ let sellerman;
 let buttonCount;
 let basketQuantityButtons;
 let basketQuantityInput;
+
+let defaultMaxLimit = 999;
 
 // selected product
 let selectedProductId = null;
@@ -162,6 +186,8 @@ let suspendedList = [];
 
 // sales cart
 let salesBasket = [];
+let amount2Paid = 0;
+let partialPayment = [];
 
 // keypad
 var confirmation_keypad;
@@ -980,7 +1006,7 @@ function add2Basket() {
         }
 
         let existingProduct = salesBasket.find(x => x.id == selectedProductId);
-        let productLimit = categories.find(x => x.id == selectedProductId).limit || 999;
+        let productLimit = categories.find(x => x.id == selectedProductId).limit || defaultMaxLimit;
         let newWeighed = (getWeighed() < productLimit) ? getWeighed() : productLimit;
         if (!existingProduct) {
             salesBasket.push({
@@ -1047,6 +1073,12 @@ function reloadBasketProductList() {
 function updateTotalPrice() {
     $('#lineItemCount').text(`${salesBasket.length}`);
     $('#totalPrice').text(`${convert2PriceWithUnit(salesBasket.reduce(function(total, item){ return total + item.amount },0))}`);
+    updateAmount2Paid(salesBasket.reduce(function(total, item){ return total + item.amount },0));
+    
+}
+function updateAmount2Paid(amount) {
+    amount2Paid = amount;
+    $('#amount2PaidSpan').text(`${convert2PriceWithUnit(amount)}`);
 }
 
 function incrementWeigh(id) {
@@ -1125,6 +1157,27 @@ function basketNotification() {
 }
 function openBasket() {
     asideBar.executeButtonAction('basketButton');
+}
+
+function disableBasketProductList() {
+    $('#basketProductListSection ul').addClass('disabled');
+    $('#basketProductListSection ul button, #basketProductListSection ul input').attr('disabled', true);
+}
+
+function completePayment() {
+    $('basketPaymetSection ')
+    if (confirm(`${getPaymentName()} yöntemi ile ${convert2PriceWithUnit(amount2Paid)} tutarında ödeme yapılacak.`) == true) {
+        salesBasket = [];
+        basketNotification();
+        $(`.productCard`).removeClass('basket');
+        closeModalE();
+        updateAmount2Paid(0);
+    }
+}
+function getPaymentName() {
+    let selectedPaymentId = $('#basketPaymentSection .paymentOptions button.selected').data('option');
+    let selectedPayment = Object.values(paymentOptions).find(option => option.id === selectedPaymentId);
+    return selectedPayment ? selectedPayment.name : null;
 }
 
 // ready
@@ -1489,6 +1542,33 @@ function setFirstKeypad() {
     }
 }
 
+function setBasketNumpad() {
+    let basket_keypad = Keypad.generateFrom("#basketNumpadContainer", [
+        {
+            statename: "default",
+            rightActionContent: "<i class='fa fa-check' style=\"font-family: 'FontAwesome'; color: var(--green);\"></i>",
+            rightAction: function (keypad) {
+                if (keypad.getNumericValue() == '' || keypad.getNumericValue() >= amount2Paid) {
+                    completePayment();
+                    // keypad.getNumericValue(true);
+                }
+                else {
+                    //partial payment
+                    // disableBasketProductList();
+                    // && update amount2Paid
+                }
+            },
+            watcher: function (keypad, char, prevVal, nextVal) {
+                // console.log(nextVal);
+                return true;
+            }
+        },
+    ], {
+        html_mod: 0,
+    });
+    basket_keypad.setState("default");
+}
+
 
 // asidebar buttons
 function AsideBarButtons(containerId, buttonsPerPage) {
@@ -1555,7 +1635,12 @@ function AsideBarButtons(containerId, buttonsPerPage) {
         open_basket: async function () {
             let basketProductList = reloadBasketProductList();
             let bodyHtml;
+            let isBasketEmpty = true;
+            let basketTotalPrice = 0;
             if (salesBasket.length > 0) {
+                basketTotalPrice = salesBasket.reduce(function(total, item){ return total + item.amount },0);
+                amount2Paid = basketTotalPrice;
+                isBasketEmpty = false;
                 bodyHtml = `<div id="basketModalBody">
                                 <div id="basketProductListSection">
                                     <ul>
@@ -1563,7 +1648,7 @@ function AsideBarButtons(containerId, buttonsPerPage) {
                                     </ul>
                                     <div class="productListSummary">
                                         <div class="productListButtons">
-                                            <button id="breakBasket" onclick="breakBasket();">Sepeti Boz</button>
+                                            <button id="breakBasket" onclick="breakBasket();">Belge iptal</button>
                                         </div>
                                         <div class="quantityAndTotalPrice">
                                             <div>
@@ -1572,12 +1657,29 @@ function AsideBarButtons(containerId, buttonsPerPage) {
                                             </div>
                                             <div>
                                                 <span>Yekün: </span>
-                                                <span id="totalPrice">${convert2PriceWithUnit(salesBasket.reduce(function(total, item){ return total + item.amount },0))}</span>
+                                                <span id="totalPrice">${convert2PriceWithUnit(basketTotalPrice)}</span>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div id="basketPaymentSection"></div>
+                                <div id="basketPaymentSection">
+                                    <div class="basketPaymentInfo">
+                                        <div class="amount2Paid">
+                                            <span>Ödenecek Tutar:</span>
+                                            <span id="amount2PaidSpan">${convert2PriceWithUnit(basketTotalPrice)}</span>
+                                        </div>
+                                        <div class="partialPaymentList">
+                                        </div>
+                                        <div class="paymentOptions">
+                                            <button data-option=${paymentOptions.cash.id} class="selected"><img src="./public/images/cash.svg" alt="Nakit" title="Nakit" /></button>
+                                            <button data-option=${paymentOptions.credit_card.id}><img src="./public/images/credit_card.svg" alt="Kredi kartı" title="Kredi kartı" /></button>
+                                            <button data-option=${paymentOptions.food_card.id}><img src="./public/images/food_card.svg" alt="Yemek kartı" title="Yemek kartı" /></button>
+                                            <button data-option=${paymentOptions.eft.id}><img src="./public/images/eft.svg" alt="Eft/Havale" title="Eft/Havale" /></button>
+                                            <button data-option=${paymentOptions.qr_code.id}><img src="./public/images/qr_code.svg" alt="Qr kod" title="Qr kod" /></button>
+                                        </div>
+                                    </div>
+                                    <div id="basketNumpadContainer"></div>
+                                </div>
                             </div>`;
             }
             else {
@@ -1587,6 +1689,13 @@ function AsideBarButtons(containerId, buttonsPerPage) {
                             </div>`;
             }
             fillAsideButtonsModal(bodyHtml);
+            if(!isBasketEmpty) { 
+                setBasketNumpad();
+                $('.paymentOptions button').off('click').on('click', function(){
+                    $('.paymentOptions button').removeClass('selected');
+                    $(this).addClass('selected');
+                });
+            }
         },
         close_basket: function() {
             // kontroller gelicek
@@ -1631,7 +1740,7 @@ function AsideBarButtons(containerId, buttonsPerPage) {
             let button = this.buttonsData[i];
             if (button.modes.some(x => x == scaleMode)) {
                 let li = $('<li></li>');
-                let buttonElement = $(`<button id="${button.domId}" title="${button.name}"><div class="notificationBubble"></div>  <i class="${button.iconClass}"></i> <span class="threeDots">${button.name}</span></button>`);
+                let buttonElement = $(`<button id="${button.domId}" title="${button.name}"><div class="notificationBubble"></div>  <i class="${button.iconClass}"></i> <span class="truncatedText2">${button.name}</span></button>`);
                 buttonElement.on('click', () => this.executeButtonAction(button.domId));
 
                 li.append(buttonElement);

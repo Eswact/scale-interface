@@ -11,7 +11,7 @@
         "modes": [0,1]
     },
     {
-        "name": "Askı Listesi",
+        "name": "Hafıza Listesi",
         "domId": "suspendedButton",
         "iconClass": "fa-solid fa-sd-card",
         "onClick": "suspend",
