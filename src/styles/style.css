@@ -76,6 +76,7 @@ input[type="number"] {
     --scale-bg: rgb(41, 31, 31);
     --red: rgb(236, 54, 67);
     --green: rgb(67, 160, 71);
+    --waiting: rgb(181, 141, 91);
     --aside-bar: rgb(15, 76, 92);
     --gray: #777;
 
@@ -144,6 +145,31 @@ body {
 @keyframes spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
+}
+
+.contextMenuContainer {
+    position: absolute;
+    display: none;
+    background: #fff;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+    z-index: 1000;
+}
+
+.contextMenuContainer ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.contextMenuContainer li {
+    padding: 8px 12px;
+    cursor: pointer;
+}
+
+.contextMenuContainer li:hover {
+    background-color: #f0f0f0;
 }
 /* general end */
 
@@ -878,9 +904,9 @@ body {
     top: 0;
     left: 0;
     z-index: 21;
-    margin: 20px; /* .modalBg padding */
-    width: calc(100% - 40px);
-    height: calc(100% - 40px);
+    margin: 4px;
+    width: calc(100% - 8px);
+    height: calc(100% - 8px);
     background-color: white;
     display: none;
     justify-content: center;
@@ -1096,14 +1122,14 @@ body {
     border-top: 2px solid #ddd;
 }
 #basketProductListSection {
-    width: calc(100% - 360px);
+    width: 63%;
     height: 100%;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
 }
 #basketPaymentSection {
-    width: 360px;
+    width: 37%;
     height: 100%;
     /* padding: 10px; */
     border-left: 2px solid #ddd;
@@ -1314,14 +1340,14 @@ body {
 }
 #basketPaymentSection .basketPaymentInfo .amount2Paid {
     width: 100%;
-    height: 4rem;
+    height: 64px;
     padding: 10px;
     display: flex;
     align-items: center;
     justify-content: space-between;
     border-bottom: 2px solid #ddd;
     font-size: 1.25rem;
-    color: var(--green);
+    color: var(--red);
 }
 #basketPaymentSection .amount2Paid span:first-child {
     font-size: 1rem;
@@ -1330,17 +1356,21 @@ body {
 }
 #basketPaymentSection .basketPaymentInfo .paymentOptions {
     width: 100%;
-    height: 12rem;
+    overflow-x: auto;
+    height: 106px;
     padding: 10px;
     display: flex;
-    flex-wrap: wrap;
+    /* flex-wrap: wrap; */
     align-items: flex-end;
-    /* justify-content: space-between; */
+    justify-content: space-between;
     border-top: 2px solid #ddd;
 }
+#basketPaymentSection .basketPaymentInfo .paymentOptions::-webkit-scrollbar {
+    height: 8px;
+}
 #basketPaymentSection .basketPaymentInfo .paymentOptions button {
-    height: 40%;
-    width: 30%;
+    height: 100%;
+    min-width: 23%;
     margin: 4px;
     padding: 6px 12px;
     display: flex;
@@ -1364,7 +1394,7 @@ body {
     color: var(--first-color);
 }
 #basketPaymentSection .basketPaymentInfo .partialPaymentList {
-    height: calc(100% - 16rem);
+    height: calc(100% - 170px);
     padding: 6px;
 }
 #basketPaymentSection .basketPaymentInfo .partialPaymentList ul {
@@ -1384,8 +1414,28 @@ body {
 #basketPaymentSection .basketPaymentInfo .partialPaymentList ul li:first-child {
     border-top: none;
 }
-#basketPaymentSection .basketPaymentInfo .partialPaymentList ul li span:last-child {
+#basketPaymentSection .basketPaymentInfo .partialPaymentList ul li.completedState .partialPaymentPrice {
+    color: var(--green);
+}
+#basketPaymentSection .basketPaymentInfo .partialPaymentList ul li.canceledState .partialPaymentPrice {
+    text-decoration: line-through;
+}
+#basketPaymentSection .basketPaymentInfo .partialPaymentList ul li .partialPaymentState {
+    padding: 6px;
+    border-radius: 6px;
+    border: 2px solid;
+}
+#basketPaymentSection .basketPaymentInfo .partialPaymentList ul li.waitingState .partialPaymentState {
+    color: var(--waiting);
+    border-color: var(--waiting);
+}
+#basketPaymentSection .basketPaymentInfo .partialPaymentList ul li.completedState .partialPaymentState {
+    color: var(--green);
+    border-color: var(--green);
+}
+#basketPaymentSection .basketPaymentInfo .partialPaymentList ul li.canceledState .partialPaymentState {
     color: var(--red);
+    border-color: var(--red);
 }
 #basketNumpadContainer {
     --keypad-wrapper-bg-color: var(--first-color);
@@ -1582,8 +1632,7 @@ body {
     }
     #cardContainer .productCard img {
         margin-right: 0;
-        margin-top: 8px;
-        margin-bottom: 6px;
+        margin-top: 3px;
     }
     #cardContainer .productCard div {
         width: 100%;

@@ -126,27 +126,36 @@ const currency = {
         icon: "fa-solid fa-euro-sign"
     }
 };
-
+const paymentStates = {
+    waiting: { id: 0, name: 'Bekleniyor', class:"waitingState"},
+    completed: { id: 1, name: 'Tamamlandı', class:"completedState"},
+    canceled: { id: 2, name: 'İptal Edildi', class:"canceledState"},
+};
 const paymentOptions = {
     cash: {
         id: 0,
-        name: "Nakit"
+        name: "Nakit",
+        image: "./public/images/cash.svg"
     },
     credit_card: {
         id: 1,
-        name: "Kredi Kartı"
+        name: "Kredi Kartı",
+        image: "./public/images/credit_card.svg"
     },
     food_card: {
         id: 2,
-        name: "Yemek Kartı"
+        name: "Yemek Kartı",
+        image: "./public/images/food_card.svg"
     },
     eft: {
         id: 3,
-        name: "EFT"
+        name: "EFT",
+        image: "./public/images/eft.svg"
     },
     qr_code: {
         id: 4,
-        name: "Qr Kodu"
+        name: "Qr Kodu",
+        image: "./public/images/qr_code.svg"
     }
 };
 
@@ -213,7 +222,20 @@ var confirmation_keypad;
 
 // css injection
 var options = localStorage.getItem("options");
-var default_options = { scaleMode: scaleModes.default, baseCurrency: "TRY", columnCount: 4, rowCount: 3, barCount: 5, bar2Count: 5, baseFont: 16, sellerman: false, buttonCount: 5, fullScreen: true, basketQuantityButtons: true, basketQuantityInput: true };
+var default_options = { 
+    scaleMode: scaleModes.default, 
+    baseCurrency: "TRY", 
+    columnCount: 4, 
+    rowCount: 3, 
+    barCount: 5, 
+    bar2Count: 5, 
+    baseFont: 16, 
+    sellerman: false, 
+    buttonCount: 5, 
+    fullScreen: true, 
+    basketQuantityButtons: true, 
+    basketQuantityInput: true
+};
 function getOptions() {
     if (options === undefined || options === null) {
         options = default_options;
@@ -1190,15 +1212,20 @@ function openBasket() {
     resetProductDetail();
 }
 
+function fillPaymentOptions() {
+    let paymentOptionsArray = Object.keys(paymentOptions).map((key) =>  paymentOptions[key]);
+    $('.paymentOptions').html(paymentOptionsArray.map(function(item) {
+        return `<button data-option=${item.id} title="${item.name}"><img src="${item.image}" alt="${item.name}" /></button>`;
+    }).join(''));
+    $('.paymentOptions button:first-child').addClass('selected');
+}
+
 function disableBasketProductList() {
     $('#basketProductListSection ul').addClass('disabled');
     $('#basketProductListSection ul button, #basketProductListSection ul input').attr('disabled', true);
 }
 
-function getPaymentName(optionId) {
-    let selectedPayment = Object.values(paymentOptions).find(option => option.id === optionId);
-    return selectedPayment ? selectedPayment.name : null;
-}
+
 function completePayment(amount ,amountOfChange) {
     if (confirm(`${getPaymentName($('#basketPaymentSection .paymentOptions button.selected').data('option'))} yöntemi ile ${convert2PriceWithUnit(amount)} tutarında ödeme yapılacak. ${(amountOfChange) ? `para üstü: ${convert2PriceWithUnit(amountOfChange)}` : ''}`) == true) {
         salesBasket = [];
@@ -1209,26 +1236,93 @@ function completePayment(amount ,amountOfChange) {
         closeModalE();
     }
 }
+
+function getPaymentStateName(stateId) {
+    let selectedStatus = Object.values(paymentStates).find(option => option.id === stateId);
+    return selectedStatus ? selectedStatus.name : null;
+}
+function getPaymentStateClass(stateId) {
+    let selectedStatus = Object.values(paymentStates).find(option => option.id === stateId);
+    return selectedStatus ? selectedStatus.class : null;
+}
+function getPaymentName(optionId) {
+    let selectedPayment = Object.values(paymentOptions).find(option => option.id === optionId);
+    return selectedPayment ? selectedPayment.name : null;
+}
 function makePartialPayment(partialAmount) {
-    if (confirm(`${getPaymentName($('#basketPaymentSection .paymentOptions button.selected').data('option'))} yöntemi ile ${convert2PriceWithUnit(partialAmount)} tutarında ödeme yapılacak. Geri kalan ödenecek tutar: ${convert2PriceWithUnit(amount2Paid - partialAmount)}`) == true) {
+    // amount2Paid'ten büyük mü kontrolü
+    if (confirm(`${getPaymentName($('#basketPaymentSection .paymentOptions button.selected').data('option'))} yöntemi ile ${convert2PriceWithUnit(partialAmount)} tutarında ödeme oluşturulacak.`)) {
         partialPayment.push({
             id: partialPayment.length > 0 ? Math.max(...partialPayment.map(payment => payment.id)) + 1 : 1,
+            state: paymentStates.waiting.id,
             option: $('#basketPaymentSection .paymentOptions button.selected').data('option'),
             amount: partialAmount
         });
         createPartialPaymentList();
-        updateAmount2Paid(amount2Paid - partialAmount);
+        // updateAmount2Paid(amount2Paid - partialAmount);
         disableBasketProductList();
     }
 }
-function createPartialPaymentList() {
-    $('.partialPaymentList ul').html(partialPayment.map(function(item) {
-        return `<li>
-                    <span>${getPaymentName(item.option)}</span>
-                    <span>-${convert2PriceWithUnit(item.amount)}</span>
-                </li>`
-    }).join(''));
+function createPartialPaymentMenuItems(itemId, state, event) {
+    const menuItems = [];
+    if (state === paymentStates.waiting.id) {
+        menuItems.push({ name: 'Tamamla', action: `completePaymentAction(${itemId})` });
+        menuItems.push({ name: 'İptal Et', action: `cancelPaymentAction(${itemId})` });
+    } else if (state === paymentStates.completed.id) {
+        menuItems.push({ name: 'İade Et', action: `refundPaymentAction(${itemId})` });
+    }
+    createContextMenu(menuItems, event);
 }
+function createPartialPaymentList() {
+    $('.partialPaymentList ul').html(partialPayment.map(function(item) {    
+        return `<li data-id="${item.id}" data-state="${item.state}" class="partialPaymentLi ${getPaymentStateClass(item.state)}">
+                    <div class="partialPaymentState">${getPaymentStateName(item.state)}</div>
+                    <span class="partialPaymentOption">${getPaymentName(item.option)}</span>
+                    <span class="partialPaymentPrice">${convert2PriceWithUnit(item.amount)}</span>
+                </li>`;
+    }).join(''));
+
+    $('li.partialPaymentLi').on('click', function(event) {
+        const paymentId = $(this).data('id');
+        const paymentState = $(this).data('state');
+        createPartialPaymentMenuItems(paymentId, paymentState, event);
+    });
+}
+function completePaymentAction(itemId) {
+    let selectedPartialPayment = partialPayment.find(x => x.id == itemId);
+    if (selectedPartialPayment.amount >= amount2Paid) {
+        if (selectedPartialPayment.option != paymentOptions.cash.id) {
+            alert('Ödenecek tutardan daha fazla girdiğiniz için düzeltme yapıldı.');
+            completePayment(amount2Paid);
+        }
+        else {
+            completePayment(selectedPartialPayment.amount, selectedPartialPayment.amount - amount2Paid);
+        }
+    }
+    else {
+        updateAmount2Paid(amount2Paid - selectedPartialPayment.amount);
+        updatePaymentState(itemId, paymentStates.completed.id);
+    }
+    $('#contextMenuContainer').hide();
+}
+function cancelPaymentAction(itemId) {
+    updatePaymentState(itemId, paymentStates.canceled.id);
+    $('#contextMenuContainer').hide();
+}
+function refundPaymentAction(itemId) {
+    let selectedPartialPayment = partialPayment.find(x => x.id == itemId);
+    updateAmount2Paid(amount2Paid + selectedPartialPayment.amount);
+    updatePaymentState(itemId, paymentStates.canceled.id);
+    $('#contextMenuContainer').hide();
+}
+function updatePaymentState(itemId, newState) {
+    const payment = partialPayment.find(p => p.id === itemId);
+    if (payment) {
+        payment.state = newState;
+        createPartialPaymentList();
+    }
+}
+
 
 // ready
 $(document).ready(function () {
@@ -1496,6 +1590,46 @@ function reverseConvertFromPrice(value) {
     }
 }
 
+function createContextMenu(menuItems, event) {
+    const menu = $('#contextMenuContainer');
+    menu.html(`
+        <ul>
+            ${menuItems.map(item => `<li onclick="${item.action}">${item.name}</li>`).join('')}
+        </ul>
+    `);
+    positionContextMenu(event);
+
+    $(document).off('mousedown.contextMenuClose').on('mousedown.contextMenuClose', function(e) {
+        if (!$(e.target).closest('#contextMenuContainer').length) {
+            menu.hide();
+            $(document).off('mousedown.contextMenuClose');
+        }
+    });
+}
+function positionContextMenu(event) {
+    const menu = $('#contextMenuContainer');
+    const clickX = event.pageX;
+    const clickY = event.pageY;
+    const menuWidth = menu.outerWidth();
+    const menuHeight = menu.outerHeight();
+    const windowWidth = $(window).width();
+    const windowHeight = $(window).height();
+    let posX = clickX;
+    let posY = clickY;
+    if ((clickX + menuWidth) > windowWidth) {
+        posX = windowWidth - menuWidth;
+    }
+    if ((clickY + menuHeight) > windowHeight) {
+        posY = windowHeight - menuHeight;
+    }
+    menu.css({
+        top: `${posY}px`,
+        left: `${posX}px`,
+        display: 'block'
+    });
+}
+
+
 // KeypadJS
 function setFirstKeypad() {
     confirmation_keypad = null;
@@ -1612,7 +1746,7 @@ function setBasketNumpad() {
             statename: "default",
             rightActionContent: "<i class='fa fa-check' style=\"font-family: 'FontAwesome'; color: var(--green);\"></i>",
             rightAction: function (keypad) {
-                if (keypad.getNumericValue() == '' || keypad.getNumericValue() >= amount2Paid) {
+                if (keypad.getNumericValue() == '' || (keypad.getNumericValue() >= amount2Paid && partialPayment == '')) {
                     if (keypad.getNumericValue() >= amount2Paid) {
                         if ($('#basketPaymentSection .paymentOptions button.selected').data('option') != paymentOptions.cash.id) {
                             alert('Ödenecek tutardan daha fazla girdiğiniz için düzeltme yapıldı.');
@@ -1743,11 +1877,7 @@ function AsideBarButtons(containerId, buttonsPerPage) {
                                             <ul></ul>
                                         </div>
                                         <div class="paymentOptions">
-                                            <button data-option=${paymentOptions.cash.id} class="selected"><img src="./public/images/cash.svg" alt="Nakit" title="Nakit" /></button>
-                                            <button data-option=${paymentOptions.credit_card.id}><img src="./public/images/credit_card.svg" alt="Kredi kartı" title="Kredi kartı" /></button>
-                                            <button data-option=${paymentOptions.food_card.id}><img src="./public/images/food_card.svg" alt="Yemek kartı" title="Yemek kartı" /></button>
-                                            <button data-option=${paymentOptions.eft.id}><img src="./public/images/eft.svg" alt="Eft/Havale" title="Eft/Havale" /></button>
-                                            <button data-option=${paymentOptions.qr_code.id}><img src="./public/images/qr_code.svg" alt="Qr kod" title="Qr kod" /></button>
+
                                         </div>
                                     </div>
                                     <div id="basketNumpadContainer"></div>
@@ -1761,6 +1891,7 @@ function AsideBarButtons(containerId, buttonsPerPage) {
                             </div>`;
             }
             fillAsideButtonsModal(bodyHtml);
+            fillPaymentOptions();
             if(!isBasketEmpty) { 
                 setBasketNumpad();
                 $('.paymentOptions button').off('click').on('click', function(){
