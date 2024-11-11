@@ -393,6 +393,13 @@ body {
     top: 6px;
     right: 6px;
     font-size: calc(0.875rem / var(--column-count) * 4);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: flex-end;
+}
+#cardContainer .productCard .productBarcode span:last-child {
+    font-size: calc(1rem / var(--column-count) * 4);;
 }
 #pagination {
     width: 100%;

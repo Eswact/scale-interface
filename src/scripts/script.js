@@ -108,7 +108,25 @@
 const scaleModes = {
     default: 0,
     sales: 1
-}
+};
+const currency = {
+    "TRY": {
+        rate: 1,
+        unit: "₺",
+        icon: "fa-solid fa-turkish-lira-sign"
+    },
+    "USD": {
+        rate: 0.029,
+        unit: "$",
+        icon: "fa-solid fa-dollar-sign"
+    },
+    "EUR": {
+        rate: 0.027,
+        unit: "€",
+        icon: "fa-solid fa-euro-sign"
+    }
+};
+
 const paymentOptions = {
     cash: {
         id: 0,
@@ -130,7 +148,7 @@ const paymentOptions = {
         id: 4,
         name: "Qr Kodu"
     }
-}
+};
 
 
 // all data
@@ -138,6 +156,7 @@ let categories;
 
 // options
 let scaleMode;
+let baseCurrency;
 let columnCount;
 let rowCount;
 let barCount;
@@ -194,7 +213,7 @@ var confirmation_keypad;
 
 // css injection
 var options = localStorage.getItem("options");
-var default_options = { scaleMode: scaleModes.default, columnCount: 4, rowCount: 3, barCount: 5, bar2Count: 5, baseFont: 16, sellerman: false, buttonCount: 5, fullScreen: true, basketQuantityButtons: true, basketQuantityInput: true };
+var default_options = { scaleMode: scaleModes.default, baseCurrency: "TRY", columnCount: 4, rowCount: 3, barCount: 5, bar2Count: 5, baseFont: 16, sellerman: false, buttonCount: 5, fullScreen: true, basketQuantityButtons: true, basketQuantityInput: true };
 function getOptions() {
     if (options === undefined || options === null) {
         options = default_options;
@@ -214,6 +233,7 @@ function updateOptions(kullanici_yeni_opts) {
 }
 function applyOptions() {
     scaleMode = options.scaleMode;
+    baseCurrency = options.baseCurrency;
     setFirstKeypad();
     columnCount = options.columnCount;
     rowCount = options.rowCount;
@@ -228,12 +248,14 @@ function applyOptions() {
     asideBar = new AsideBarButtons("#buttonsSide nav ul", options.buttonCount);
     asideBar.loadButtonsFromJSON('././data/buttons.json');
 
-    if (scaleMode = scaleModes.sales) {
+    if (scaleMode == scaleModes.sales) {
         $('#content').append(`<button onclick="openBasket()" id="openBasketButton">
                                     <i class="fa-solid fa-basket-shopping"></i>
                                     <div id="basketProductCounter"></div>
                                 </button>`);
     }
+    $('#unitPriceCurrency').html(`(<i class="${currency[baseCurrency].icon}"></i>)`);
+    $('#totalPriceCurrency').html(`(<i class="${currency[baseCurrency].icon}"></i>)`);
 
     inject();
 }
@@ -332,9 +354,9 @@ function renderProducts(page) {
                                         <img src="${product.image || './public/images/default_image.png'}" onerror="this.src='./public/images/default_image.png';" />
                                         <div>
                                             <span class="productName truncatedText2" title="${product.name}">${product.name}</span>
-                                            <span class="productPrice">${convert2PriceWithUnit(product.price)} (${product.unitName})</span>
+                                            <span class="productPrice">${convert2PriceWithUnit(product.price, currency[product.currency].unit)}</span>
                                         <div>
-                                        <span class="productBarcode">${product.barcode}</span>
+                                        <span class="productBarcode"><span>${product.barcode}</span><span>${product.unitName}</span></span>
                                     </div>`);
     });
 
@@ -505,10 +527,10 @@ function setProductDetail(productId) {
     $("#productDetailImg").attr("src", selectedProduct.image || './public/images/default_image.png');
     $('#productDetailBarcode').html(selectedProduct.barcode);
     $('#productDetailName').html(selectedProduct.name);
-    $('#productDetailPrice').html(convert2Price(selectedProduct.price));
+    $('#productDetailPrice').html(convert2PriceWithUnit(selectedProduct.price, currency[selectedProduct.currency].unit));
     if (selectedProduct.isFav) { $('#productDetailDiv').addClass('favorites'); }
     else { $('#productDetailDiv').removeClass('favorites'); }
-    setUnitPrice(selectedProduct.price);
+    setUnitPrice(selectedProduct.price, selectedProduct.currency);
     if ($('.keypad-header input').val() != '' && confirmation_keypad._currentState == 'default') { setWeighed(confirmation_keypad.getNumericValue(true)); }
     else { if (!selectedProduct.ponderable && scaleMode != scaleModes.sales) { setWeighed(1); } }
     calculateTotalAmount();
@@ -1360,7 +1382,8 @@ function setTare(value) {
     let tare = convert2Kg(value);
     $('#tare').text(tare);
 }
-function setUnitPrice(value) {
+function setUnitPrice(value, targetCurrency) {
+    if (targetCurrency && value) { value = convertToBaseCurrency(value, targetCurrency); }
     let unitPrice = convert2Price(value);
     $('#unitPrice').text(unitPrice);
 }
@@ -1392,6 +1415,16 @@ function getAmount() {
 }
 
 // common functions
+function convertToBaseCurrency(value, targetCurrency) {
+    const baseCurrencyRate = currency[baseCurrency].rate;
+    const targetCurrencyRate = currency[targetCurrency].rate;
+    if (!targetCurrencyRate) {
+       console.error(`Döviz kuru bulunamadı: ${targetCurrency}`);
+       return null;
+    }
+    return (value / targetCurrencyRate) * baseCurrencyRate;
+ }
+ 
 function convert2Price(value) {
     if (value != null && value != undefined) {
         let str = value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
@@ -1416,19 +1449,23 @@ function convert2Kg(value) {
         return "0,000";
     }
 }
-function convert2PriceWithUnit(value) {
+function convert2PriceWithUnit(value, unit) {
+    let unitName = currency[baseCurrency].unit;
+    if (unit != null && unit != undefined) { unitName = unit };
     if (value != null && value != undefined) {
         let str = value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
         str = str.replace(/\./, "x");
         str = str.replace(/,/g, ".");
         str = str.replace(/x/, ",");
-        return str + " ₺";
+        return str + ` ${unitName}`;
     }
     else {
-        return "0,00 ₺";
+        return `0,00 ${unitName}`;
     }
 }
-function convert2KgWithUnit(value, unitName) {
+function convert2KgWithUnit(value, unit) {
+    let unitName = '';
+    if (unit != null && unit != undefined) { unitName = unit };
     if (value != null && value != undefined) {
         let str = value.toLocaleString('en-US', { minimumFractionDigits: 3, maximumFractionDigits: 3 });
         str = str.replace(/\./, "x");
@@ -1437,13 +1474,12 @@ function convert2KgWithUnit(value, unitName) {
         return str + ` ${unitName}`;
     }
     else {
-        return "0,000 kg";
+        return `0,000 ${unitName}`;
     }
 }
 function reverseConvertFromKg(value) {
     if (value != null && value != undefined) {
-        let str = value.replace(" kg", "");
-        str = str.replace(/\./g, "");
+        let str = value.replace(/\./g, "");
         str = str.replace(/,/, ".");
         return parseFloat(str);
     } else {
@@ -1452,8 +1488,7 @@ function reverseConvertFromKg(value) {
 }
 function reverseConvertFromPrice(value) {
     if (value != null && value != undefined) {
-        let str = value.replace(" ₺", "");
-        str = str.replace(/\./g, "");
+        let str = value.replace(/\./g, "");
         str = str.replace(/,/, ".");
         return parseFloat(str);
     } else {
@@ -1504,7 +1539,7 @@ function setFirstKeypad() {
                             let currentBarcode = parseInt(rightX);
                             if (categories.find(x => x.barcode == currentBarcode)) { 
                                 selectedProductId = categories.find(x => x.barcode == currentBarcode).id;
-                                setUnitPrice(categories.find(x => x.barcode == currentBarcode).price);
+                                setUnitPrice(categories.find(x => x.barcode == currentBarcode).price, categories.find(x => x.barcode == currentBarcode).currency);
                                 setWeighed(currentQuantity);
                                 calculateTotalAmount();
                                 add2Basket();
