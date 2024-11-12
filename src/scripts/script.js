@@ -1226,8 +1226,10 @@ function disableBasketProductList() {
 }
 
 
-function completePayment(amount ,amountOfChange) {
-    if (confirm(`${getPaymentName($('#basketPaymentSection .paymentOptions button.selected').data('option'))} yöntemi ile ${convert2PriceWithUnit(amount)} tutarında ödeme yapılacak. ${(amountOfChange) ? `para üstü: ${convert2PriceWithUnit(amountOfChange)}` : ''}`) == true) {
+function completePayment(amount, option ,amountOfChange) {
+    let optionName;
+    (option != null && option != undefined) ? optionName = getPaymentName(option)  : optionName = getPaymentName($('#basketPaymentSection .paymentOptions button.selected').data('option'));
+    if (confirm(`${optionName} yöntemi ile ${convert2PriceWithUnit(amount)} tutarında ödeme yapılacak. ${(amountOfChange) ? `para üstü: ${convert2PriceWithUnit(amountOfChange)}` : ''}`) == true) {
         salesBasket = [];
         basketNotification();
         $(`.productCard`).removeClass('basket');
@@ -1293,10 +1295,10 @@ function completePaymentAction(itemId) {
     if (selectedPartialPayment.amount >= amount2Paid) {
         if (selectedPartialPayment.option != paymentOptions.cash.id) {
             alert('Ödenecek tutardan daha fazla girdiğiniz için düzeltme yapıldı.');
-            completePayment(amount2Paid);
+            completePayment(amount2Paid, selectedPartialPayment.option);
         }
         else {
-            completePayment(selectedPartialPayment.amount, selectedPartialPayment.amount - amount2Paid);
+            completePayment(selectedPartialPayment.amount, selectedPartialPayment.option, selectedPartialPayment.amount - amount2Paid);
         }
     }
     else {
@@ -1746,14 +1748,14 @@ function setBasketNumpad() {
             statename: "default",
             rightActionContent: "<i class='fa fa-check' style=\"font-family: 'FontAwesome'; color: var(--green);\"></i>",
             rightAction: function (keypad) {
-                if (keypad.getNumericValue() == '' || (keypad.getNumericValue() >= amount2Paid && partialPayment == '')) {
+                if ((keypad.getNumericValue() == '' || keypad.getNumericValue() >= amount2Paid) && partialPayment == '') {
                     if (keypad.getNumericValue() >= amount2Paid) {
                         if ($('#basketPaymentSection .paymentOptions button.selected').data('option') != paymentOptions.cash.id) {
                             alert('Ödenecek tutardan daha fazla girdiğiniz için düzeltme yapıldı.');
                             completePayment(amount2Paid);
                         }
                         else {
-                            completePayment(keypad.getNumericValue(), keypad.getNumericValue() - amount2Paid);
+                            completePayment(keypad.getNumericValue(), paymentOptions.cash.id, keypad.getNumericValue() - amount2Paid);
                         }
                     }
                     else {
@@ -1761,7 +1763,9 @@ function setBasketNumpad() {
                     }
                 }
                 else {
-                    makePartialPayment(keypad.getNumericValue(true));
+                    if (keypad.getNumericValue() != '') {
+                        makePartialPayment(keypad.getNumericValue(true));
+                    }
                 }
             },
             watcher: function (keypad, char, prevVal, nextVal) {
