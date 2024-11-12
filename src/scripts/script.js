@@ -1510,127 +1510,6 @@ function getAmount() {
     return amountValue;
 }
 
-// common functions
-function convertToBaseCurrency(value, targetCurrency) {
-    const baseCurrencyRate = currency[baseCurrency].rate;
-    const targetCurrencyRate = currency[targetCurrency].rate;
-    if (!targetCurrencyRate) {
-       console.error(`Döviz kuru bulunamadı: ${targetCurrency}`);
-       return null;
-    }
-    return (value / targetCurrencyRate) * baseCurrencyRate;
- }
- 
-function convert2Price(value) {
-    if (value != null && value != undefined) {
-        let str = value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-        str = str.replace(/\./, "x");
-        str = str.replace(/,/g, ".");
-        str = str.replace(/x/, ",");
-        return str;
-    }
-    else {
-        return "0,00";
-    }
-}
-function convert2Kg(value) {
-    if (value != null && value != undefined) {
-        let str = value.toLocaleString('en-US', { minimumFractionDigits: 3, maximumFractionDigits: 3 });
-        str = str.replace(/\./, "x");
-        str = str.replace(/,/g, ".");
-        str = str.replace(/x/, ",");
-        return str;
-    }
-    else {
-        return "0,000";
-    }
-}
-function convert2PriceWithUnit(value, unit) {
-    let unitName = currency[baseCurrency].unit;
-    if (unit != null && unit != undefined) { unitName = unit };
-    if (value != null && value != undefined) {
-        let str = value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-        str = str.replace(/\./, "x");
-        str = str.replace(/,/g, ".");
-        str = str.replace(/x/, ",");
-        return str + ` ${unitName}`;
-    }
-    else {
-        return `0,00 ${unitName}`;
-    }
-}
-function convert2KgWithUnit(value, unit) {
-    let unitName = '';
-    if (unit != null && unit != undefined) { unitName = unit };
-    if (value != null && value != undefined) {
-        let str = value.toLocaleString('en-US', { minimumFractionDigits: 3, maximumFractionDigits: 3 });
-        str = str.replace(/\./, "x");
-        str = str.replace(/,/g, ".");
-        str = str.replace(/x/, ",");
-        return str + ` ${unitName}`;
-    }
-    else {
-        return `0,000 ${unitName}`;
-    }
-}
-function reverseConvertFromKg(value) {
-    if (value != null && value != undefined) {
-        let str = value.replace(/\./g, "");
-        str = str.replace(/,/, ".");
-        return parseFloat(str);
-    } else {
-        return 0;
-    }
-}
-function reverseConvertFromPrice(value) {
-    if (value != null && value != undefined) {
-        let str = value.replace(/\./g, "");
-        str = str.replace(/,/, ".");
-        return parseFloat(str);
-    } else {
-        return 0;
-    }
-}
-
-function createContextMenu(menuItems, event) {
-    const menu = $('#contextMenuContainer');
-    menu.html(`
-        <ul>
-            ${menuItems.map(item => `<li onclick="${item.action}">${item.name}</li>`).join('')}
-        </ul>
-    `);
-    positionContextMenu(event);
-
-    $(document).off('mousedown.contextMenuClose').on('mousedown.contextMenuClose', function(e) {
-        if (!$(e.target).closest('#contextMenuContainer').length) {
-            menu.hide();
-            $(document).off('mousedown.contextMenuClose');
-        }
-    });
-}
-function positionContextMenu(event) {
-    const menu = $('#contextMenuContainer');
-    const clickX = event.pageX;
-    const clickY = event.pageY;
-    const menuWidth = menu.outerWidth();
-    const menuHeight = menu.outerHeight();
-    const windowWidth = $(window).width();
-    const windowHeight = $(window).height();
-    let posX = clickX;
-    let posY = clickY;
-    if ((clickX + menuWidth) > windowWidth) {
-        posX = windowWidth - menuWidth;
-    }
-    if ((clickY + menuHeight) > windowHeight) {
-        posY = windowHeight - menuHeight;
-    }
-    menu.css({
-        top: `${posY}px`,
-        left: `${posX}px`,
-        display: 'block'
-    });
-}
-
 
 // KeypadJS
 function setFirstKeypad() {
@@ -2014,4 +1893,165 @@ function AsideBarButtons(containerId, buttonsPerPage) {
         this.container.before(upArrow);
         this.container.after(downArrow);
     };
+}
+
+
+// common functions
+function convertToBaseCurrency(value, targetCurrency) {
+    const baseCurrencyRate = currency[baseCurrency].rate;
+    const targetCurrencyRate = currency[targetCurrency].rate;
+    if (!targetCurrencyRate) {
+       console.error(`Döviz kuru bulunamadı: ${targetCurrency}`);
+       return null;
+    }
+    return (value / targetCurrencyRate) * baseCurrencyRate;
+}
+ 
+function convert2Price(value) {
+    if (value != null && value != undefined) {
+        let str = value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        str = str.replace(/\./, "x");
+        str = str.replace(/,/g, ".");
+        str = str.replace(/x/, ",");
+        return str;
+    }
+    else {
+        return "0,00";
+    }
+}
+function convert2Kg(value) {
+    if (value != null && value != undefined) {
+        let str = value.toLocaleString('en-US', { minimumFractionDigits: 3, maximumFractionDigits: 3 });
+        str = str.replace(/\./, "x");
+        str = str.replace(/,/g, ".");
+        str = str.replace(/x/, ",");
+        return str;
+    }
+    else {
+        return "0,000";
+    }
+}
+function convert2PriceWithUnit(value, unit) {
+    let unitName = currency[baseCurrency].unit;
+    if (unit != null && unit != undefined) { unitName = unit };
+    if (value != null && value != undefined) {
+        let str = value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        str = str.replace(/\./, "x");
+        str = str.replace(/,/g, ".");
+        str = str.replace(/x/, ",");
+        return str + ` ${unitName}`;
+    }
+    else {
+        return `0,00 ${unitName}`;
+    }
+}
+function convert2KgWithUnit(value, unit) {
+    let unitName = '';
+    if (unit != null && unit != undefined) { unitName = unit };
+    if (value != null && value != undefined) {
+        let str = value.toLocaleString('en-US', { minimumFractionDigits: 3, maximumFractionDigits: 3 });
+        str = str.replace(/\./, "x");
+        str = str.replace(/,/g, ".");
+        str = str.replace(/x/, ",");
+        return str + ` ${unitName}`;
+    }
+    else {
+        return `0,000 ${unitName}`;
+    }
+}
+function reverseConvertFromKg(value) {
+    if (value != null && value != undefined) {
+        let str = value.replace(/\./g, "");
+        str = str.replace(/,/, ".");
+        return parseFloat(str);
+    } else {
+        return 0;
+    }
+}
+function reverseConvertFromPrice(value) {
+    if (value != null && value != undefined) {
+        let str = value.replace(/\./g, "");
+        str = str.replace(/,/, ".");
+        return parseFloat(str);
+    } else {
+        return 0;
+    }
+}
+
+function createContextMenu(menuItems, event) {
+    const menu = $('#contextMenuContainer');
+    menu.html(`
+        <ul>
+            ${menuItems.map(item => `<li onclick="${item.action}">${item.name}</li>`).join('')}
+        </ul>
+    `);
+    positionContextMenu(event);
+
+    $(document).off('mousedown.contextMenuClose').on('mousedown.contextMenuClose', function(e) {
+        if (!$(e.target).closest('#contextMenuContainer').length) {
+            menu.hide();
+            $(document).off('mousedown.contextMenuClose');
+        }
+    });
+}
+function positionContextMenu(event) {
+    const menu = $('#contextMenuContainer');
+    const clickX = event.pageX;
+    const clickY = event.pageY;
+    const menuWidth = menu.outerWidth();
+    const menuHeight = menu.outerHeight();
+    const windowWidth = $(window).width();
+    const windowHeight = $(window).height();
+    let posX = clickX;
+    let posY = clickY;
+    if ((clickX + menuWidth) > windowWidth) {
+        posX = windowWidth - menuWidth;
+    }
+    if ((clickY + menuHeight) > windowHeight) {
+        posY = windowHeight - menuHeight;
+    }
+    menu.css({
+        top: `${posY}px`,
+        left: `${posX}px`,
+        display: 'block'
+    });
+}
+
+function showSplashScreen(title, description, buttons = []) {
+    // text, text, [{text,action,type}]
+    const splashScreen = document.getElementById("splashScreen");
+    splashScreen.innerHTML = `<img src="./public/images/loading.gif" />`;
+    if (title) {
+        const titleElement = document.createElement("h1");
+        titleElement.innerText = title;
+        splashScreen.appendChild(titleElement);
+    }
+    if (description) {
+        const descriptionElement = document.createElement("p");
+        descriptionElement.innerText = description;
+        splashScreen.appendChild(descriptionElement);
+    }
+    if (buttons.length > 0) {
+        const buttonsContainer = document.createElement("div");
+        buttonsContainer.innerHTML = "";
+        buttons.forEach(button => {
+            const buttonElement = document.createElement("button");
+            buttonElement.innerText = button.text;
+            buttonElement.onclick = button.action;
+            if (button.type === "accept") {
+                buttonElement.classList.add("acceptButton");
+            }
+            if (button.type === "cancel") {
+                buttonElement.classList.add("cancelButton");
+            }
+            buttonsContainer.appendChild(buttonElement);
+        });
+        splashScreen.appendChild(buttonsContainer);
+    }
+    splashScreen.style.display = "flex";
+}
+
+function hideSplashScreen() {
+    const splashScreen = document.getElementById("splashScreen");
+    splashScreen.style.display = "none";
 }
