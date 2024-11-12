@@ -1325,6 +1325,61 @@ function updatePaymentState(itemId, newState) {
     }
 }
 
+const basketMenu = [
+    {
+        text: "Belge İptal",
+        icon: "https://cdn-icons-png.flaticon.com/512/391/391247.png",
+        action: function () { breakBasket(); }
+    },
+    {
+        text: "Belge Tekrar",
+        icon: "https://cdn-icons-png.flaticon.com/512/4856/4856659.png",
+        action: function () { console.log("Belge Tekrar"); }
+    },
+    {
+        text: "İndirim",
+        icon: "https://cdn-icons-png.flaticon.com/512/2615/2615079.png",
+        action: function () { console.log("İndirim"); }
+    },
+    {
+        text: "Arttırım",
+        icon: "https://cdn-icons-png.flaticon.com/512/7327/7327404.png",
+        action: function () { console.log("Arttırım"); }
+    },
+    {
+        text: "Cari Seç",
+        icon: "https://cdn-icons-png.flaticon.com/512/3225/3225069.png",
+        action: function () { console.log("Cari Seç"); }
+    },
+    {
+        text: "Diğer",
+        icon: "https://cdn-icons-png.flaticon.com/512/9970/9970242.png",
+        action: null,
+        subMenu: [
+            {
+                text: "Diğer 1",
+                icon: "https://cdn-icons-png.flaticon.com/512/9970/9970242.png",
+                action: function () { console.log("Diğer 1"); },
+            },
+            {
+                text: "Diğer 2",
+                icon: "https://cdn-icons-png.flaticon.com/512/9970/9970242.png",
+                action: function () { console.log("Diğer 2"); },
+                subMenu: [
+                    {
+                        text: "Diğer 2-1",
+                        icon: "https://cdn-icons-png.flaticon.com/512/9970/9970242.png",
+                        action: function () { console.log("Diğer 2-1"); }
+                    }
+                ]
+            }
+        ]
+    }
+];
+function openCartTransactions() {
+    openGridMenu(basketMenu);
+}
+
 
 // ready
 $(document).ready(function () {
@@ -1736,7 +1791,7 @@ function AsideBarButtons(containerId, buttonsPerPage) {
                                     </ul>
                                     <div class="productListSummary">
                                         <div class="productListButtons">
-                                            <button id="breakBasket" onclick="breakBasket();">Belge iptal</button>
+                                            <button id="cartTransactions" onclick="openCartTransactions()">İşlemler</button>
                                         </div>
                                         <div class="quantityAndTotalPrice">
                                             <div>
@@ -1896,7 +1951,7 @@ function AsideBarButtons(containerId, buttonsPerPage) {
 }
 
 
-// common functions
+// convert functions
 function convertToBaseCurrency(value, targetCurrency) {
     const baseCurrencyRate = currency[baseCurrency].rate;
     const targetCurrencyRate = currency[targetCurrency].rate;
@@ -1906,7 +1961,6 @@ function convertToBaseCurrency(value, targetCurrency) {
     }
     return (value / targetCurrencyRate) * baseCurrencyRate;
 }
- 
 function convert2Price(value) {
     if (value != null && value != undefined) {
         let str = value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
@@ -1978,6 +2032,7 @@ function reverseConvertFromPrice(value) {
     }
 }
 
+// context menu
 function createContextMenu(menuItems, event) {
     const menu = $('#contextMenuContainer');
     menu.html(`
@@ -2017,24 +2072,27 @@ function positionContextMenu(event) {
     });
 }
 
-function showSplashScreen(title, description, buttons = []) {
-    // text, text, [{text,action,type}]
+// splash screen
+function showSplashScreen(splash) {
+    let default_splash = { default_html: `<img class="defaultImg" src="./public/images/loading.gif" />`,  title: null,  description: null,  buttons: [] };
+    if (splash) { splash = Object.assign(default_splash, splash); }
+    else { splash = default_splash; }
     const splashScreen = document.getElementById("splashScreen");
-    splashScreen.innerHTML = `<img src="./public/images/loading.gif" />`;
-    if (title) {
+    splashScreen.innerHTML = splash.default_html;
+    if (splash.title) {
         const titleElement = document.createElement("h1");
-        titleElement.innerText = title;
+        titleElement.innerText = splash.title;
         splashScreen.appendChild(titleElement);
     }
-    if (description) {
+    if (splash.description) {
         const descriptionElement = document.createElement("p");
-        descriptionElement.innerText = description;
+        descriptionElement.innerText = splash.description;
         splashScreen.appendChild(descriptionElement);
     }
-    if (buttons.length > 0) {
+    if (splash.buttons.length > 0) {
         const buttonsContainer = document.createElement("div");
         buttonsContainer.innerHTML = "";
-        buttons.forEach(button => {
+        splash.buttons.forEach(button => {
             const buttonElement = document.createElement("button");
             buttonElement.innerText = button.text;
             buttonElement.onclick = button.action;
@@ -2050,8 +2108,54 @@ function showSplashScreen(title, description, buttons = []) {
     }
     splashScreen.style.display = "flex";
 }
-
 function hideSplashScreen() {
     const splashScreen = document.getElementById("splashScreen");
     splashScreen.style.display = "none";
+}
+
+// grid menü
+let gridMenuHistory = [];
+function showGridMenu(menu) {    
+    const gridContainer = document.getElementById("gridMenu");
+    gridContainer.innerHTML = "";
+    if (gridMenuHistory.length > 0) {
+        const backButton = document.createElement("button");
+        backButton.classList.add("gridMenuBackButton"); 
+        backButton.innerHTML = `<i class="fa-solid fa-circle-left"></i>`
+        backButton.onclick = function () {
+            navigateBack();
+        };
+        gridContainer.appendChild(backButton);
+    }
+    menu.forEach(item => {
+        const button = document.createElement("button");
+        button.classList.add("gridMenuButton"); 
+        button.innerHTML = `<img src="${item.icon}" alt="${item.text}" /><span class="truncatedText2">${item.text}</span>`;
+        if (item.subMenu) {
+            button.onclick = function () {
+                gridMenuHistory.push(menu);
+                showGridMenu(item.subMenu);
+            };
+        } else {
+            button.onclick = function () {
+                closeGridMenu();
+                item.action();
+            };
+        }
+        gridContainer.appendChild(button);
+    });
+}
+function navigateBack() {
+    if (gridMenuHistory.length > 0) {
+        const previousMenu = gridMenuHistory.pop();
+        showGridMenu(previousMenu);
+    }
+}
+function openGridMenu(menu) {
+    $('#gridMenuModal').addClass('show');
+    showGridMenu(menu);
+}
+function closeGridMenu() {
+    gridMenuHistory = [];
+    $('#gridMenuModal').removeClass('show');
 }

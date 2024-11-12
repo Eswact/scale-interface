@@ -165,13 +165,19 @@ body {
     text-align: center;
 }
 #splashScreen img {
-    height: 500px;
+    max-height: 500px;
     width: auto;
+    object-fit: contain;
+}
+#splashScreen .defaultImg {
+    height: 360px;
+    width: 500px;
+    object-fit: cover;
+    object-position: center;
 }
 #splashScreen h1 {
     color: var(--active-color);
     font-size: 3rem;
-    margin-top: -80px;
 }
 #splashScreen p {
     color: white;
@@ -1338,13 +1344,12 @@ body {
 }
 #basketProductListSection .productListSummary .productListButtons button {
     font-size: 1.25rem;
-    padding: 6px 12px;
+    padding: 8px 16px;
     border-radius: 6px;
-}
-#basketProductListSection .productListSummary .productListButtons #breakBasket {
-    background-color: var(--red);
+    background-color: var(--active-color);
     color: white;
     border: none;
+    box-shadow: 0 0 2px 2px var(--active-color-25);
 }
 #emptyBasketModal {
     width: 100%;
@@ -1524,6 +1529,99 @@ body {
     background-color: var(--first-color);
 }
 /* basket end */
+
+#gridMenuModal {
+    z-index: 25;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 20, 0.5);
+    display: none;
+    justify-content: center;
+    align-items: center;
+}
+#gridMenuModal.show {
+    display: flex;
+}
+#gridMenuContainer {
+    position: relative;
+    display: flex;
+    width: auto;
+    height: auto;
+    max-width: 680px;
+    max-height: 680px;
+    /* aspect-ratio: 1; */
+    padding: 1rem;
+    background-color: rgba(255, 255, 255, 0.6);
+    border: 2px solid white;
+    border-radius: 10px;
+    box-shadow: 0 0 2px 2px rgba(255, 255, 255, 0.3);
+}
+#gridMenuClose {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 3rem;
+    aspect-ratio: 1;
+    top: -1.5rem;
+    right: -1.5rem;
+    font-size: 2.25rem;
+    border-radius: 50%;
+    color: white;
+    background-color: var(--red);
+    border: 2px solid var(--red);
+    box-shadow: 0 0 2px 2px var(--red-25);
+    border: none;
+}
+#gridMenu {
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+}
+#gridMenu .gridMenuButton {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    width: calc(25% - 10px);
+    aspect-ratio: 1;
+    overflow: hidden;
+    margin: 5px;
+    padding: 10px;
+    border: 1px solid var(--first-color);
+    background-color: white;
+    color: var(--first-color);
+    box-shadow: 0 0 2px 2px var(--first-color-25);
+    border-radius: 5px;
+}
+#gridMenu .gridMenuBackButton {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: calc(25% - 10px);
+    aspect-ratio: 1;
+    overflow: hidden;
+    margin: 5px;
+    padding: 10px;
+    border: 1px solid var(--first-color);
+    background-color: white;
+    color: var(--first-color);
+    box-shadow: 0 0 2px 2px var(--first-color-25);
+    border-radius: 5px;
+    font-size: 4rem;
+}
+#gridMenu .gridMenuButton img {
+    height: 70%;
+    width: auto;
+}
 
 /* resolution-warning start */
 #resolution-warning {
