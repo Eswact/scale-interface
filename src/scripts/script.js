@@ -382,6 +382,13 @@ function renderProducts(page) {
                                     </div>`);
     });
 
+    let emptyCards = cardsPerPage - productsToShow.length;
+    for (let i = 0; i < emptyCards; i++) {
+        $('#cardContainer').append(`
+            <div class="productCard hidden"></div>
+        `);
+    }
+
     totalPages = Math.ceil(products.length / cardsPerPage);
     $('#totalPages').text(totalPages);
     $('#currentPage').text(page);

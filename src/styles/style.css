@@ -535,6 +535,11 @@ body {
     align-items: center;
 }
 
+#cardContainer .productCard.hidden {
+    visibility: hidden;
+    pointer-events: none;
+}
+
 #cardContainer .productCard.selected {
     border: 4px solid var(--active-color);
     box-shadow: inset 0 0 24px 6px var(--active-color-25);
