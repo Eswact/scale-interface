@@ -135,27 +135,27 @@ const paymentOptions = {
     cash: {
         id: 0,
         name: "Nakit",
-        image: "./public/images/cash.svg"
+        icon: '<i class="fa-solid fa-money-bill"></i>'
     },
     credit_card: {
         id: 1,
         name: "Kredi Kartı",
-        image: "./public/images/credit_card.svg"
+        icon: '<i class="fa-solid fa-credit-card"></i>'
     },
     food_card: {
         id: 2,
         name: "Yemek Kartı",
-        image: "./public/images/food_card.svg"
+        icon: '<i class="fa-solid fa-utensils"></i>'
     },
     eft: {
         id: 3,
         name: "EFT",
-        image: "./public/images/eft.svg"
+        icon: '<i class="fa-solid fa-mobile-screen-button"></i>'
     },
     qr_code: {
         id: 4,
         name: "Qr Kodu",
-        image: "./public/images/qr_code.svg"
+        icon: '<i class="fa-solid fa-qrcode"></i>'
     }
 };
 
@@ -569,7 +569,7 @@ function resetProductDetail() {
     setUnitPrice(0);
     calculateTotalAmount();
 
-    $('#chooseProductDiv').html('Lütfen ürün seçimi yapınız');
+    $('#chooseProductDiv').html('<span>Lütfen ürün seçimi yapınız</span>');
 }
 
 // barcode filter
@@ -1083,7 +1083,7 @@ function add2Basket() {
         else { notificationText = `Maksimum miktarda ${categories.find(x => x.id == selectedProductId).name} sepette bulunuyor.`}
         $(`.productCard[data-product=${selectedProductId}]`).addClass('basket');
         resetProductDetail();
-        $('#chooseProductDiv').html(notificationText);
+        $('#chooseProductDiv').html(`<span class="heartbeat">${notificationText}</span>`);
         setWeighed(0);
 
         basketNotification();
@@ -1215,7 +1215,9 @@ function openBasket() {
 function fillPaymentOptions() {
     let paymentOptionsArray = Object.keys(paymentOptions).map((key) =>  paymentOptions[key]);
     $('.paymentOptions').html(paymentOptionsArray.map(function(item) {
-        return `<button data-option=${item.id} title="${item.name}"><img src="${item.image}" alt="${item.name}" /></button>`;
+        return `<button data-option=${item.id} title="${item.name}">
+                    ${item.icon}
+                </button>`;
     }).join(''));
     $('.paymentOptions button:first-child').addClass('selected');
 }
@@ -1328,47 +1330,47 @@ function updatePaymentState(itemId, newState) {
 const basketMenu = [
     {
         text: "Belge İptal",
-        icon: "https://cdn-icons-png.flaticon.com/512/391/391247.png",
+        icon: `<i class="fa-solid fa-ban"></i>`,
         action: function () { breakBasket(); }
     },
     {
         text: "Belge Tekrar",
-        icon: "https://cdn-icons-png.flaticon.com/512/4856/4856659.png",
+        icon: `<i class="fa-solid fa-repeat"></i>`,
         action: function () { console.log("Belge Tekrar"); }
     },
     {
         text: "İndirim",
-        icon: "https://cdn-icons-png.flaticon.com/512/2615/2615079.png",
+        icon: `<i class="fa-solid fa-down-long"></i>`,
         action: function () { console.log("İndirim"); }
     },
     {
         text: "Arttırım",
-        icon: "https://cdn-icons-png.flaticon.com/512/7327/7327404.png",
+        icon: `<i class="fa-solid fa-up-long"></i>`,
         action: function () { console.log("Arttırım"); }
     },
     {
         text: "Cari Seç",
-        icon: "https://cdn-icons-png.flaticon.com/512/3225/3225069.png",
+        icon: `<i class="fa-solid fa-user"></i>`,
         action: function () { console.log("Cari Seç"); }
     },
     {
         text: "Diğer",
-        icon: "https://cdn-icons-png.flaticon.com/512/9970/9970242.png",
+        icon: `<i class="fa-solid fa-ellipsis"></i>`,
         action: null,
         subMenu: [
             {
                 text: "Diğer 1",
-                icon: "https://cdn-icons-png.flaticon.com/512/9970/9970242.png",
+                icon: `<i class="fa-solid fa-ellipsis"></i>`,
                 action: function () { console.log("Diğer 1"); },
             },
             {
                 text: "Diğer 2",
-                icon: "https://cdn-icons-png.flaticon.com/512/9970/9970242.png",
+                icon: `<i class="fa-solid fa-ellipsis"></i>`,
                 action: function () { console.log("Diğer 2"); },
                 subMenu: [
                     {
                         text: "Diğer 2-1",
-                        icon: "https://cdn-icons-png.flaticon.com/512/9970/9970242.png",
+                        icon: `<i class="fa-solid fa-ellipsis"></i>`,
                         action: function () { console.log("Diğer 2-1"); }
                     }
                 ]
@@ -2130,7 +2132,7 @@ function showGridMenu(menu) {
     menu.forEach(item => {
         const button = document.createElement("button");
         button.classList.add("gridMenuButton"); 
-        button.innerHTML = `<img src="${item.icon}" alt="${item.text}" /><span class="truncatedText2">${item.text}</span>`;
+        button.innerHTML = `${item.icon}<span class="truncatedText2">${item.text}</span>`;
         if (item.subMenu) {
             button.onclick = function () {
                 gridMenuHistory.push(menu);
