@@ -4,7 +4,7 @@
     fetchCategories() => tüm kategori ve ürünler çekilir ve "categories" değişkenine atanır. Ardından getFirstView() fonksiyonu çağrılır.
     getOptions() => kullanıcının kaydettiği ayar var ise, onları getirir. Kaydedilmiş bir ayar yok ise, varsayılan ayarlar kullanılır.
     updateOptions(kullanici_yeni_opts) => ayarları güncelleyip kaydetmek için kullanılır. Ardından fetchCategories() fonksiyonu çağrılır.
-    NOT: kullanici_yeni_opts => columnCount, rowCount, barCount, bar2Count, baseFont değerlerini içermelidir 
+    NOT: kullanici_yeni_opts => scaleMode, baseCurrency, columnCount, rowCount, barCount, bar2Count, baseFont, sellerman, buttonCount, fullScreen, basketQuantityButtons, basketQuantityInput değerlerini içermelidir 
     applyOptions() => inject() => css injection işlemi ile kullanıcının ayarları uygulanır.
     renderProducts(page) => "products" Dizisi içersinde bulunan ürünlere ve page değişkeni göre ürünleri kartlar halinde listeler. "rowCount" ve "columnCount" değişkenleri ile satır/sütun sayısı kullanıcın ayarladığı şekilde olur. 
     renderMainCategories(mainCategories) => parentId'si null Olan ana kategorileri "barCount" değişkenine göre listeler. Eğer barCount'tan fazla ana kategori var ise, yapıyı carousel'e dönüştürür.
@@ -30,7 +30,7 @@
     renderButtons() => Mevcut sayfadaki butonları container'da listeler. Eksik buton varsa, boş butonlarla tamamlar.
     handlePagination(direction) => Yön tuşlarına göre sayfa değiştirme işlemi yapar. 'up' veya 'down' yönünde kullanılabilir.
     createArrows() => Aşağı ve yukarı ok butonlarını oluşturur ve container'a ekler.
-    KeypadJS kullanılarak keypad oluşturuldu.
+    KeypadJS kullanılarak confirmation_keypad oluşturuldu.
     closeModalE() => modalE sınıfına sahip modal'leri kapatmak için kullanılır.
     openAsideButtonsModal(buttonProps) => buttonProps objesine göre #asideButtonsModal modal'ini oluşturur.
     fillAsideButtonsModal(bodyHtml, footerHtml) => bodyHtml ve footerHtml değerlerine göre #asideButtonsModal modal'ini doldurur.
@@ -50,13 +50,50 @@
     resetSuspended() => Tüm askıya alınmış öğeleri kaldırır.
     fillMemoryCard() => Hafıza kartı ile ilgili içeriği doldurur.
     fillSuspendedList() => Askıya alınmış öğe listesini ilgili içerikle doldurur.
+    convertToBaseCurrency (value, targetCurrency) => Kendisine gelen fiyatı ana döviz fiyatına çevirir.
+    add2Basket () => Seçili ürüne ve girilen miktara göre sepete ekleme yapar.
+    reloadBasketProductList () => Sepetteki ürün listesini yeniden oluşturur
+    updateTotalPrice () => Sepette yapılan değişiklikler sırasıda toplam fiyatı günceller.
+    updateAmount2Paid (amount) => Sepette yapılan değişiklikler sırasıda ödenecek tutarı günceller.
+    incrementWeigh (id) => Ürün miktarını 1 arttırır.
+    decreaseWeigh (id) => Ürün miktarını 1 azaltır.
+    setCustomWeigh (id) => Ürün miktarını günceller.
+    lineWeighUpdate (currentProduct) => Sepette yapılan miktar güncellemeleri sonrasında güncelleme yapılan satırın görünümü günceller. 
+    deleteBasketLine (id) => Sepetten satır/kalem siler
+    breakBasket () => Sepeti bozar.
+    basketNotification () => Sepet dolu iken kalem sayısı ile beraber gösterilmesini sağlar.
+    openBasket () => Sepet modalini açar.
+    fillPaymentOptions () => Ödeme seçeneklerini oluşturur.
+    disableBasketProductList () => Sepette ürünlerin listelendiği ve adetlerini güncelleyebildiğimiz kısımı devre dışı bırakır.
+    completePayment (amount, option ,amountOfChange) => Ödemeyi tamamlarken yapılacak işlemler gerçekleşir.
+    getPaymentStateName (stateId) => Ödemenin durum id'sine göre durun ismini verir.
+    getPaymentStateClass (stateId) => Ödemenin durum id'sine göre durun ismini verir.
+    getPaymentName (optionId) => Ödeme seçeneği id'sine göre Ödeme seçeneği ismini verir.
+    makePartialPayment (partialAmount) => Parçalı ödeme oluşturur.
+    createPartialPaymentMenuItems (itemId, state, event) => Parçalı ödeme listesinde bulunan ödemelern context menüsünü oluşturur.
+    createPartialPaymentList () => Parçalı ödeme listesini oluşturur.
+    completePaymentAction (itemId) => Parçalı ödemenin id'sini alarak belirli parçalı ödemeyi tamamlar.
+    cancelPaymentAction (itemId) => Parçalı ödemenin id'sini alarak belirli parçalı ödemeyi iptal eder.
+    refundPaymentAction (itemId) => Parçalı ödemenin id'sini alarak belirli parçalı ödemeyi iptal eder/iade eder.
+    updatePaymentState (itemId, newState) => Parçalı ödemenin durumunu günceller.
+    openCartTransactions () => Sepet işlemlerinin bulunduğu grid menüyü açar.
+    createContextMenu (menuItems, event) => Contex menü oluşturur.
+    positionContextMenu (event) => Contex menünün konumunu ayarlar.
+    showSplashScreen (splash) => Splash screen gösterilir.
+    hideSplashScreen () => Splash screen saklanır.
+    showGridMenu (menu) => Grid menü oluşturur.
+    navigateBack () => Grid menüde geri dönmek için kullanılır.
+    openGridMenu (menu) => Oluşturulan grid menü gösterilir.
+    closeGridMenu () => Grid menü kapanır.
+    KeypadJS kullanılarak basket_keypad oluşturuldu.
 
+    
     EN -- Documentation
     getFirstView() => The first view is created.
     fetchCategories() => All categories and products are fetched and assigned to the "categories" variable. Then, the getFirstView() function is called.
     getOptions() => Retrieves the user's saved settings if available. If there are no saved settings, default settings are used.
     updateOptions(kullanici_yeni_opts) => Used to update and save the settings. Afterward, the fetchCategories() function is called.
-    NOT: kullanici_yeni_opts should contain values for columnCount, rowCount, barCount, bar2Count, and baseFont.
+    NOT: kullanici_yeni_opts should contain values for scaleMode, baseCurrency, columnCount, rowCount, barCount, bar2Count, baseFont, sellerman, buttonCount, fullScreen, basketQuantityButtons and basketQuantityInput.
     applyOptions() => Applies the user's settings using CSS injection (inject()).
     renderProducts(page) => Lists the products in the "products" array as cards based on the variable page. The number of rows and columns is set according to the user's settings using rowCount and columnCount.
     renderMainCategories(mainCategories) => Lists the main categories with a parentId of null according to the variable barCount. If there are more main categories than barCount, the structure is converted into a carousel.
@@ -82,7 +119,7 @@
     renderButtons() => Renders buttons on the current page. If there are missing buttons, fills them with empty placeholders.
     handlePagination(direction) => Handles pagination based on direction keys. Can be used with 'up' or 'down' direction.
     createArrows() => Creates up and down arrow buttons and appends them to the container.
-    Keypad was created using KeypadJS.
+    confirmation_keypad was created using KeypadJS.
     closeModalE() => Closes modals with the class modalE.
     openAsideButtonsModal(buttonProps) => Creates #asideButtonsModal modal based on the buttonProps object.
     fillAsideButtonsModal(bodyHtml, footerHtml) => Fills the #asideButtonsModal modal with body and footer HTML.
@@ -102,6 +139,42 @@
     resetSuspended() => Removes all suspended items.
     fillMemoryCard() => Fills the memory card with the relevant content.
     fillSuspendedList() => Fills the suspended list with the relevant content.
+    convertToBaseCurrency (value, targetCurrency) => Converts the given price to the base currency price.
+    add2Basket () => Adds the selected product to the basket based on the entered quantity.
+    reloadBasketProductList () => Rebuilds the product list in the basket.
+    updateTotalPrice () => Updates the total price during changes made in the basket.
+    updateAmount2Paid (amount) => Updates the amount to be paid as changes are made in the basket.
+    incrementWeigh (id) => Increases the product quantity by 1.
+    decreaseWeigh (id) => Decreases the product quantity by 1.
+    setCustomWeigh (id) => Updates the product quantity.
+    lineWeighUpdate (currentProduct) => Updates the appearance of the line after quantity changes in the basket.
+    deleteBasketLine (id) => Deletes an item/line from the basket.
+    breakBasket () => Clears the basket.
+    basketNotification () => Displays the basket notification with item count when the basket is full.
+    openBasket () => Opens the basket modal.
+    fillPaymentOptions () => Creates the payment options.
+    disableBasketProductList () => Disables the section where products are listed and quantities are updated in the basket.
+    completePayment (amount, option, amountOfChange) => Executes actions to complete the payment.
+    getPaymentStateName (stateId) => Returns the name of the payment state based on the state ID.
+    getPaymentStateClass (stateId) => Returns the class of the payment state based on the state ID.
+    getPaymentName (optionId) => Returns the name of the payment option based on the option ID.
+    makePartialPayment (partialAmount) => Creates a partial payment.
+    createPartialPaymentMenuItems (itemId, state, event) => Creates the context menu for items in the partial payment list.
+    createPartialPaymentList () => Builds the partial payment list.
+    completePaymentAction (itemId) => Completes the specific partial payment with the given ID.
+    cancelPaymentAction (itemId) => Cancels the specific partial payment with the given ID.
+    refundPaymentAction (itemId) => Refunds or cancels the specific partial payment with the given ID.
+    updatePaymentState (itemId, newState) => Updates the status of the partial payment.
+    openCartTransactions () => Opens the grid menu containing cart transactions.
+    createContextMenu (menuItems, event) => Creates a context menu.
+    positionContextMenu (event) => Sets the position of the context menu.
+    showSplashScreen (splash) => Displays the splash screen.
+    hideSplashScreen () => Hides the splash screen.
+    showGridMenu (menu) => Creates the grid menu.
+    navigateBack () => Used to go back in the grid menu.
+    openGridMenu (menu) => Displays the created grid menu.
+    closeGridMenu () => Closes the grid menu.
+    basket_keypad was created using KeypadJS.
 */
 
 // enums
@@ -219,6 +292,7 @@ let partialPayment = [];
 
 // keypad
 var confirmation_keypad;
+var basket_keypad;
 
 // css injection
 var options = localStorage.getItem("options");
@@ -1261,7 +1335,7 @@ function getPaymentName(optionId) {
     return selectedPayment ? selectedPayment.name : null;
 }
 function makePartialPayment(partialAmount) {
-    // amount2Paid'ten büyük mü kontrolü
+    // amount2Paid control ?
     if (confirm(`${getPaymentName($('#basketPaymentSection .paymentOptions button.selected').data('option'))} yöntemi ile ${convert2PriceWithUnit(partialAmount)} tutarında ödeme oluşturulacak.`)) {
         partialPayment.push({
             id: partialPayment.length > 0 ? Math.max(...partialPayment.map(payment => payment.id)) + 1 : 1,
@@ -1686,7 +1760,8 @@ function setFirstKeypad() {
 }
 
 function setBasketNumpad() {
-    let basket_keypad = Keypad.generateFrom("#basketNumpadContainer", [
+    basket_keypad = null;
+    basket_keypad = Keypad.generateFrom("#basketNumpadContainer", [
         {
             statename: "default",
             rightActionContent: "<i class='fa fa-check' style=\"font-family: 'FontAwesome'; color: var(--green);\"></i>",
@@ -1841,9 +1916,12 @@ function AsideBarButtons(containerId, buttonsPerPage) {
             fillPaymentOptions();
             if(!isBasketEmpty) { 
                 setBasketNumpad();
-                $('.paymentOptions button').off('click').on('click', function(){
+                $('.paymentOptions button').off('click').on('click', function() {
                     $('.paymentOptions button').removeClass('selected');
                     $(this).addClass('selected');
+                    if (basket_keypad.getNumericValue() != '' && basket_keypad.getNumericValue() != null) {
+                        $('#basketNumpadContainer .keypad-action-button-right').click();
+                    }
                 });
             }
         },
