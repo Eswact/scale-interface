@@ -1553,6 +1553,8 @@ $(document).ready(function () {
             }
 
             let existingProduct = inMemory.find(x => x.id == selectedProductId);
+            let productLimit = categories.find(x => x.id == selectedProductId).limit || defaultMaxLimit;
+            let newWeighed = (getWeighed() < productLimit) ? getWeighed() : productLimit;
             if (!existingProduct) {
                 inMemory.push({
                     id: typeof selectedProductId === 'string' ? selectedProductId : JSON.stringify(selectedProductId),
@@ -1560,14 +1562,18 @@ $(document).ready(function () {
                     barcode: categories.find(x => x.id == selectedProductId).barcode,
                     ponderable: categories.find(x => x.id == selectedProductId).ponderable,
                     unitName: categories.find(x => x.id == selectedProductId).unitName,
-                    weighed: getWeighed(),
+                    limit: productLimit,
+                    weighed: newWeighed,
                     unitPrice: getUnitPrice(),
                     tare: getTare(),
-                    amount: getAmount()
+                    amount: getAmount(newWeighed)
                 });
             } else {
-                existingProduct.weighed += getWeighed();
-                existingProduct.amount += getAmount();
+                if (existingProduct.weighed + newWeighed >= existingProduct.limit) {
+                    newWeighed = existingProduct.limit - existingProduct.weighed;
+                }
+                existingProduct.weighed += newWeighed;
+                existingProduct.amount += getAmount(newWeighed);
             }
 
             $('.productCard.selected').addClass('memory');
