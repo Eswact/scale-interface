@@ -345,9 +345,12 @@ function applyOptions() {
     asideBar.loadButtonsFromJSON('././data/buttons.json');
 
     if (scaleMode == scaleModes.sales) {
-        $('#content').append(`<button onclick="openBasket()" id="openBasketButton">
-                                    <i class="fa-solid fa-basket-shopping"></i>
-                                    <div id="basketProductCounter"></div>
+        $('#productDetail').append(`<button onclick="openBasket()" id="openBasketButton">
+                                    <div class="basketDiv">
+                                        <i class="fa-solid fa-basket-shopping"></i>
+                                        <div id="basketProductCounter"></div>
+                                    </div>
+                                    <span id="basketTotalAmount"></span>
                                 </button>`);
     }
     $('#unitPriceCurrency').html(`(<i class="${currency[baseCurrency].icon}"></i>)`);
@@ -1149,14 +1152,14 @@ function add2Basket() {
                 weighed: newWeighed,
                 unitPrice: getUnitPrice(),
                 tare: getTare(),
-                amount: getAmount()
+                amount: getAmount(newWeighed)
             });
         } else {
             if (existingProduct.weighed + newWeighed >= existingProduct.limit) {
                 newWeighed = existingProduct.limit - existingProduct.weighed;
             }
             existingProduct.weighed += newWeighed;
-            existingProduct.amount += getAmount();
+            existingProduct.amount += getAmount(newWeighed);
         }
 
         let notificationText;
@@ -1205,7 +1208,6 @@ function updateTotalPrice() {
     $('#lineItemCount').text(`${salesBasket.length}`);
     $('#totalPrice').text(`${convert2PriceWithUnit(salesBasket.reduce(function(total, item){ return total + item.amount },0))}`);
     updateAmount2Paid(salesBasket.reduce(function(total, item){ return total + item.amount },0));
-    
 }
 function updateAmount2Paid(amount) {
     amount2Paid = amount;
@@ -1279,6 +1281,7 @@ function breakBasket() {
 
 function basketNotification() {
     $('#basketProductCounter').html(salesBasket.length);
+    $('#basketTotalAmount').text(`${convert2PriceWithUnit(salesBasket.reduce(function(total, item){ return total + item.amount },0))}`);
     if (salesBasket.length) {
         $('#basketButton').addClass('notif');
         $('#openBasketButton').addClass('show');
@@ -1642,7 +1645,11 @@ function getUnitPrice() {
     let unitPriceValue = reverseConvertFromPrice(unitPriceText);
     return unitPriceValue;
 }
-function getAmount() {
+function getAmount(customWeigh) {
+    if (typeof customWeigh === 'number') {
+        setWeighed(customWeigh);
+        calculateTotalAmount();
+    }
     let amountText = $('#amount').text();
     let amountValue = reverseConvertFromPrice(amountText);
     return amountValue;

@@ -448,6 +448,7 @@ body {
 }
 
 #transactionSide {
+    position: relative;
     display: flex;
     flex-direction: column;
     width: calc(30% - 100px);
@@ -966,13 +967,14 @@ body {
 }
 
 #productDetailDiv {
+    position: relative;
     display: none;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     width: 100%;
     /* height: 100%; */
-    padding: 32px;
+    padding: 36px 32px 0px 32px;
     /* align-items: start; */
 }
 
@@ -1740,22 +1742,28 @@ body {
 }
 
 #openBasketButton {
+    width: calc(100% - 3px);
     position: absolute;
-    top: 0.5rem;
-    right: 0.5rem;
+    left: 3px;
+    top: 0;
     display: none;
     align-items: center;
-    justify-content: space-around;
+    justify-content: space-between;
     padding: 0.85rem 1.25rem;
     font-size: 1.5rem;
     color: white;
     background-color: var(--active-color);
     border: none;
-    border-radius: 0.85rem;
 }
 
 #openBasketButton.show {
     display: flex;
+}
+
+#openBasketButton .basketDiv {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
 }
 
 #openBasketButton i {
@@ -1763,11 +1771,13 @@ body {
     margin-right: 1rem;
 }
 
-#openBasketButton div {
+#openBasketButton #basketProductCounter {
     background-color: white;
-    min-width: 2.5rem;
+    min-width: 2.55rem;
     min-height: 2.5rem;
-    padding: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     border-radius: 50%;
     font-weight: 600;
     color: var(--active-color);
@@ -2188,6 +2198,141 @@ body {
     #gridMenuContainer {
         width: 680px;
         max-height: 680px;
+    }
+}
+
+@media (orientation: portrait) {
+    html {
+        font-size: calc(var(--base-font-size) - 3px);
+    }
+
+    #content {
+        flex-direction: column;
+    }
+
+    #buttonsSide {
+        width: 100%;
+        height: auto;
+        padding: 10px 20px;
+    }
+    #content.full #buttonsSide {
+        width: 100%;
+        height: 0;
+    }
+    #buttonsSide nav {
+        flex-direction: row;
+    }
+    #buttonsSide nav #buttonsDiv {
+        width: auto;
+    }
+    #buttonsSide nav #buttonsDiv ul {
+        display: flex;
+        flex-direction: row;
+    }
+    #buttonsSide nav #buttonsDiv ul li {
+        margin-left: 20px;
+    }
+    #buttonsSide nav #buttonsDiv ul li:first-child {
+        margin-left: 0;
+    }
+    #buttonsSide nav #settingsDiv {
+        width: auto;
+        display: flex;
+        flex-direction: row;
+    }
+    #buttonsSide nav #settingsDiv button {
+        margin-right: 20px;
+    }
+    #buttonsSide nav #settingsDiv button:last-child {
+        margin-right: 0;
+    }
+
+    #electionSide {
+        width: 100%;
+        height: 70%;
+    }
+    #topBar {
+        min-height: 120px;
+        height: 15%;
+    }
+    #content.full #electionSide {
+        width: 100%;
+    }
+    #categoryList {
+        height: 25%;
+    }
+    #mainCategoryContainer .mainCategory span {
+        font-size: 2.5rem;
+    }
+    #pagination .paginationButtons {
+        font-size: 2.25rem;
+        padding: 10px 20px;
+        border-radius: 20px;
+    }
+    #goBackCategory {
+        flex-direction: row;
+    }
+    #goBackCategory button {
+        font-size: 2.5rem;
+    }
+    #goBackCategory span {
+        font-size: 1.75rem;
+    }
+
+    #transactionSide {
+        flex-direction: row;
+        width: 100%;
+        height: 30%;
+    }
+    #selectedProduct {
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+    #productDetailDiv {
+        padding: 50px 0 0 0;
+    }
+    #productDetailDiv .generalDetails {
+        padding: 20px 0 0 0;
+    }
+    #productDetailBarcode {
+        font-size: 1.3rem;
+    }
+    #productDetailDiv .generalDetails div {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+    #productDetailName {
+        font-size: 2.75rem;
+    }
+    #productDetailPrice {
+        font-size: 2.25rem;
+    }
+    #content.full #transactionSide {
+        width: 100%;
+    }
+    #numpad {
+        margin-top: 0;
+        height: 100%;
+    }
+    #numpadContainer .keypad-header input {
+        font-size: 3rem;
+        padding: 12px 24px;
+    }
+
+    #openBasketButton {
+        font-size: 2rem;
+        width: 50%;
+    }
+    #openBasketButton #basketProductCounter {
+        min-width: 3.55rem;
+        min-height: 3.5rem;
+    }
+    #openBasketButton i {
+        font-size: 3rem;
     }
 }
 /* mobile end */
