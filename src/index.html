@@ -58,38 +58,40 @@
                     </div>
                 </div>
             </div>
-            <div id="productList">
-                <span id="filterValue"></span>
-                <div id="cardContainer">
-                    <!-- leaf true -->
-                </div>
-                <div id="pagination">
-                    <button id="firstPage" class="paginationButtons" disabled><i class="fa-solid fa-angles-left"></i></button>
-                    <button id="prevPage" class="paginationButtons" disabled><i class="fa-solid fa-chevron-left"></i></button>
-                    <span id="pageInfo"><span id="currentPage">1</span> / <span id="totalPages"></span></span>
-                    <button id="nextPage" class="paginationButtons" disabled><i class="fa-solid fa-chevron-right"></i></button>
-                    <button id="lastPage" class="paginationButtons" disabled><i class="fa-solid fa-angles-right"></i></button>
-                </div>
-            </div>
-            <div id="categoryList">
-                <div id="goBackCategory">
-                    <button onclick="goBack()"><i class="fa-solid fa-left-long"></i></button>
-                    <span class="threeDots"></span>
-                </div>
-                <div id="subCategories" class="carousel">
-                    <!-- leaf false -->
-                    <div id="subCategoryContainer">
-
+            <div id="productAndCategories">
+                <div id="productList">
+                    <span id="filterValue"></span>
+                    <div id="cardContainer">
+                        <!-- leaf true -->
                     </div>
-                    <button class="carousel-btn left disabled" id="subPrevBtn"><i class="fa-solid fa-chevron-left"></i></button>
-                    <button class="carousel-btn right disabled" id="subNextBtn"><i class="fa-solid fa-chevron-right"></i></button>
-                </div>
-                <div id="mainCategories">
-                    <div id="mainCategoryContainer">
-                        <!-- parentId null -->
+                    <div id="pagination">
+                        <button id="firstPage" class="paginationButtons" disabled><i class="fa-solid fa-angles-left"></i></button>
+                        <button id="prevPage" class="paginationButtons" disabled><i class="fa-solid fa-chevron-left"></i></button>
+                        <span id="pageInfo"><span id="currentPage">1</span> / <span id="totalPages"></span></span>
+                        <button id="nextPage" class="paginationButtons" disabled><i class="fa-solid fa-chevron-right"></i></button>
+                        <button id="lastPage" class="paginationButtons" disabled><i class="fa-solid fa-angles-right"></i></button>
                     </div>
-                    <button class="carousel-btn left disabled" id="mainPrevBtn"><i class="fa-solid fa-chevron-left"></i></button>
-                    <button class="carousel-btn right disabled" id="mainNextBtn"><i class="fa-solid fa-chevron-right"></i></button>
+                </div>
+                <div id="categoryList">
+                    <div id="goBackCategory">
+                        <button onclick="goBack()"><i class="fa-solid fa-left-long"></i></button>
+                        <span class="threeDots"></span>
+                    </div>
+                    <div id="subCategories" class="carousel">
+                        <!-- leaf false -->
+                        <div id="subCategoryContainer">
+    
+                        </div>
+                        <button class="carousel-btn left disabled" id="subPrevBtn"><i class="fa-solid fa-chevron-left"></i></button>
+                        <button class="carousel-btn right disabled" id="subNextBtn"><i class="fa-solid fa-chevron-right"></i></button>
+                    </div>
+                    <div id="mainCategories">
+                        <div id="mainCategoryContainer">
+                            <!-- parentId null -->
+                        </div>
+                        <button class="carousel-btn left disabled" id="mainPrevBtn"><i class="fa-solid fa-chevron-left"></i></button>
+                        <button class="carousel-btn right disabled" id="mainNextBtn"><i class="fa-solid fa-chevron-right"></i></button>
+                    </div>
                 </div>
             </div>
         </div>
