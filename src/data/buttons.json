@@ -17,7 +17,7 @@
         "onClick": "suspend",
         "isModal": true,
         "customClose": null,
-        "modalWidth": 720,
+        "modalWidth": 800,
         "modalHeight": 800,
         "modes": [0,1]
     },
@@ -28,8 +28,8 @@
         "onClick": "open_basket",
         "isModal": true,
         "customClose": "close_basket",
-        "modalWidth": 1366,
-        "modalHeight": 768,
+        "modalWidth": 1600,
+        "modalHeight": 900,
         "modes": [1]
     }
 ]

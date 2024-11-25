@@ -1534,6 +1534,10 @@ $(document).ready(function () {
         changePage('sub', 'next');
     });
 
+    $('#hideCategoryList').click(function(){
+        $('#categoryList').toggleClass('unShow');
+    });
+
     $('#calculateTareButton').click(function (){
         console.log('Dara');
     });
@@ -1952,6 +1956,9 @@ function AsideBarButtons(containerId, buttonsPerPage) {
         const button = this.buttonsData.find(b => b.domId === id);
         if (button && this.functionMap[button.onClick]) {
             let buttonProps = { name: button.name, iconClass: button.iconClass, modalWidth: button.modalWidth, modalHeight: button.modalHeight };
+            if (window.matchMedia("(orientation: portrait)").matches) {
+                buttonProps = { name: button.name, iconClass: button.iconClass, modalWidth: button.modalHeight, modalHeight: button.modalWidth };
+            }
             fillAsideButtonsModal(); // reset
             openAsideButtonsModal(buttonProps);
             $('#asideButtonsModal').addClass('load');
