@@ -352,6 +352,10 @@ function applyOptions() {
                                     </div>
                                     <span id="basketTotalAmount"></span>
                                 </button>`);
+        $('#salePrintProductButton').css('display', 'block');
+    }
+    else { 
+        $('#salePrintProductButton').css('display', 'none');
     }
     $('#unitPriceCurrency').html(`(<i class="${currency[baseCurrency].icon}"></i>)`);
     $('#totalPriceCurrency').html(`(<i class="${currency[baseCurrency].icon}"></i>)`);
